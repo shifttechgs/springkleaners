@@ -1,0 +1,17 @@
+@extends('layouts.app')
+@section('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')
+@section('content')
+    @include('components.navbar')
+    @include('components.hero')
+    @include('components.marquee')
+    @include('components.who-we-help')
+    @include('components.services')
+    @include('components.how-it-works')
+    @include('components.why-us')
+    @include('components.testimonials')
+    @include('components.pricing')
+    @include('components.faq')
+    @include('components.final-cta')
+{{--    @include('components.cta')--}}
+    @include('components.footer')
+@endsection
