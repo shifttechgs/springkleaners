@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: springkleaners
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: SpringKleaners
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:nktViXIMrpSShAoWa4Pw8LBAol0BLtiOOtqTiZR8ssg=
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://springkleaners.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
