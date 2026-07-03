@@ -39,7 +39,7 @@ class CompanySettingController extends Controller
             'branch_code' => 'required|string|max:20',
             'account_no' => 'required|string|max:50',
             'reference_note' => 'nullable|string|max:255',
-            'review_url' => 'nullable|url|max:500',
+            'review_url' => 'nullable|url|max:2000',
         ]);
 
         Setting::set('company_name', $data['name']);
