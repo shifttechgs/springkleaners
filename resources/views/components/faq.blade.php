@@ -13,7 +13,7 @@
                 <p class="text-[#647082] text-[13px] leading-relaxed mb-5 max-w-xs">
                     Can't find your answer? WhatsApp us — we reply instantly.
                 </p>
-                <a href="https://wa.me/27814303023"
+                <a href="https://wa.me/27815274711"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="inline-flex items-center gap-2 bg-[#081d3a] text-white rounded-full px-5 py-2.5 text-[12px] font-semibold hover:bg-[#0a2444] transition-colors mb-8">

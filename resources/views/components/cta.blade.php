@@ -12,13 +12,13 @@
                 </p>
 
                 <div class="space-y-4 mb-8">
-                    <a href="tel:+27814303023" class="flex items-center gap-3 text-white/70 hover:text-[#f6e304] transition-colors group">
+                    <a href="tel:+27815274711" class="flex items-center gap-3 text-white/70 hover:text-[#f6e304] transition-colors group">
                         <div class="w-10 h-10 rounded-lg bg-white/5 group-hover:bg-[#f6e304]/10 flex items-center justify-center flex-shrink-0 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                             </svg>
                         </div>
-                        <span class="text-[15px] font-medium">+27 81 430 3023</span>
+                        <span class="text-[15px] font-medium">+27 81 527 4711</span>
                     </a>
 
                     <a href="mailto:bookings@springkleaners.co.za" class="flex items-center gap-3 text-white/70 hover:text-[#f6e304] transition-colors group">
@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <a href="https://wa.me/27814303023"
+                <a href="https://wa.me/27815274711"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl transition-colors mt-2">
@@ -132,6 +132,6 @@ function handleCtaForm(e) {
         'Suburb: ' + (data.get('suburb') || '') + '\n' +
         'Message: ' + (data.get('message') || 'None')
     );
-    window.open('https://wa.me/27814303023?text=' + msg, '_blank');
+    window.open('https://wa.me/27815274711?text=' + msg, '_blank');
 }
 </script>

@@ -43,7 +43,7 @@
                         <p class="text-[#081d3a] font-black uppercase tracking-tight text-[15px] sm:text-[17px] leading-snug">
                             Got a space in need of a refresh?
                         </p>
-                        <a href="/get-my-quote"
+                        <a href="{{ route('booking.show') }}"
                            class="inline-flex items-center gap-3 bg-[#081d3a] text-white font-semibold px-6 py-3.5 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[14px] tracking-tight whitespace-nowrap flex-shrink-0">
                             Get My Instant Quote
                             <span class="w-7 h-7 bg-[#f6e304] rounded-full flex items-center justify-center flex-shrink-0">

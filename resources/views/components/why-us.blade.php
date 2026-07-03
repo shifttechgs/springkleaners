@@ -139,7 +139,7 @@
             <p class="text-white/40 text-[11px] font-bold uppercase tracking-widest mb-6">
                 Ready to get your space spotlessly clean?
             </p>
-            <a href="/get-my-quote"
+            <a href="{{ route('booking.show') }}"
                class="inline-flex items-center gap-3 bg-[#f6e304] text-[#081d3a] font-bold px-8 py-4 rounded-full hover:bg-yellow-300 active:scale-95 transition-all shadow-lg text-[15px] tracking-tight">
                 Get My Instant Quote
                 <span class="w-7 h-7 bg-[#081d3a] rounded-full flex items-center justify-center flex-shrink-0">

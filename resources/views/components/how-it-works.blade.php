@@ -22,7 +22,7 @@
                 <h3 class="text-[#081d3a] text-[15px] font-bold uppercase tracking-tight mt-2 mb-1.5">Share Details</h3>
                 <p class="text-[#647082] text-[12px] leading-relaxed mb-4">Fill out a quick form with details about your space, schedule, and preferences.</p>
                 <div class="mt-auto rounded-lg overflow-hidden aspect-[4/3] bg-[#e8e8e4]">
-                    <img src="/images/works/toon-lambrechts-0FTI9ceTUOc-unsplash.jpg" alt="Share your details" class="w-full h-full object-cover">
+                    <img src="/images/works/step1_share_details.png" alt="Share your details" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -32,7 +32,7 @@
                 <h3 class="text-[#081d3a] text-[15px] font-bold uppercase tracking-tight mt-2 mb-1.5">Get Quote</h3>
                 <p class="text-[#647082] text-[12px] leading-relaxed mb-4">We'll send you a personalized estimate, no hidden fees, no upselling.</p>
                 <div class="mt-auto rounded-lg overflow-hidden aspect-[4/3] bg-[#e8e8e4]">
-                    <img src="/images/works/3.png" alt="Get your quote" class="w-full h-full object-cover">
+                    <img src="/images/works/2.png" alt="Get your quote" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
                 <h3 class="text-[#081d3a] text-[15px] font-bold uppercase tracking-tight mt-2 mb-1.5">You Relax</h3>
                 <p class="text-[#647082] text-[12px] leading-relaxed mb-4">Enjoy a spotless home or workspace that looks, feels, and smells truly clean.</p>
                 <div class="mt-auto rounded-lg overflow-hidden aspect-[4/3] bg-[#e8e8e4]">
-                    <img src="/images/works/premium_photo-1683141112334-d7d404f6e716.avif" alt="You relax and enjoy" class="w-full h-full object-cover">
+                    <img src="/images/works/step4_you_relax.png" alt="You relax and enjoy" class="w-full h-full object-cover">
                 </div>
             </div>
 

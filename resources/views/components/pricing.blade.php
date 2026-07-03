@@ -33,11 +33,11 @@
                 {{-- Bottom Card: Pricing --}}
                 <div class="bg-white rounded-xl p-5 flex flex-col flex-1">
                     <div class="mb-4">
-                        <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 950</span>
+                        <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1200</span>
                         <span class="text-[#647082] text-[12px] ml-1">/ visit</span>
                     </div>
-                    <a href="/get-my-quote" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
-                        Get My Quote
+                    <a href="{{ route('booking.show', ['service' => 'deep-cleaning']) }}" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
+                        Book Now
                     </a>
                     <ul class="space-y-1.5">
                         <li class="flex items-center gap-2 text-[11px] text-[#081d3a]/65">
@@ -80,8 +80,8 @@
                         <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1,200</span>
                         <span class="text-[#647082] text-[12px] ml-1">/ property</span>
                     </div>
-                    <a href="/get-my-quote" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
-                        Get My Quote
+                    <a href="{{ route('booking.show', ['service' => 'end-of-tenancy']) }}" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
+                        Book Now
                     </a>
                     <ul class="space-y-1.5">
                         <li class="flex items-center gap-2 text-[11px] text-[#081d3a]/65">
@@ -128,8 +128,8 @@
                         <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1,800</span>
                         <span class="text-[#647082] text-[12px] ml-1">/ project</span>
                     </div>
-                    <a href="/get-my-quote" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
-                        Get My Quote
+                    <a href="{{ route('booking.show', ['service' => 'post-construction']) }}" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
+                        Book Now
                     </a>
                     <ul class="space-y-1.5">
                         <li class="flex items-center gap-2 text-[11px] text-[#081d3a]/65">
@@ -160,7 +160,7 @@
                 <p class="text-[#081d3a] font-bold text-[17px] tracking-tight">Not seeing exactly what you need?</p>
                 <p class="text-[#647082] text-[13px] mt-1">Let's build a cleaning plan that works for you.</p>
             </div>
-            <a href="/get-my-quote"
+            <a href="{{ route('booking.show') }}"
                class="inline-flex items-center gap-2.5 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3 rounded-full hover:bg-yellow-300 active:scale-95 transition-all shadow-sm text-[13px] tracking-tight flex-shrink-0">
                 Get My Instant Quote
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

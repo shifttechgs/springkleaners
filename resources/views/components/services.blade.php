@@ -73,10 +73,11 @@
                             </p>
                         </div>
 
-                        <div class="flex items-center px-5 sm:px-7 pb-5 sm:pb-0 flex-shrink-0">
-                            <a href="/get-my-quote"
+                        <div class="flex flex-col items-center sm:items-end justify-center gap-2 px-5 sm:px-7 pb-5 sm:pb-0 flex-shrink-0">
+                            <span class="text-[#647082] text-[11px] whitespace-nowrap">From <span class="text-[#081d3a] font-bold">R1,200</span> / visit</span>
+                            <a href="{{ route('booking.show', ['service' => 'deep-cleaning']) }}"
                                class="inline-flex items-center gap-2 bg-[#081d3a] text-[#f6e304] font-semibold px-5 py-3 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[13px] whitespace-nowrap">
-                                Get My Instant Quote
+                                Book This Service
                             </a>
                         </div>
 
@@ -135,10 +136,11 @@
                             </p>
                         </div>
 
-                        <div class="flex items-center px-5 sm:px-7 pb-5 sm:pb-0 flex-shrink-0">
-                            <a href="/get-my-quote"
+                        <div class="flex flex-col items-center sm:items-end justify-center gap-2 px-5 sm:px-7 pb-5 sm:pb-0 flex-shrink-0">
+                            <span class="text-[#647082] text-[11px] whitespace-nowrap">From <span class="text-[#081d3a] font-bold">R1,200</span> / property</span>
+                            <a href="{{ route('booking.show', ['service' => 'end-of-tenancy']) }}"
                                class="inline-flex items-center gap-2 bg-[#081d3a] text-[#f6e304] font-semibold px-5 py-3 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[13px] whitespace-nowrap">
-                                Get My Instant Quote
+                                Book This Service
                             </a>
                         </div>
 
@@ -197,10 +199,11 @@
                             </p>
                         </div>
 
-                        <div class="flex items-center px-5 sm:px-7 pb-5 sm:pb-0 flex-shrink-0">
-                            <a href="/get-my-quote"
+                        <div class="flex flex-col items-center sm:items-end justify-center gap-2 px-5 sm:px-7 pb-5 sm:pb-0 flex-shrink-0">
+                            <span class="text-[#647082] text-[11px] whitespace-nowrap">From <span class="text-[#081d3a] font-bold">R1,800</span> / project</span>
+                            <a href="{{ route('booking.show', ['service' => 'post-construction']) }}"
                                class="inline-flex items-center gap-2 bg-[#081d3a] text-[#f6e304] font-semibold px-5 py-3 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[13px] whitespace-nowrap">
-                                Get My Instant Quote
+                                Book This Service
                             </a>
                         </div>
 

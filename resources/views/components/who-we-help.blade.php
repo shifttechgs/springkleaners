@@ -14,7 +14,7 @@
                 </p>
             </div>
             <div class="flex-shrink-0">
-                <a href="/get-my-quote"
+                <a href="{{ route('booking.show') }}"
                    class="inline-flex items-center gap-3 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[14px] tracking-tight">
                     Get My Instant Quote
                     <span class="w-7 h-7 bg-[#081d3a] rounded-full flex items-center justify-center flex-shrink-0">

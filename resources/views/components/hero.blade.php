@@ -15,7 +15,7 @@
     <div class="section-wrap relative z-10 w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
 
-            <div class="lg:col-span-7">
+            <div class="lg:col-span-7 lg:translate-y-16">
                 <div id="hero-badge" class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-8">
                     <div class="flex text-[#f6e304] text-xs">★★★★★</div>
                     <span class="text-white/70 text-[13px] tracking-tight font-medium">Cape Town's Premium Cleaning Service</span>
@@ -25,7 +25,7 @@
                     Spotlessly Clean.<br><span class="text-[#f6e304]">Every Time.</span>
                 </h1>
 
-                <p id="hero-sub" class="text-lg text-white/60 leading-relaxed max-w-xl mb-10 font-normal tracking-tight">
+                <p id="hero-sub" class="text-lg text-white/60 leading-relaxed max-w-2xl mb-10 font-normal tracking-tight">
                     Professional deep cleaning, end-of-tenancy &amp; post-construction cleaning for homes and businesses across Cape Town's Northern Suburbs.
                 </p>
 
@@ -61,21 +61,22 @@
                         'Edgemead', 'Bothasig', 'Richwood', 'Burgundy Estate', 'Flamingo Vlei',
                         'Sandown', 'Sunset Beach', 'Parklands North', 'Waves Edge', 'Montague Gardens',
                         'Blouberg Rise', 'Summer Greens', 'Rugby', 'Paarden Eiland', 'Marconi Beam',
-                        'Dunoon', 'Joe Slovo Park', 'Penhill', 'Kerria', 'Ravensmead'
+                        'Dunoon', 'Joe Slovo Park', 'Penhill', 'Kerria', 'Ravensmead',
+                        'Sea Point', 'Green Point'
                     ],
                     suburbQuery: '',
                     filteredSuburbs: [],
                     showSuggestions: false,
                     selectedSuburb: '',
                     locationStatus: null,
-                    formStep: 1,
+                    serviceError: false,
+                    errors: { name: false, phone: false },
                     form: {
                         name: '',
                         phone: '',
                         email: '',
                         service: '',
-                        propertyType: 'Residential',
-                        message: ''
+                        propertyType: 'Residential'
                     },
                     waitlistEmail: '',
                     filterSuburbs() {
@@ -110,31 +111,37 @@
                         }
                     },
                     submitForm() {
-                        const msg = encodeURIComponent(
-                            'Hi SpringKleaners! I would like to request a free estimate.\n\n' +
-                            'Name: ' + this.form.name + '\n' +
-                            'Phone: ' + this.form.phone + '\n' +
-                            'Email: ' + this.form.email + '\n' +
-                            'Service: ' + this.form.service + '\n' +
-                            'Property Type: ' + this.form.propertyType + '\n' +
-                            'Suburb: ' + this.selectedSuburb + '\n' +
-                            'Message: ' + (this.form.message || 'None')
-                        );
-                        window.open('https://wa.me/27814303023?text=' + msg, '_blank');
-                        this.formStep = 3;
+                        this.errors.name = !this.form.name.trim();
+                        this.errors.phone = !this.form.phone.trim();
+                        this.serviceError = !this.form.service;
+                        if (!this.suburbQuery.trim()) {
+                            this.locationStatus = 'required';
+                        } else if (this.locationStatus !== 'valid') {
+                            this.checkLocation();
+                        }
+                        if (this.errors.name || this.errors.phone || this.serviceError || this.locationStatus !== 'valid') {
+                            return;
+                        }
+                        const params = new URLSearchParams({
+                            service: this.form.service,
+                            name: this.form.name,
+                            phone: this.form.phone,
+                            suburb: this.selectedSuburb,
+                        });
+                        window.location.href = '{{ route('booking.show') }}?' + params.toString();
                     }
-                }" class="bg-white/[0.04] border border-white/10 rounded-2xl p-7 backdrop-blur-sm">
+                }" class="bg-[#f8f9fc]/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl">
 
-                    <div x-show="formStep !== 3">
+                    <div>
                         <div class="mb-1">
-                            <h3 class="text-white font-bold text-[20px] tracking-tight">Get Your Free Estimate</h3>
-                            <p class="text-[#f6e304]/70 text-sm mt-1">Get your instant price estimate</p>
+                            <h3 class="text-[#081d3a] font-bold text-[20px] tracking-tight">Get Your Free Estimate</h3>
+                            <p class="text-[#647082] text-sm mt-1">Get your instant price estimate</p>
                         </div>
 
-                        <div class="border-t border-white/10 my-5"></div>
+                        <div class="border-t border-[#081d3a]/10 my-3"></div>
 
-                        <div class="mb-5">
-                            <label class="block text-white/70 text-xs uppercase tracking-wider mb-2 font-medium">Your Suburb</label>
+                        <div class="mb-3">
+                            <label class="block text-[#081d3a]/70 text-xs uppercase tracking-wider mb-2 font-medium">Your Suburb <span class="text-rose-500">*</span></label>
                             <div class="relative">
                                 <input
                                     type="text"
@@ -143,7 +150,8 @@
                                     x-on:blur="setTimeout(() => { showSuggestions = false }, 200)"
                                     x-on:keydown.enter.prevent="checkLocation()"
                                     placeholder="e.g. Milnerton, Parklands..."
-                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[14px] placeholder-white/30 focus:border-[#f6e304] focus:outline-none transition-colors"
+                                    class="w-full bg-white border rounded-xl px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors"
+                                    :class="locationStatus === 'required' ? 'border-red-400' : 'border-[#081d3a]/15'"
                                 >
                                 <div x-show="showSuggestions"
                                      class="absolute left-0 right-0 top-full mt-1 bg-[#081d3a] border border-white/10 rounded-xl z-50 max-h-48 overflow-y-auto"
@@ -160,101 +168,118 @@
                                 </div>
                             </div>
 
-                            <div x-show="locationStatus === 'valid'" class="mt-2 flex items-center gap-1.5 text-green-400 text-[13px]" style="display:none;">
+                            <div x-show="locationStatus === 'required'" class="mt-2 flex items-center gap-1.5 text-red-600 text-[13px]" style="display:none;">
+                                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                                <span>Please enter your suburb</span>
+                            </div>
+                            <div x-show="locationStatus === 'valid'" class="mt-2 flex items-center gap-1.5 text-green-600 text-[13px]" style="display:none;">
                                 <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                                 <span>Great! We service <span x-text="selectedSuburb" class="font-semibold"></span></span>
                             </div>
-                            <div x-show="locationStatus === 'invalid'" class="mt-2 flex items-center gap-1.5 text-red-400 text-[13px]" style="display:none;">
+                            <div x-show="locationStatus === 'invalid'" class="mt-2 flex items-center gap-1.5 text-red-600 text-[13px]" style="display:none;">
                                 <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                                <span>We don't service <span x-text="suburbQuery" class="font-semibold"></span> yet</span>
+                                <span>We don't service <span x-text="suburbQuery || 'that area'" class="font-semibold"></span> yet</span>
                             </div>
-                        </div>
 
-                        <div x-show="locationStatus === 'valid'"
-                             x-transition:enter="transition ease-out duration-300"
-                             x-transition:enter-start="opacity-0 translate-y-3"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             class="space-y-4"
-                             style="display:none;">
-
-                            <div>
-                                <input type="text" x-model="form.name" placeholder="Full Name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[14px] placeholder-white/30 focus:border-[#f6e304] focus:outline-none transition-colors">
-                            </div>
-                            <div>
-                                <input type="tel" x-model="form.phone" placeholder="+27 xxx xxx xxxx" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[14px] placeholder-white/30 focus:border-[#f6e304] focus:outline-none transition-colors">
-                            </div>
-                            <div>
-                                <input type="email" x-model="form.email" placeholder="Email address" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[14px] placeholder-white/30 focus:border-[#f6e304] focus:outline-none transition-colors">
-                            </div>
-                            <div>
-                                <select x-model="form.service" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[14px] focus:border-[#f6e304] focus:outline-none transition-colors appearance-none cursor-pointer">
-                                    <option value="" class="bg-[#081d3a]">Select Service</option>
-                                    <option value="Deep Cleaning" class="bg-[#081d3a]">Deep Cleaning</option>
-                                    <option value="End-of-Tenancy Cleaning" class="bg-[#081d3a]">End-of-Tenancy Cleaning</option>
-                                    <option value="Post Construction Cleaning" class="bg-[#081d3a]">Post Construction Cleaning</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-white/50 text-xs uppercase tracking-wider mb-2">Property Type</label>
-                                <div class="flex gap-2">
-                                    <button type="button"
-                                            @click="form.propertyType = 'Residential'"
-                                            :class="form.propertyType === 'Residential' ? 'bg-[#f6e304] text-[#081d3a]' : 'bg-white/5 text-white/60 border border-white/10'"
-                                            class="flex-1 px-4 py-2 rounded-lg text-[13px] font-medium transition-colors">
-                                        Residential
-                                    </button>
-                                    <button type="button"
-                                            @click="form.propertyType = 'Commercial'"
-                                            :class="form.propertyType === 'Commercial' ? 'bg-[#f6e304] text-[#081d3a]' : 'bg-white/5 text-white/60 border border-white/10'"
-                                            class="flex-1 px-4 py-2 rounded-lg text-[13px] font-medium transition-colors">
-                                        Commercial
-                                    </button>
+                            <div x-show="locationStatus !== 'valid' && !showSuggestions" class="mt-3" style="display:none;">
+                                <p class="text-[#081d3a]/40 text-[11px] uppercase tracking-wider mb-2">Popular areas</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <template x-for="suburb in ['Milnerton', 'Blouberg', 'Table View', 'Parklands']" :key="suburb">
+                                        <button type="button"
+                                                @click="selectSuburb(suburb)"
+                                                class="px-2.5 py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors"
+                                                x-text="suburb">
+                                        </button>
+                                    </template>
                                 </div>
                             </div>
-                            <div>
-                                <textarea x-model="form.message" rows="2" placeholder="Any additional details..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[14px] placeholder-white/30 focus:border-[#f6e304] focus:outline-none transition-colors resize-none"></textarea>
-                            </div>
-                            <button @click="submitForm()"
-                                    type="button"
-                                    class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-4 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-base shadow-lg">
-                                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                </svg>
-                                Send via WhatsApp
-                            </button>
-                            <p class="text-center text-white/40 text-[12px]">🔒 Free inspection · No commitment · Instant estimate</p>
                         </div>
 
                         <div x-show="locationStatus === 'invalid'"
                              x-transition:enter="transition ease-out duration-300"
                              x-transition:enter-start="opacity-0 translate-y-3"
                              x-transition:enter-end="opacity-100 translate-y-0"
-                             class="mt-4 p-5 bg-white/5 rounded-xl border border-white/10"
+                             class="mb-3 p-4 bg-[#081d3a]/5 rounded-xl border border-[#081d3a]/10"
                              style="display:none;">
-                            <p class="text-white font-semibold text-[15px] mb-1">We're not in <span x-text="suburbQuery" class="text-[#f6e304]"></span> yet</p>
-                            <p class="text-white/50 text-[13px] mb-4">We're expanding! Join our waitlist to be first.</p>
+                            <p class="text-[#081d3a] font-semibold text-[14px] mb-1">We're not in <span x-text="suburbQuery || 'your area'" class="font-bold"></span> yet</p>
+                            <p class="text-[#647082] text-[12px] mb-3">We're expanding! Join our waitlist to be first.</p>
                             <div class="flex gap-2">
-                                <input type="email" x-model="waitlistEmail" placeholder="Your email address" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-[13px] placeholder-white/30 focus:border-[#f6e304] focus:outline-none transition-colors">
+                                <input type="email" x-model="waitlistEmail" placeholder="Your email address" class="flex-1 bg-white border border-[#081d3a]/15 rounded-xl px-3 py-2.5 text-[#081d3a] text-[13px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors">
                                 <button type="button" class="px-4 py-2.5 bg-[#f6e304] text-[#081d3a] font-bold rounded-xl text-[13px] hover:bg-yellow-300 transition-colors flex-shrink-0">
                                     Join
                                 </button>
                             </div>
                         </div>
-                    </div>
 
-                    <div x-show="formStep === 3"
-                         x-transition:enter="transition ease-out duration-400"
-                         x-transition:enter-start="opacity-0 scale-95"
-                         x-transition:enter-end="opacity-100 scale-100"
-                         class="py-8 text-center"
-                         style="display:none;">
-                        <div class="w-16 h-16 rounded-full bg-[#f6e304]/10 border-2 border-[#f6e304] flex items-center justify-center mx-auto mb-5">
-                            <svg class="w-8 h-8 text-[#f6e304]" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
+                        <div class="space-y-2.5">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[#081d3a]/50 text-[11px] uppercase tracking-wider mb-1 font-medium">Full Name <span class="text-rose-500 normal-case tracking-normal">*</span></label>
+                                    <input type="text" x-model="form.name" @input="errors.name = false" placeholder="e.g. Jane Smith" class="w-full bg-white border rounded-xl px-4 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors" :class="errors.name ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                    <p x-show="errors.name" x-cloak class="text-red-600 text-[11.5px] mt-1">Please enter your name</p>
+                                </div>
+                                <div>
+                                    <label class="block text-[#081d3a]/50 text-[11px] uppercase tracking-wider mb-1 font-medium">Phone <span class="text-rose-500 normal-case tracking-normal">*</span></label>
+                                    <input type="tel" x-model="form.phone" @input="errors.phone = false" placeholder="082 xxx xxxx" class="w-full bg-white border rounded-xl px-4 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors" :class="errors.phone ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                    <p x-show="errors.phone" x-cloak class="text-red-600 text-[11.5px] mt-1">Please enter your phone number</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[#081d3a]/50 text-[11px] uppercase tracking-wider mb-1 font-medium">Email</label>
+                                    <input type="email" x-model="form.email" placeholder="you@email.com" class="w-full bg-white border border-[#081d3a]/15 rounded-xl px-4 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-[#081d3a]/50 text-[11px] uppercase tracking-wider mb-1 font-medium">Service <span class="text-rose-500 normal-case tracking-normal">*</span></label>
+                                    <select x-model="form.service" @change="serviceError = false" class="w-full bg-white border rounded-xl px-4 py-2.5 text-[#081d3a] text-[14px] focus:border-[#f6e304] focus:outline-none transition-colors appearance-none cursor-pointer" :class="serviceError ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                        <option value="" class="bg-white">Select Service</option>
+                                        <option value="deep-cleaning" class="bg-white">Deep Cleaning</option>
+                                        <option value="end-of-tenancy" class="bg-white">End-of-Tenancy</option>
+                                        <option value="post-construction" class="bg-white">Post Construction</option>
+                                    </select>
+                                    <p x-show="serviceError" x-cloak class="text-red-600 text-[11.5px] mt-1">Please choose a service</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button"
+                                        @click="form.propertyType = 'Residential'"
+                                        :class="form.propertyType === 'Residential' ? 'bg-[#f6e304] text-[#081d3a]' : 'bg-[#081d3a]/5 text-[#081d3a]/60 border border-[#081d3a]/10'"
+                                        class="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-colors">
+                                    Residential
+                                </button>
+                                <button type="button"
+                                        @click="form.propertyType = 'Commercial'"
+                                        :class="form.propertyType === 'Commercial' ? 'bg-[#f6e304] text-[#081d3a]' : 'bg-[#081d3a]/5 text-[#081d3a]/60 border border-[#081d3a]/10'"
+                                        class="flex-1 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-colors">
+                                    Commercial
+                                </button>
+                            </div>
+                            <p x-show="errors.name || errors.phone || serviceError || locationStatus === 'required'" x-cloak class="text-red-500 text-[12px] -mt-1">Please fill in the highlighted fields above to continue.</p>
+                            <button @click="submitForm()"
+                                    type="button"
+                                    class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-base shadow-lg">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h4m3 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Book My Clean
+                            </button>
+                            <p class="text-center text-[#647082] text-[11px]">🔒 Free inspection · No commitment · Instant estimate</p>
                         </div>
-                        <h3 class="text-white font-bold text-[20px] mb-2 tracking-tight">Request sent!</h3>
-                        <p class="text-white/60 text-[14px] leading-relaxed">Check your WhatsApp — we'll confirm shortly.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 bg-[#081d3a]/90 backdrop-blur-sm border border-white/10 rounded-2xl px-5 py-3.5 grid grid-cols-3 divide-x divide-white/10 shadow-xl">
+                    <div class="text-center px-2">
+                        <div class="text-white font-bold text-lg leading-none">4.9 <span class="text-[#f6e304]">★</span></div>
+                        <div class="text-white/50 text-[10px] uppercase tracking-wider mt-1.5">Google Reviews</div>
+                    </div>
+                    <div class="text-center px-2">
+                        <div class="text-[#f6e304] font-bold text-lg leading-none">98%</div>
+                        <div class="text-white/50 text-[10px] uppercase tracking-wider mt-1.5">Satisfaction</div>
+                    </div>
+                    <div class="text-center px-2">
+                        <div class="text-white font-bold text-lg leading-none">3+</div>
+                        <div class="text-white/50 text-[10px] uppercase tracking-wider mt-1.5">Years Exp.</div>
                     </div>
                 </div>
             </div>

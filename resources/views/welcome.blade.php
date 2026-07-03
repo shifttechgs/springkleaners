@@ -8,9 +8,11 @@
     @include('components.services')
     @include('components.how-it-works')
     @include('components.why-us')
+    @include('components.areas-we-serve')
     @include('components.testimonials')
     @include('components.pricing')
     @include('components.faq')
+    @include('components.blog-teaser')
     @include('components.final-cta')
 {{--    @include('components.cta')--}}
     @include('components.footer')

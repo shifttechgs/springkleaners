@@ -282,9 +282,9 @@
                         </div>
                         <div>
                             <p class="text-[11px] text-[#adb5c4] uppercase tracking-widest mb-0.5" style="font-family:'Plus Jakarta Sans',sans-serif;">WhatsApp / Call</p>
-                            <a href="https://wa.me/27814303023" target="_blank"
+                            <a href="https://wa.me/27815274711" target="_blank"
                                class="text-[#081d3a] font-semibold text-[14.5px] hover:text-[#f6e304] transition-colors"
-                               style="font-family:'Plus Jakarta Sans',sans-serif;">+27 81 430 3023</a>
+                               style="font-family:'Plus Jakarta Sans',sans-serif;">+27 81 527 4711</a>
                         </div>
                     </div>
 
@@ -360,7 +360,7 @@
                             'Suburb: '  + this.selectedSuburb,
                             'Notes: '   + (this.form.message || 'None'),
                         ];
-                        window.open('https://wa.me/27814303023?text=' + encodeURIComponent(lines.join('\n')), '_blank');
+                        window.open('https://wa.me/27815274711?text=' + encodeURIComponent(lines.join('\n')), '_blank');
                         this.submitted = true;
                     }
                  }">

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town's Northern Suburbs. Fully insured, vetted staff, free inspection.">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="@yield('description', 'SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town\'s Northern Suburbs. Fully insured, vetted staff, free inspection.')">
     <title>@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')</title>
+    <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/png" href="/images/fav.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,11 +100,21 @@
             to { transform: translateX(-50%); }
         }
         .marquee-track {
-            animation: marquee-scroll 35s linear infinite;
+            animation: marquee-scroll 60s linear infinite;
             display: flex;
             width: max-content;
         }
         .marquee-track:hover { animation-play-state: paused; }
+        .marquee-track-lg { animation-duration: 45s; }
+        .marquee-track-reverse { animation-direction: reverse; }
+
+        @keyframes review-scroll-y {
+            from { transform: translateY(0); }
+            to { transform: translateY(-50%); }
+        }
+        .review-scroll { animation: review-scroll-y 32s linear infinite; }
+        .review-scroll-down { animation-direction: reverse; }
+        .review-scroll:hover { animation-play-state: paused; }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #040f1f; }
@@ -111,15 +123,13 @@
 
         .odometer { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        #mainNav { background: transparent; transition: all 0.4s ease; }
-        #mainNav.nav-scrolled {
-            background: rgba(13,27,51,0.96);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 4px 40px rgba(0,0,0,0.4);
+        #mainNav { transition: all 0.4s ease; }
+        #mainNav.nav-scrolled > div:first-child {
+            box-shadow: 0 8px 40px rgba(0,0,0,0.35);
         }
 
         .wow { visibility: hidden; }
+        [x-cloak] { display: none !important; }
 
         .swiper-pagination-bullet { background: #647082 !important; opacity: 1 !important; }
         .swiper-pagination-bullet-active {
@@ -178,7 +188,7 @@
     @yield('content')
 
     <div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden flex border-t border-white/10 shadow-2xl">
-        <a href="https://wa.me/27814303023"
+        <a href="https://wa.me/27815274711"
            target="_blank"
            rel="noopener noreferrer"
            class="flex-1 flex items-center justify-center gap-2 bg-[#25d366] text-white font-bold py-4 text-[14px] tracking-tight">
@@ -187,7 +197,7 @@
             </svg>
             WhatsApp Us
         </a>
-        <a href="/get-my-quote"
+        <a href="{{ route('booking.show') }}"
            class="flex-1 flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-4 text-[14px] tracking-tight">
             Get My Instant Quote
         </a>
