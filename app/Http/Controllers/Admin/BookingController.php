@@ -144,6 +144,7 @@ class BookingController extends Controller
         if ($data['status'] === BookingStatus::Completed->value && blank($booking->invoice_number)) {
             $data['invoice_number'] = 'INV-'.now()->format('Y').'-'.str_pad((string) $booking->id, 4, '0', STR_PAD_LEFT);
             $data['invoiced_at'] = now();
+            $data['accepted_token'] = $booking->accepted_token ?? (string) Str::uuid();
         }
 
         $booking->update($data);
