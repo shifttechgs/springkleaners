@@ -2,6 +2,9 @@
 
 return [
 
+    // Days a Pending/Quoted booking holds its calendar slot before it auto-expires and frees the slot up.
+    'quote_hold_days' => 5,
+
     'list' => [
 
         'deep-cleaning' => [

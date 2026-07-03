@@ -29,4 +29,18 @@
         <priority>0.6</priority>
     </url>
     @endforeach
+    @foreach (\App\Support\Services::slugs() as $serviceSlug)
+    <url>
+        <loc>{{ url('/services/'.$serviceSlug) }}</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    @endforeach
+    @foreach (array_keys(config('locations')) as $areaSlug)
+    <url>
+        <loc>{{ url('/areas/'.$areaSlug) }}</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    @endforeach
 </urlset>

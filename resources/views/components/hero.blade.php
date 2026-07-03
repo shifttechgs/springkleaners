@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-5" id="hero-form">
+            <div class="lg:col-span-5 lg:mt-24" id="hero-form">
                 <div x-data="{
                     suburbs: [
                         'Milnerton', 'Sunningdale', 'Blouberg', 'Parklands', 'Century City',

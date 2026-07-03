@@ -11,9 +11,95 @@
             </a>
 
             <div class="hidden lg:flex items-center justify-center gap-8">
-                <a href="/#services" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Services</a>
+                <div class="relative" x-data="{ servicesOpen: false }" @mouseenter="servicesOpen = true" @mouseleave="servicesOpen = false">
+                    <a href="/#services" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
+                        Services
+                        <svg class="w-3 h-3 transition-transform duration-200" :class="servicesOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </a>
+                    <div x-show="servicesOpen"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 -translate-y-1"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         class="absolute top-full left-0 pt-3 w-64"
+                         style="display:none;">
+                        <div class="rounded-2xl border border-black/5 overflow-hidden p-2" style="background: rgba(255,255,255,0.96); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); box-shadow: 0 20px 50px -12px rgba(8,29,58,0.28);">
+                            <a href="{{ route('services.show', 'deep-cleaning') }}" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                Deep Cleaning
+                            </a>
+                            <a href="{{ route('services.show', 'end-of-tenancy') }}" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                End-of-Tenancy Cleaning
+                            </a>
+                            <a href="{{ route('services.show', 'post-construction') }}" class="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                Post Construction Cleaning
+                            </a>
+                            <div class="border-t border-black/5 mt-1.5 pt-1.5">
+                                <a href="/#services" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[#081d3a]/40 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[12px] font-semibold tracking-tight transition-colors">
+                                    View all services
+                                    <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative" x-data="{ areasOpen: false }" @mouseenter="areasOpen = true" @mouseleave="areasOpen = false">
+                    <a href="/#areas" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
+                        Areas
+                        <svg class="w-3 h-3 transition-transform duration-200" :class="areasOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </a>
+                    <div x-show="areasOpen"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 -translate-y-1"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         class="absolute top-full left-0 pt-3 w-80"
+                         style="display:none;">
+                        <div class="rounded-2xl border border-black/5 overflow-hidden p-2" style="background: rgba(255,255,255,0.96); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); box-shadow: 0 20px 50px -12px rgba(8,29,58,0.28);">
+                            <div class="grid grid-cols-2 gap-1">
+                                <a href="{{ route('areas.show', 'milnerton') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Milnerton
+                                </a>
+                                <a href="{{ route('areas.show', 'sunningdale') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Sunningdale
+                                </a>
+                                <a href="{{ route('areas.show', 'blouberg') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Blouberg
+                                </a>
+                                <a href="{{ route('areas.show', 'parklands') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Parklands
+                                </a>
+                                <a href="{{ route('areas.show', 'century-city') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Century City
+                                </a>
+                                <a href="{{ route('areas.show', 'table-view') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Table View
+                                </a>
+                                <a href="{{ route('areas.show', 'big-bay') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Big Bay
+                                </a>
+                                <a href="{{ route('areas.show', 'bloubergstrand') }}" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[#081d3a]/75 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[13px] font-semibold tracking-tight transition-colors">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0"></span>
+                                    Bloubergstrand
+                                </a>
+                            </div>
+                            <div class="border-t border-black/5 mt-1.5 pt-1.5">
+                                <a href="/#areas" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[#081d3a]/40 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[12px] font-semibold tracking-tight transition-colors">
+                                    View all areas
+                                    <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <a href="/#how-it-works" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">How It Works</a>
-                <a href="/#testimonials" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Reviews</a>
                 <a href="/#pricing" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Pricing</a>
                 <a href="{{ route('blog.index') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Blog</a>
             </div>
@@ -46,9 +132,36 @@
          class="lg:hidden mt-2 rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
          style="display: none; background: rgba(13,27,51,0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
         <div class="py-6 px-5 flex flex-col gap-1">
-            <a href="/#services" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Services</a>
+            <div x-data="{ servicesOpen: false }">
+                <button type="button" @click="servicesOpen = !servicesOpen" class="w-full flex items-center justify-between py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">
+                    <span>Services</span>
+                    <svg class="w-4 h-4 transition-transform duration-200" :class="servicesOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div x-show="servicesOpen" x-transition class="pl-4 flex flex-col gap-1 pb-2" style="display:none;">
+                    <a href="{{ route('services.show', 'deep-cleaning') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Deep Cleaning</a>
+                    <a href="{{ route('services.show', 'end-of-tenancy') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">End-of-Tenancy Cleaning</a>
+                    <a href="{{ route('services.show', 'post-construction') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Post Construction Cleaning</a>
+                    <a href="/#services" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/40 hover:text-[#f6e304] text-[13px] transition-colors">View all services →</a>
+                </div>
+            </div>
+            <div x-data="{ areasOpen: false }">
+                <button type="button" @click="areasOpen = !areasOpen" class="w-full flex items-center justify-between py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">
+                    <span>Areas We Serve</span>
+                    <svg class="w-4 h-4 transition-transform duration-200" :class="areasOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div x-show="areasOpen" x-transition class="pl-4 flex flex-col gap-1 pb-2" style="display:none;">
+                    <a href="{{ route('areas.show', 'milnerton') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Milnerton</a>
+                    <a href="{{ route('areas.show', 'sunningdale') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Sunningdale</a>
+                    <a href="{{ route('areas.show', 'blouberg') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Blouberg</a>
+                    <a href="{{ route('areas.show', 'parklands') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Parklands</a>
+                    <a href="{{ route('areas.show', 'century-city') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Century City</a>
+                    <a href="{{ route('areas.show', 'table-view') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Table View</a>
+                    <a href="{{ route('areas.show', 'big-bay') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Big Bay</a>
+                    <a href="{{ route('areas.show', 'bloubergstrand') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Bloubergstrand</a>
+                    <a href="/#areas" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/40 hover:text-[#f6e304] text-[13px] transition-colors">View all areas →</a>
+                </div>
+            </div>
             <a href="/#how-it-works" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">How It Works</a>
-            <a href="/#testimonials" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Reviews</a>
             <a href="/#pricing" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Pricing</a>
             <a href="{{ route('blog.index') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Blog</a>
             <div class="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">

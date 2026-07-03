@@ -79,6 +79,9 @@
                                class="inline-flex items-center gap-2 bg-[#081d3a] text-[#f6e304] font-semibold px-5 py-3 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[13px] whitespace-nowrap">
                                 Book This Service
                             </a>
+                            <a href="{{ route('services.show', 'deep-cleaning') }}" class="text-[#081d3a]/60 hover:text-[#081d3a] font-semibold text-[12px] whitespace-nowrap underline underline-offset-2">
+                                Learn more
+                            </a>
                         </div>
 
                     </div>
@@ -142,6 +145,9 @@
                                class="inline-flex items-center gap-2 bg-[#081d3a] text-[#f6e304] font-semibold px-5 py-3 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[13px] whitespace-nowrap">
                                 Book This Service
                             </a>
+                            <a href="{{ route('services.show', 'end-of-tenancy') }}" class="text-[#081d3a]/60 hover:text-[#081d3a] font-semibold text-[12px] whitespace-nowrap underline underline-offset-2">
+                                Learn more
+                            </a>
                         </div>
 
                     </div>
@@ -204,6 +210,9 @@
                             <a href="{{ route('booking.show', ['service' => 'post-construction']) }}"
                                class="inline-flex items-center gap-2 bg-[#081d3a] text-[#f6e304] font-semibold px-5 py-3 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[13px] whitespace-nowrap">
                                 Book This Service
+                            </a>
+                            <a href="{{ route('services.show', 'post-construction') }}" class="text-[#081d3a]/60 hover:text-[#081d3a] font-semibold text-[12px] whitespace-nowrap underline underline-offset-2">
+                                Learn more
                             </a>
                         </div>
 

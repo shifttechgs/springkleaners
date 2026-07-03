@@ -36,9 +36,9 @@
             <div>
                 <h3 class="text-white font-bold text-[15px] mb-5">Services</h3>
                 <ul class="space-y-3">
-                    <li><a href="/#services" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Deep Cleaning</a></li>
-                    <li><a href="/#services" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">End-of-Tenancy Cleaning</a></li>
-                    <li><a href="/#services" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Post Construction Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'deep-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Deep Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'end-of-tenancy') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">End-of-Tenancy Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'post-construction') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Post Construction Cleaning</a></li>
                     <li><a href="{{ route('blog.index') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Blog</a></li>
                 </ul>
             </div>
@@ -83,7 +83,15 @@
             <div>
                 <h3 class="text-white font-bold text-[15px] mb-5">Areas We Service</h3>
                 <p class="text-white/40 text-[13px] leading-loose">
-                    Milnerton · Sunningdale · Blouberg · Parklands · Century City · Table View · Big Bay · Bloubergstrand · West Beach · Edgemead · Bothasig · Monte Vista &amp; surrounding areas
+                    <a href="{{ route('areas.show', 'milnerton') }}" class="hover:text-[#f6e304] transition-colors">Milnerton</a> ·
+                    <a href="{{ route('areas.show', 'sunningdale') }}" class="hover:text-[#f6e304] transition-colors">Sunningdale</a> ·
+                    <a href="{{ route('areas.show', 'blouberg') }}" class="hover:text-[#f6e304] transition-colors">Blouberg</a> ·
+                    <a href="{{ route('areas.show', 'parklands') }}" class="hover:text-[#f6e304] transition-colors">Parklands</a> ·
+                    <a href="{{ route('areas.show', 'century-city') }}" class="hover:text-[#f6e304] transition-colors">Century City</a> ·
+                    <a href="{{ route('areas.show', 'table-view') }}" class="hover:text-[#f6e304] transition-colors">Table View</a> ·
+                    <a href="{{ route('areas.show', 'big-bay') }}" class="hover:text-[#f6e304] transition-colors">Big Bay</a> ·
+                    <a href="{{ route('areas.show', 'bloubergstrand') }}" class="hover:text-[#f6e304] transition-colors">Bloubergstrand</a> ·
+                    West Beach · Edgemead · Bothasig · Monte Vista &amp; surrounding areas
                 </p>
             </div>
 
@@ -95,6 +103,7 @@
                 <div class="flex gap-6 items-center">
                     <a href="#" class="text-white/30 hover:text-[#f6e304] text-[12px] transition-colors">Privacy Policy</a>
                     <a href="#" class="text-white/30 hover:text-[#f6e304] text-[12px] transition-colors">Terms of Service</a>
+                    <a href="{{ route('login') }}" class="text-white/30 hover:text-[#f6e304] text-[12px] transition-colors">Staff Login</a>
                     <span class="text-white/20 text-[11px]">·</span>
                     <span class="text-white/30 text-[12px]">Designed by <a href="#" class="hover:text-[#f6e304] transition-colors font-medium">ShiftTech</a></span>
                 </div>

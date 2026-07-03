@@ -14,6 +14,10 @@
 /auth.json
 /node_modules
 /public/build
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
 /public/hot
 /public/storage
 /storage/*.key

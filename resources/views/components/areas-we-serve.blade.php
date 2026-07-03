@@ -4,6 +4,11 @@
         'Sea Point', 'Green Point', 'Big Bay', 'Bloubergstrand', 'West Beach', 'Monte Vista',
         'Edgemead', 'Bothasig', 'Montague Gardens', 'Paarden Eiland',
     ];
+    $areaSlugs = [
+        'Milnerton' => 'milnerton', 'Blouberg' => 'blouberg', 'Table View' => 'table-view',
+        'Parklands' => 'parklands', 'Century City' => 'century-city', 'Sunningdale' => 'sunningdale',
+        'Big Bay' => 'big-bay', 'Bloubergstrand' => 'bloubergstrand',
+    ];
 @endphp
 <section id="areas" class="bg-[#f8f9fc] section-py">
     <div class="section-wrap">
@@ -21,14 +26,17 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
             @foreach ($areas as $area)
-                <div class="wow fadeInUp flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-5 py-4 hover:border-[#f6e304] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group" data-wow-duration="0.6s" data-wow-delay="{{ 0.03 * $loop->index }}s">
+                @php $slug = $areaSlugs[$area] ?? null; @endphp
+                <{{ $slug ? 'a' : 'div' }}
+                    @if ($slug) href="{{ route('areas.show', $slug) }}" @endif
+                    class="wow fadeInUp flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-5 py-4 hover:border-[#f6e304] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group" data-wow-duration="0.6s" data-wow-delay="{{ 0.03 * $loop->index }}s">
                     <div class="w-9 h-9 rounded-full bg-[#081d3a]/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[#f6e304]/15 transition-colors duration-200">
                         <svg class="w-4 h-4 text-[#081d3a] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
                         </svg>
                     </div>
                     <span class="text-[#081d3a] font-semibold text-[14px] tracking-tight">{{ $area }}</span>
-                </div>
+                </{{ $slug ? 'a' : 'div' }}>
             @endforeach
         </div>
 

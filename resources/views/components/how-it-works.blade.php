@@ -65,7 +65,7 @@
             <div class="flex flex-col justify-end items-end text-right wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.5s">
                 <p class="text-[#081d3a]/40 text-[11px] font-bold uppercase tracking-widest mb-2">Ready to Get Started?</p>
                 <p class="text-[#647082] text-[13px] leading-relaxed mb-5">Simple pricing, no hidden fees — see what works for your space.</p>
-                <a href="#pricing"
+                <a href="/#pricing"
                    class="inline-flex items-center gap-2.5 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3 rounded-full hover:bg-yellow-300 active:scale-95 transition-all shadow-sm text-[13px] tracking-tight w-fit">
                     View our pricing
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

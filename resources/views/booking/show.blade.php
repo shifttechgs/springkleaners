@@ -89,6 +89,8 @@
     }
     .time-slot:hover { border-color: #c9cedb; }
     .time-selected { background: #081d3a; color: #fff; border-color: #081d3a; }
+    .time-taken { background: #f8f9fc; color: #d5d9e2; cursor: not-allowed; }
+    .time-taken:hover { border-color: #e8eaf0; }
 
     .step-dot {
         width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -138,7 +140,7 @@
         calMonth: (new Date()).getMonth(), calYear: (new Date()).getFullYear(),
         selectedDate: null, selectedTime: null,
         timeSlots: ['8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM'],
-        availability: {}, capacity: 2, nextAvailable: null, dateError: '', checkingDate: false,
+        availability: {}, bookedTimes: {}, capacity: 2, nextAvailable: null, dateError: '', checkingDate: false,
 
         init() {
             this.fetchAvailability();
@@ -226,6 +228,10 @@
         bookedCount(d) { return this.availability[this.dateKey(d)] || 0; },
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
         isSelectable(d) { return !!d && this.isWeekend(d) && !this.isPast(d) && !this.isFull(d); },
+        isTimeTaken(t) {
+            if (!this.selectedDate) return false;
+            return (this.bookedTimes[this.dateISO(this.selectedDate)] || []).includes(t);
+        },
         isSelected(d) {
             if (!d || !this.selectedDate) return false;
             return this.selectedDate.getFullYear() === this.calYear && this.selectedDate.getMonth() === this.calMonth && this.selectedDate.getDate() === d;
@@ -264,8 +270,12 @@
                 const res = await fetch('{{ route('booking.availability') }}?month=' + month);
                 const json = await res.json();
                 this.availability = json.counts || {};
+                this.bookedTimes = json.times || {};
                 this.capacity = json.capacity || this.capacity;
                 this.nextAvailable = json.next_available || null;
+                if (this.selectedTime && this.isTimeTaken(this.selectedTime)) {
+                    this.selectedTime = null;
+                }
             } catch (e) {}
         },
 
@@ -338,6 +348,21 @@
                     phone: this.form.phone,
                     address: this.form.address,
                     suburb: this.selectedSuburb,
+                    property_type: this.form.propertyType,
+                    bedrooms: this.form.bedrooms,
+                    bathrooms: this.form.bathrooms,
+                    extra_rooms: this.form.extraRooms,
+                    last_cleaned: this.form.lastCleaned,
+                    floor_types: this.form.floorTypes,
+                    pets: this.form.pets,
+                    notes: this.form.notes,
+                    access_instructions: this.form.accessInstructions,
+                    parking: this.form.parking,
+                    addons: this.selectedAddons,
+                    booking_type: this.bookingType,
+                    frequency: this.bookingType === 'recurring' ? this.frequency : null,
+                    subtotal: this.subtotal,
+                    total: this.total,
                 }),
             })
             .then(res => res.json().then(json => ({ ok: res.ok, json })))
@@ -345,10 +370,15 @@
                 this.checkingDate = false;
                 if (!ok || json.status !== 'ok') {
                     if (popup) popup.close();
-                    this.nextAvailable = json.next_available || this.nextAvailable;
-                    this.dateError = 'That date just got fully booked for the weekend — please choose another date below.';
-                    this.selectedDate = null;
-                    this.selectedTime = null;
+                    if (json.status === 'time_taken') {
+                        this.dateError = 'That time slot was just taken — please pick another.';
+                        this.selectedTime = null;
+                    } else {
+                        this.nextAvailable = json.next_available || this.nextAvailable;
+                        this.dateError = 'That date just got fully booked for the weekend — please choose another date below.';
+                        this.selectedDate = null;
+                        this.selectedTime = null;
+                    }
                     this.goStep(2);
                     this.fetchAvailability();
                     return;
@@ -715,7 +745,9 @@
                             <div x-show="!selectedDate" class="text-[#adb5c4] text-[13px] bg-[#f8f9fc] rounded-xl p-5 text-center">Choose a date first.</div>
                             <div x-show="selectedDate" x-cloak class="grid grid-cols-2 gap-2">
                                 <template x-for="t in timeSlots" :key="t">
-                                    <div @click="selectedTime = t; errors.dateTime = false" class="time-slot" :class="selectedTime === t ? 'time-selected' : ''" x-text="t"></div>
+                                    <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }"
+                                         class="time-slot" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')"
+                                         :title="isTimeTaken(t) ? 'Already booked' : ''" x-text="t"></div>
                                 </template>
                             </div>
                             <p class="text-[#adb5c4] text-[12px] mt-4">Need a different time? Mention it in your WhatsApp message and we'll do our best to accommodate.</p>
