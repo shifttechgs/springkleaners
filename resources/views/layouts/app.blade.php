@@ -8,7 +8,9 @@
     <meta name="robots" content="@yield('robots', 'index, follow')">
     <title>@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')</title>
     <link rel="canonical" href="{{ url()->current() }}">
-    <link rel="icon" type="image/png" href="/images/fav.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/fav-512.png">
+    <link rel="apple-touch-icon" href="/images/fav-180.png">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="SpringKleaners">
