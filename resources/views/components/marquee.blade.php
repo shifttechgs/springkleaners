@@ -14,7 +14,7 @@
     <div class="text-center mb-8 px-5">
         <span class="text-[#f6e304] text-lg tracking-tight">★★★★★</span>
         <span class="text-white font-bold text-lg ml-2">4.9<span class="text-white/40 font-normal">/5</span></span>
-        <span class="text-white/50 text-[15px]"> · rated by Cape Town clients</span>
+        <span class="text-white/50 text-[15px]"> · Rated by Cape Town clients</span>
     </div>
 
     <div class="relative flex mb-8">
