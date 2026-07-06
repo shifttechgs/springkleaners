@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Get My Quote — SpringKleaners | Free Cleaning Estimate Cape Town')
+@section('robots', 'noindex, follow')
 
 @push('styles')
 <style>

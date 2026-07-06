@@ -12,9 +12,19 @@
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>{{ url('/get-my-quote') }}</loc>
+        <loc>{{ url('/about') }}</loc>
         <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>{{ url('/privacy-policy') }}</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
+    </url>
+    <url>
+        <loc>{{ url('/terms-of-service') }}</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
     </url>
     <url>
         <loc>{{ url('/blog') }}</loc>

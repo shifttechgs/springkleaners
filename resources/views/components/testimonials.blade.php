@@ -15,7 +15,7 @@
                         <span class="text-4xl font-extrabold text-[#081d3a] leading-none">4.9</span>
                         <div>
                             <div class="text-[#f6e304] text-base leading-none">★★★★★</div>
-                            <p class="text-[#647082] text-[13px] mt-1.5">Based on 10 Google reviews</p>
+                            <p class="text-[#647082] text-[13px] mt-1.5">Based on real Google reviews</p>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                 </a>
 
                 <div class="rounded-2xl overflow-hidden hidden lg:block" style="min-height:220px">
-                    <img src="/images/works/puroclean-of-fort-worth--dc38HdQR1M-unsplash.jpg" alt="Professional cleaning in progress" class="w-full h-full object-cover">
+                    <img src="/images/works/1.png" alt="SpringKleaners professional at work" class="w-full h-full object-cover">
                 </div>
             </div>
 

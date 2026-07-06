@@ -2,6 +2,7 @@
 
 @section('title', 'Your Invoice — SpringKleaners')
 @section('description', 'View and download your SpringKleaners invoice.')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
     @include('components.navbar')

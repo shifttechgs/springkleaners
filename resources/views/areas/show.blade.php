@@ -22,6 +22,19 @@
     }
     </script>
 
+    @php
+        $breadcrumbJsonLd = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Areas We Serve', 'item' => url('/#areas')],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $location['name'], 'item' => url()->current()],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+
     @include('components.navbar')
 
     {{-- Hero --}}
@@ -106,7 +119,21 @@
                     ['q' => 'Can I get a same-week booking?', 'a' => 'In most cases, yes. Message us on WhatsApp with your address in '.$location['name'].' and we\'ll check availability immediately.'],
                     ['q' => 'Are your cleaning teams insured?', 'a' => 'Yes. SpringKleaners is fully insured, and every team member is background-checked before joining us.'],
                 ];
+
+                $faqJsonLd = [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'FAQPage',
+                    'mainEntity' => collect($areaFaqs)->map(fn ($faq) => [
+                        '@type' => 'Question',
+                        'name' => $faq['q'],
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq['a'],
+                        ],
+                    ])->all(),
+                ];
             @endphp
+            <script type="application/ld+json">{!! json_encode($faqJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
             <div class="max-w-2xl mx-auto space-y-2.5 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s" x-data="{ active: 0 }">
                 @foreach ($areaFaqs as $i => $faq)
                 <div class="rounded-xl transition-all duration-200" :class="active === {{ $i }} ? 'bg-white shadow-sm ring-1 ring-gray-200' : 'bg-white/60 hover:bg-white ring-1 ring-transparent hover:ring-gray-100'">

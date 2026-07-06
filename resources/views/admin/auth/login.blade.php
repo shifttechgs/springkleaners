@@ -4,29 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="robots" content="noindex, nofollow">
     <title>Admin Login | SpringKleaners</title>
     <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { navy: '#081d3a', gold: '#f6e304', muted: '#647082' },
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-        .bg-grid {
-            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
-            background-size: 28px 28px;
-        }
-    </style>
+    @vite(['resources/css/admin.css'])
 </head>
 <body class="min-h-screen flex items-center justify-center px-4" style="background: radial-gradient(120% 120% at 50% -10%, #0d2a4a 0%, #081d3a 45%, #040f1f 100%);">
     <div class="absolute inset-0 bg-grid pointer-events-none"></div>

@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://springkleaners.co.za/sitemap.xml

@@ -38,6 +38,10 @@ Route::get('/get-my-quote', function () {
     return view('quote');
 });
 
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
 Route::get('/book/availability', [BookingController::class, 'availability'])->name('booking.availability');
 Route::post('/book/reserve', [BookingController::class, 'reserve'])->name('booking.reserve');
 Route::get('/book', [BookingController::class, 'show'])->name('booking.show');
@@ -57,6 +61,27 @@ Route::get('/sitemap.xml', function () {
         ->view('sitemap', ['posts' => $posts])
         ->header('Content-Type', 'text/xml');
 });
+
+Route::get('/robots.txt', function () {
+    $lines = [
+        'User-agent: *',
+        'Disallow: /admin',
+        'Disallow: /quote/',
+        'Disallow: /invoice/',
+        '',
+        'Sitemap: '.rtrim(config('app.url'), '/').'/sitemap.xml',
+    ];
+
+    return response(implode("\n", $lines), 200)->header('Content-Type', 'text/plain');
+});
+
+Route::get('/privacy-policy', function () {
+    return view('legal.privacy');
+})->name('privacy');
+
+Route::get('/terms-of-service', function () {
+    return view('legal.terms');
+})->name('terms');
 
 Route::get('/quote/{booking:accepted_token}', [ClientQuoteController::class, 'show'])->name('quote.show');
 Route::post('/quote/{booking:accepted_token}/accept', [ClientQuoteController::class, 'accept'])->name('quote.accept');

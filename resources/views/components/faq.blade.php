@@ -40,7 +40,22 @@
                     ['q' => 'Can I get a same-week booking?', 'a' => 'In most cases, yes. We do our best to accommodate urgent requests. Contact us via WhatsApp for the fastest response and we\'ll check availability immediately.'],
                     ['q' => 'What if I\'m not satisfied with the clean?', 'a' => 'We offer a satisfaction guarantee. If you\'re not happy with any aspect of the clean, let us know within 24 hours and we\'ll return to address it at no additional charge.'],
                 ];
+
+                $faqJsonLd = [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'FAQPage',
+                    'mainEntity' => collect($faqs)->map(fn ($faq) => [
+                        '@type' => 'Question',
+                        'name' => $faq['q'],
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq['a'],
+                        ],
+                    ])->all(),
+                ];
                 @endphp
+
+                <script type="application/ld+json">{!! json_encode($faqJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
                 @foreach($faqs as $i => $faq)
                 <div class="group rounded-xl transition-all duration-200"

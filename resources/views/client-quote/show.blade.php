@@ -2,6 +2,7 @@
 
 @section('title', 'Your Quote — SpringKleaners')
 @section('description', 'View and confirm your SpringKleaners cleaning quote.')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
     @include('components.navbar')

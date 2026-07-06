@@ -1,0 +1,52 @@
+# Working on SpringKleaners — Instructions
+
+Practical conventions for anyone (human or AI) picking up this codebase. Read this before adding a feature — most of the patterns here exist because an earlier approach was tried and deliberately replaced.
+
+## Stack
+
+Laravel 12, Blade templates, Tailwind CSS v4 (real Vite build, **not** the CDN — see [Build process](#build-process)), Alpine.js (CDN, deferred), GSAP + ScrollTrigger + SplitText (homepage hero only), WOW.js + animate.css (scroll reveals, sitewide), Odometer.js (animated counters, sitewide). MySQL locally (WAMP), SQLite on the current Render deployment.
+
+## The "static config, not a database" pattern
+
+Blog posts, services, and area/suburb pages are **not** Eloquent models. This is deliberate — it keeps the site fast to extend without migrations:
+
+- **Services**: `config/cleaning_services.php` (pricing/booking logic) + `config/service_pages.php` (marketing copy, FAQs). To add a 4th service, add one entry to each — no new routes or controllers.
+- **Areas**: `config/locations.php`. To add a 9th suburb, add one entry — keep the `name` casing identical to the suburb list in `hero.blade.php` (the booking page's location auto-validation matches on exact string).
+- **Blog**: `config/blog.php` for metadata, `resources/views/blog/posts/{slug}.blade.php` for body content.
+
+The **only** real database tables are `bookings`, `clients`, `users`, and `settings` — because capacity checking, CRM history, auth, and business settings genuinely need persisted state. Don't introduce a database table for content that config files already handle well.
+
+## WhatsApp-first, no payment gateway
+
+Every client-facing CTA ends in a `wa.me/...?text=...` link, not a payment processor or email-only flow. This is intentional — keep reusing this pattern for new CTAs rather than introducing new channels unless explicitly asked. The one exception: transactional emails (quote/invoice/thank-you/confirmation) exist in `app/Mail/*` and are sent from the admin panel alongside the WhatsApp option, never instead of it.
+
+## Known Blade/Alpine gotchas
+
+- **Inline JSON-LD**: Laravel's Blade compiler treats a bare `@context`/`@type` at the start of a line as its own `@context`/`@type`-adjacent directive collision. Either escape as `@@context`/`@@type`, or — the pattern used for every schema block added after the initial rollout — build the array in a `@php` block and `json_encode()` the whole thing, which sidesteps the problem entirely. Prefer the `json_encode()` approach for new schema.
+- **Alpine `x-data` on a double-quoted attribute**: never put a literal `"` inside inline JS written into a double-quoted `x-data="..."` attribute (e.g. `querySelector('meta[name="csrf-token"]')`) — it silently truncates the attribute. Use `meta[name=csrf-token]` (unquoted) or single-quote the outer attribute instead.
+- **`x-for` `:key`**: must be unique across the array. Keying by a value that can repeat (e.g. weekday initials — `M`,`T`,`W`,`T`,`F`,`S`,`S`) silently collapses duplicates. Key by index when values can repeat.
+
+## Build process (Tailwind v4 / Vite)
+
+As of July 2026 the site no longer loads Tailwind from a CDN — it's a real compiled build. Two separate entry stylesheets exist because the public site and admin panel each define their own `.btn-gold` (different padding/sizing) and never share a page:
+
+- `resources/css/app.css` → public site (`layouts/app.blade.php`)
+- `resources/css/admin.css` → admin panel + all 4 admin auth pages
+
+**Any time you change a CSS class or add a new one, run `npm run build`** before testing — there is no CDN fallback anymore to mask a stale build. The Render Dockerfile already runs `npm ci && npm run build` on deploy, so production doesn't need manual intervention.
+
+Do not reintroduce jQuery, Swiper, or appear.js — all three were removed as dead/redundant (Swiper's target element no longer exists since testimonials moved to a CSS-only scroll animation; jQuery+appear.js were fully redundant with an IntersectionObserver fallback that already existed in the code). If a future feature needs a carousel, build it with Alpine or plain CSS, not a jQuery-era library.
+
+GSAP/ScrollTrigger/SplitText load **only** on the homepage (`@push('scripts')` in `welcome.blade.php`), because the hero entrance animation is the only thing that uses them, and its target element IDs only exist there. Don't move this back into the shared layout.
+
+## Admin panel
+
+`/admin/*` is gated by the `auth` middleware; a further `admin` middleware sub-group gates user/service management (checked via `$user->isAdmin()` on the `role` column — no external permissions package). The booking status workflow is `pending → quoted → accepted/declined → completed`, defined in `App\Enums\BookingStatus`. The review-request WhatsApp/Email flow fires as soon as a booking reaches `Completed`, independent of payment status — see `resources/views/admin/bookings/show.blade.php`.
+
+## Deployment
+
+Currently Render (Docker), `render.yaml` + `Dockerfile`. SQLite has no persistent disk on the free plan — the `bookings`/`clients` tables reset on every deploy, by design decision (see [`docs/todo.md`](./todo.md) for the planned Render → cPanel migration, which will fix this).
+
+## SEO / GEO
+
+See [`docs/seo.md`](./seo.md) for current status and [`docs/reports/`](./reports/) for the full point-in-time strategy audit. In short: don't add pages for services that aren't real (only Deep Cleaning, End-of-Tenancy, and Post-Construction exist — see `config/cleaning_services.php`), keep the 8-suburb area-page discipline rather than building a full service×suburb thin-content matrix, and any new schema should follow the `json_encode()` pattern above.

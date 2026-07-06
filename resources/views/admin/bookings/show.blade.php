@@ -245,6 +245,32 @@
                 </div>
             @endif
 
+            @if ($booking->status === \App\Enums\BookingStatus::Completed)
+                <div class="card p-6">
+                    <h2 class="font-bold text-[14px] tracking-tight mb-1">Ask for a Review</h2>
+                    <p class="text-muted text-[12.5px] mb-4">Send this the moment the job wraps up, independent of payment status — review velocity matters more to local search ranking than total review count, and satisfaction is highest right after the clean.</p>
+                    @php
+                        $reviewMessage = "Thank you for choosing SpringKleaners, {$booking->name}! We'd love a quick review: ".\App\Support\Company::reviewUrl();
+                    @endphp
+                    <div class="flex flex-wrap gap-2">
+                        <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($reviewMessage) }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2 bg-[#25d366] text-white font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:bg-[#20bd5a] transition-colors">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0012.05 0"/></svg>
+                            WhatsApp
+                        </a>
+                        <form method="POST" action="{{ route('admin.bookings.send-thank-you-email', $booking) }}">
+                            @csrf
+                            <button type="submit" class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
+                                Email
+                            </button>
+                        </form>
+                    </div>
+                    @if ($booking->thank_you_sent_at)
+                        <p class="text-muted text-[11.5px] mt-2">Emailed {{ $booking->thank_you_sent_at->format('d M Y H:i') }}.</p>
+                    @endif
+                </div>
+            @endif
+
             @if ($booking->invoice_number)
                 <div class="card p-6" x-data="{ copied: false }">
                     <div class="flex items-center justify-between mb-1">
@@ -278,28 +304,6 @@
                         <p class="text-emerald-600 text-[13px] font-semibold mb-4">
                             Paid {{ $booking->paid_at->format('d M Y') }} &middot; {{ ucfirst($booking->payment_method) }}
                         </p>
-
-                        <div class="border-t border-line pt-4">
-                            <h3 class="font-bold text-[13px] tracking-tight mb-1">Send Thank You</h3>
-                            @php
-                                $thankYouMessage = "Thank you for choosing SpringKleaners, {$booking->name}! We'd love a quick review: ".\App\Support\Company::reviewUrl();
-                            @endphp
-                            <div class="flex flex-wrap gap-2">
-                                <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($thankYouMessage) }}" target="_blank" rel="noopener noreferrer"
-                                   class="inline-flex items-center gap-2 bg-[#25d366] text-white font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:bg-[#20bd5a] transition-colors">
-                                    WhatsApp
-                                </a>
-                                <form method="POST" action="{{ route('admin.bookings.send-thank-you-email', $booking) }}">
-                                    @csrf
-                                    <button type="submit" class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
-                                        Email
-                                    </button>
-                                </form>
-                            </div>
-                            @if ($booking->thank_you_sent_at)
-                                <p class="text-muted text-[11.5px] mt-2">Emailed {{ $booking->thank_you_sent_at->format('d M Y H:i') }}.</p>
-                            @endif
-                        </div>
                     @else
                         <form method="POST" action="{{ route('admin.bookings.mark-paid', $booking) }}" class="space-y-3 border-t border-line pt-4">
                             @csrf

@@ -101,6 +101,7 @@
                 </div>
                 <a href="/#how-it-works" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">How It Works</a>
                 <a href="/#pricing" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Pricing</a>
+                <a href="{{ route('about') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">About</a>
                 <a href="{{ route('blog.index') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Blog</a>
             </div>
 
@@ -163,6 +164,7 @@
             </div>
             <a href="/#how-it-works" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">How It Works</a>
             <a href="/#pricing" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Pricing</a>
+            <a href="{{ route('about') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">About</a>
             <a href="{{ route('blog.index') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Blog</a>
             <div class="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
                 <a href="{{ route('booking.show') }}" @click="open = false" class="flex items-center justify-center py-3 px-4 bg-[#f6e304] text-[#081d3a] rounded-xl font-bold text-[14px] hover:bg-yellow-300 transition-colors">
