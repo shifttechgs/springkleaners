@@ -10,7 +10,7 @@
                 </span>
             </a>
 
-            <div class="hidden lg:flex items-center justify-center gap-8">
+            <div class="hidden lg:flex items-center justify-center gap-5 xl:gap-8">
                 <div class="relative" x-data="{ servicesOpen: false }" @mouseenter="servicesOpen = true" @mouseleave="servicesOpen = false">
                     <a href="/#services" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
                         Services
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="/#how-it-works" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">How It Works</a>
+                <a href="/#how-it-works" class="whitespace-nowrap text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">How It Works</a>
                 <a href="/#pricing" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Pricing</a>
                 <a href="{{ route('about') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">About</a>
                 <a href="{{ route('blog.index') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Blog</a>
@@ -108,7 +108,7 @@
             <div class="hidden lg:flex items-center justify-end gap-5">
                 <a href="tel:+27815274711" class="flex items-center gap-1.5 text-white/80 hover:text-[#f6e304] font-semibold text-[14px] tracking-tight transition-colors duration-200 flex-shrink-0">
                     <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-.826 1.677l-.916.458a1 1 0 00-.464 1.30 12.05 12.05 0 005.52 5.52 1 1 0 001.30-.464l.458-.916a1.5 1.5 0 011.677-.826l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-7.18 0-13-5.82-13-13V3.5z"/></svg>
-                    081 527 4711
+                    <span class="hidden xl:inline">081 527 4711</span>
                 </a>
                 <a href="{{ route('booking.show') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#f6e304] text-[#081d3a] font-bold rounded-xl hover:bg-yellow-300 active:scale-95 transition-all duration-200 text-sm tracking-tight shadow-lg flex-shrink-0">
                     Get My Instant Quote
