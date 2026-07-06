@@ -128,15 +128,37 @@ class BookingController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
+    private const OFFICIAL_NOTIFY_EMAIL = 'bookings@springkleaners.co.za';
+
     private function notifySubscribers(Booking $booking): void
     {
-        $subscribers = User::where('notify_new_bookings', true)->whereNotNull('password')->get();
+        $this->sendBookingAlert(self::OFFICIAL_NOTIFY_EMAIL, $booking, critical: true);
+
+        $subscribers = User::where('notify_new_bookings', true)
+            ->whereNotNull('password')
+            ->where('email', '!=', self::OFFICIAL_NOTIFY_EMAIL)
+            ->get();
 
         foreach ($subscribers as $user) {
-            try {
-                Mail::to($user->email)->send(new NewBookingAlertMail($booking));
-            } catch (Throwable $e) {
-                Log::error('Failed to send new booking alert email', ['user_id' => $user->id, 'booking_id' => $booking->id, 'error' => $e->getMessage()]);
+            $this->sendBookingAlert($user->email, $booking, critical: false, userId: $user->id);
+        }
+    }
+
+    private function sendBookingAlert(string $email, Booking $booking, bool $critical, ?int $userId = null): void
+    {
+        try {
+            Mail::to($email)->send(new NewBookingAlertMail($booking));
+        } catch (Throwable $e) {
+            $context = ['email' => $email, 'booking_id' => $booking->id, 'error' => $e->getMessage()];
+
+            if ($userId !== null) {
+                $context['user_id'] = $userId;
+            }
+
+            if ($critical) {
+                Log::critical('Failed to send new booking alert to the official notifications address — nobody may know about this booking yet.', $context);
+            } else {
+                Log::error('Failed to send new booking alert email to an optional subscriber', $context);
             }
         }
     }

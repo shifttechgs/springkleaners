@@ -20,6 +20,7 @@ class BookingsAdminSeeder extends Seeder
                 'name' => 'SpringKleaners Admin',
                 'password' => 'Bu!!etdog@1994',
                 'role' => 'admin',
+                'notify_new_bookings' => true,
             ]
         );
 

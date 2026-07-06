@@ -21,6 +21,6 @@ class CheckAdminAccount extends Command
             return;
         }
 
-        $this->info("id={$user->id} name={$user->name} email={$user->email} role={$user->role->value} has_password=".($user->password ? 'yes' : 'no'));
+        $this->info("id={$user->id} name={$user->name} email={$user->email} role={$user->role->value} has_password=".($user->password ? 'yes' : 'no')." notify_new_bookings=".($user->notify_new_bookings ? 'true' : 'false'));
     }
 }
