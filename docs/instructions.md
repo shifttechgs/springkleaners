@@ -45,7 +45,9 @@ GSAP/ScrollTrigger/SplitText load **only** on the homepage (`@push('scripts')` i
 
 ## Deployment
 
-Currently Render (Docker), `render.yaml` + `Dockerfile`. SQLite has no persistent disk on the free plan — the `bookings`/`clients` tables reset on every deploy, by design decision (see [`docs/todo.md`](./todo.md) for the planned Render → cPanel migration, which will fix this).
+Migrating from Render to Hosting Pods (cPanel) — see [`docs/deployment.md`](./deployment.md) for the full pipeline and [`docs/todo.md`](./todo.md) for what's still manual. Render's auto-deploy silently stopped working at some point and nobody noticed for weeks, which is the whole reason this migration includes an actual verification step (`docs/deployment.md`'s "Verifying a deploy actually landed" section) — don't assume a push succeeded just because CI didn't show red.
+
+`POST /deploy/migrate` (`DeployController`) is a CSRF-exempt, token-guarded endpoint that runs migrations and clears caches — it exists specifically for hosts with no SSH access, called from the GitHub Actions workflow. Don't remove its CSRF exception in `bootstrap/app.php` (it has to be callable by CI, which can't send a session-based CSRF token) — its actual protection is the constant-time `DEPLOY_TOKEN` comparison in the controller. If SSH access is later confirmed, this endpoint can be left dormant (safe — it 403s without the token) while the workflow switches to running `artisan` directly over SSH instead.
 
 ## SEO / GEO
 

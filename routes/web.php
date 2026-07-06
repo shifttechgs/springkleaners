@@ -23,6 +23,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClientInvoiceController;
 use App\Http\Controllers\ClientQuoteController;
+use App\Http\Controllers\DeployController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,8 @@ Route::get('/robots.txt', function () {
 
     return response(implode("\n", $lines), 200)->header('Content-Type', 'text/plain');
 });
+
+Route::post('/deploy/migrate', [DeployController::class, 'migrate']);
 
 Route::get('/privacy-policy', function () {
     return view('legal.privacy');

@@ -17,6 +17,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Deploy Token
+    |--------------------------------------------------------------------------
+    |
+    | Guards POST /deploy/migrate (see DeployController) for hosts with no SSH
+    | access, where a CI workflow uploads files over FTP/SFTP but has no shell
+    | to run artisan commands directly. Generate a long random value per
+    | environment — never share the same token between staging/production.
+    |
+    */
+
+    'deploy_token' => env('DEPLOY_TOKEN'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

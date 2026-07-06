@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => EnsureUserIsAdmin::class,
         ]);
+        // Called by CI (GitHub Actions), not a browser session — no CSRF token to send.
+        // Protected instead by a constant-time secret-token check in DeployController.
+        $middleware->validateCsrfTokens(except: [
+            'deploy/migrate',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
