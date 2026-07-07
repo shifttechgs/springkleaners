@@ -15,7 +15,7 @@
     <div class="section-wrap relative z-10 w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
 
-            <div class="lg:col-span-7 lg:translate-y-4">
+            <div class="lg:col-span-7 lg:translate-y-16">
                 <div id="hero-badge" class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-8">
                     <div class="flex text-[#f6e304] text-xs">★★★★★</div>
                     <span class="text-white/70 text-[13px] tracking-tight font-medium">Cape Town's Premium Cleaning Service</span>
