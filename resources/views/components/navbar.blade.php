@@ -1,6 +1,6 @@
 <nav id="mainNav" class="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-4 lg:inset-x-6 z-50" x-data="{ open: false }">
     <div class="max-w-7xl mx-auto rounded-2xl border border-white/10 shadow-2xl px-4 sm:px-5 lg:px-6" style="background: rgba(13,27,51,0.55); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);">
-        <div class="grid grid-cols-2 lg:grid-cols-[auto_1fr_auto] items-center h-16 lg:gap-4">
+        <div class="flex items-center justify-between h-16 lg:gap-4">
             <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
                 <div class="w-9 h-9 rounded-xl bg-[#f6e304] flex items-center justify-center flex-shrink-0 shadow-md">
                     <span class="text-[#081d3a] font-black text-[14px] tracking-tight leading-none">SK</span>
