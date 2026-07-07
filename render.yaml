@@ -14,7 +14,7 @@ services:
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
-        value: https://springkleaners.onrender.com
+        value: https://springkleaners.co.za
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER
