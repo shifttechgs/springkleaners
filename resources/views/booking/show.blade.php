@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Book Your Clean Online — SpringKleaners Cape Town')
-@section('description', 'Book Deep Cleaning, End-of-Tenancy or Post Construction cleaning online in minutes. Instant estimate, transparent pricing, no hidden fees — confirmed via WhatsApp.')
+@section('description', 'Book Deep Cleaning, End-of-Tenancy or Post Construction cleaning online in minutes. Instant estimate, transparent pricing, no hidden fees.')
 
 @push('styles')
 <style>
@@ -127,7 +127,7 @@
         ],
         suburbQuery: '', filteredSuburbs: [], showSuggestions: false, selectedSuburb: '', locationStatus: null,
         form: {
-            name: '', phone: '', propertyType: 'House', bedrooms: '2', bathrooms: '1', extraRooms: '0',
+            name: '', phone: '', email: '', propertyType: 'House', bedrooms: '2', bathrooms: '1', extraRooms: '0',
             lastCleaned: '', floorTypes: [], pets: false, notes: '', address: '', accessInstructions: '', parking: ''
         },
         floorTypeOptions: ['Carpet', 'Tile', 'Hardwood', 'Laminate', 'Vinyl', 'Epoxy'],
@@ -147,9 +147,11 @@
             const params = new URLSearchParams(window.location.search);
             const name = params.get('name');
             const phone = params.get('phone');
+            const email = params.get('email');
             const suburb = params.get('suburb');
             if (name) this.form.name = name;
             if (phone) this.form.phone = phone;
+            if (email) this.form.email = email;
             if (suburb) {
                 const match = this.suburbs.find(s => s.toLowerCase() === suburb.toLowerCase());
                 this.selectedSuburb = match || suburb;
@@ -247,15 +249,16 @@
         },
         get selectedDateLabel() { return this.selectedDate ? this.selectedDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : ''; },
 
-        errors: { name: false, phone: false, address: false, suburb: false, dateTime: false },
+        errors: { name: false, phone: false, email: false, address: false, suburb: false, dateTime: false },
 
         validateStep1() {
             this.errors.name = !this.form.name.trim();
             this.errors.phone = !this.form.phone.trim();
+            this.errors.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email.trim());
             this.errors.address = !this.form.address.trim();
             this.errors.suburb = !this.suburbQuery.trim();
             if (this.suburbQuery.trim()) { this.checkLocation(); }
-            return !this.errors.name && !this.errors.phone && !this.errors.address && !this.errors.suburb;
+            return !this.errors.name && !this.errors.phone && !this.errors.email && !this.errors.address && !this.errors.suburb;
         },
         validateStep2() {
             this.errors.dateTime = !this.selectedDate || !this.selectedTime;
@@ -298,40 +301,10 @@
             this.fetchAvailability();
         },
 
-        buildWhatsAppUrl() {
-            const addonLines = this.selectedAddons.map(key => { const a = this.addonsList.find(x => x.key === key); return '- ' + a.label + ' (+R' + a.price + ')'; }).join('\n');
-            const lines = [
-                'Hi SpringKleaners! I\'d like to book: ' + this.service.name,
-                '',
-                'Name: ' + this.form.name,
-                'Phone: ' + this.form.phone,
-                'Address: ' + this.form.address,
-                'Suburb: ' + this.selectedSuburb,
-                'Property type: ' + this.form.propertyType,
-                'Bedrooms: ' + this.form.bedrooms,
-                'Bathrooms: ' + this.form.bathrooms,
-                'Extra rooms: ' + this.form.extraRooms,
-                'Last professionally cleaned: ' + (this.form.lastCleaned || 'N/A'),
-                'Main flooring type(s): ' + (this.form.floorTypes.length ? this.form.floorTypes.join(', ') : 'N/A'),
-                'Pets on premises: ' + (this.form.pets ? 'Yes' : 'No'),
-                'Add-ons: ' + (this.selectedAddons.length ? ('\n' + addonLines) : 'None'),
-                'Booking type: ' + (this.bookingType === 'recurring' ? ('Recurring (' + this.frequency + ')') : 'Once-off'),
-                'Preferred date: ' + this.selectedDateLabel,
-                'Preferred time: ' + this.selectedTime,
-                'Access instructions: ' + (this.form.accessInstructions || 'N/A'),
-                'Parking: ' + (this.form.parking || 'N/A'),
-                'Special instructions: ' + (this.form.notes || 'None'),
-                '',
-                'Estimated total: R' + this.total.toLocaleString() + ' (estimate only, confirmed after a quick property check)',
-            ];
-            return 'https://wa.me/27815274711?text=' + encodeURIComponent(lines.join('\n'));
-        },
-
         submitForm() {
             if (this.checkingDate || !this.selectedDate || !this.selectedTime) return;
             this.checkingDate = true;
             this.dateError = '';
-            const popup = window.open('', '_blank');
 
             fetch('{{ route('booking.reserve') }}', {
                 method: 'POST',
@@ -346,6 +319,7 @@
                     time: this.selectedTime,
                     name: this.form.name,
                     phone: this.form.phone,
+                    email: this.form.email,
                     address: this.form.address,
                     suburb: this.selectedSuburb,
                     property_type: this.form.propertyType,
@@ -369,7 +343,6 @@
             .then(({ ok, json }) => {
                 this.checkingDate = false;
                 if (!ok || json.status !== 'ok') {
-                    if (popup) popup.close();
                     if (json.status === 'time_taken') {
                         this.dateError = 'That time slot was just taken — please pick another.';
                         this.selectedTime = null;
@@ -383,13 +356,10 @@
                     this.fetchAvailability();
                     return;
                 }
-                const url = this.buildWhatsAppUrl();
-                if (popup) { popup.location.href = url; } else { window.open(url, '_blank'); }
                 this.submitted = true;
             })
             .catch(() => {
                 this.checkingDate = false;
-                if (popup) popup.close();
                 this.dateError = 'Something went wrong — please try again or WhatsApp us directly.';
             });
         }
@@ -449,7 +419,7 @@
                     </div>
                     <h2 class="text-[#081d3a] text-3xl font-black tracking-tight mb-3">Booking request sent!</h2>
                     <p class="text-[#8a94a6] text-[15px] leading-relaxed max-w-sm mx-auto">
-                        Check your WhatsApp — our team will confirm availability and your final price within a few hours.
+                        We've emailed you a confirmation — our team will confirm availability and your final price within a few hours.
                     </p>
                     <div class="mt-8">
                         <a href="/" class="inline-flex items-center gap-2 text-[#081d3a] text-[13.5px] font-semibold hover:text-[#f6e304] transition-colors">
@@ -569,7 +539,7 @@
 
                     <p class="fs-label mb-4">Property address</p>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
                         <div>
                             <label class="fl">Full name <span class="req">*</span></label>
                             <input type="text" x-model="form.name" @input="errors.name = false" placeholder="Jane Smith" class="fi" :class="errors.name ? 'fi-error' : ''">
@@ -584,6 +554,14 @@
                             <p x-show="errors.phone" x-cloak class="field-err">
                                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
                                 Please enter a phone number
+                            </p>
+                        </div>
+                        <div>
+                            <label class="fl">Email <span class="req">*</span></label>
+                            <input type="email" x-model="form.email" @input="errors.email = false" placeholder="jane@email.com" class="fi" :class="errors.email ? 'fi-error' : ''">
+                            <p x-show="errors.email" x-cloak class="field-err">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                                Please enter a valid email
                             </p>
                         </div>
                     </div>

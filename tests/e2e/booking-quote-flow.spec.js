@@ -37,6 +37,7 @@ test.describe('Booking to accepted quote', () => {
 
         await page.getByPlaceholder('Jane Smith').fill(clientName);
         await page.getByPlaceholder('+27 81 000 0000').fill('082 555 1234');
+        await page.getByPlaceholder('jane@email.com').fill('playwright-test@example.com');
         await page.getByPlaceholder('e.g. 12 Ocean View Drive').fill('99 Automation Avenue');
 
         const suburbInput = page.getByPlaceholder('e.g. Milnerton, Table View...');
@@ -63,12 +64,8 @@ test.describe('Booking to accepted quote', () => {
         // ── Step 3: Review & submit ──
         await expect(page.getByRole('heading', { name: 'Review your booking' })).toBeVisible();
 
-        const [popup] = await Promise.all([
-            page.waitForEvent('popup'),
-            page.getByRole('button', { name: 'Send Booking Request' }).click(),
-        ]);
+        await page.getByRole('button', { name: 'Get My Instant Quote' }).click();
         await expect(page.getByRole('heading', { name: 'Booking request sent!' })).toBeVisible({ timeout: 15_000 });
-        await popup.close().catch(() => {});
 
         // ── Admin: log in ──
         await page.goto('/admin/login');

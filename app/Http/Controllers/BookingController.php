@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookingStatus;
+use App\Mail\BookingRequestReceivedMail;
 use App\Mail\NewBookingAlertMail;
 use App\Models\Booking;
 use App\Models\Client;
@@ -69,6 +70,7 @@ class BookingController extends Controller
             'time' => 'required|string',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:50',
+            'email' => 'required|email|max:255',
             'address' => 'nullable|string|max:255',
             'suburb' => 'nullable|string|max:255',
             'property_type' => 'nullable|string|max:50',
@@ -118,12 +120,14 @@ class BookingController extends Controller
         $client = Client::findOrCreateByPhone([
             'name' => $data['name'],
             'phone' => $data['phone'],
+            'email' => $data['email'],
             'suburb' => $data['suburb'] ?? null,
         ]);
 
         $booking = Booking::create([...$data, 'client_id' => $client->id, 'status' => BookingStatus::Pending]);
 
         $this->notifySubscribers($booking);
+        $this->sendClientAcknowledgement($data['email'], $booking);
 
         return response()->json(['status' => 'ok']);
     }
@@ -160,6 +164,19 @@ class BookingController extends Controller
             } else {
                 Log::error('Failed to send new booking alert email to an optional subscriber', $context);
             }
+        }
+    }
+
+    private function sendClientAcknowledgement(string $email, Booking $booking): void
+    {
+        try {
+            Mail::to($email)->send(new BookingRequestReceivedMail($booking));
+        } catch (Throwable $e) {
+            Log::error('Failed to send booking request acknowledgement email to client', [
+                'email' => $email,
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 

@@ -18,7 +18,9 @@ The **only** real database tables are `bookings`, `clients`, `users`, and `setti
 
 ## WhatsApp-first, no payment gateway
 
-Every client-facing CTA ends in a `wa.me/...?text=...` link, not a payment processor or email-only flow. This is intentional — keep reusing this pattern for new CTAs rather than introducing new channels unless explicitly asked. The one exception: transactional emails (quote/invoice/thank-you/confirmation) exist in `app/Mail/*` and are sent from the admin panel alongside the WhatsApp option, never instead of it.
+Every client-facing CTA ends in a `wa.me/...?text=...` link, not a payment processor or email-only flow. This is intentional — keep reusing this pattern for new CTAs rather than introducing new channels unless explicitly asked. Transactional emails (quote/invoice/thank-you/confirmation) exist in `app/Mail/*` and are sent from the admin panel alongside the WhatsApp option, never instead of it.
+
+**One deliberate exception (added 2026-07-07): the main booking wizard (`/book`, `booking/show.blade.php`) no longer redirects to WhatsApp.** Submitting it now requires a client email (validated in `BookingController::reserve()`), saves to the DB, emails the business (`NewBookingAlertMail`, unchanged) and automatically emails the client an acknowledgement (`App\Mail\BookingRequestReceivedMail` — deliberately distinct from `BookingConfirmationMail`, which still means "an admin has actually reviewed/priced this," not "we received your request"), then shows the existing on-page success screen. `quote.blade.php`, the homepage mini CTA (`components/cta.blade.php`), and the quote-acceptance flow (`client-quote/show.blade.php`) are unchanged and still WhatsApp-only — don't assume this exception extends to them without asking.
 
 ## Known Blade/Alpine gotchas
 

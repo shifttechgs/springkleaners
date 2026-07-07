@@ -108,9 +108,10 @@ test.describe('Mobile interaction checks (iPhone 12 viewport)', () => {
         console.log('Booking step 1 overflow diff:', overflow1);
         await page.screenshot({ path: 'test-results/mobile/booking-step1-iphone12.png' });
 
-        // Actually fill the required fields (name/phone/address/suburb) so validation lets us through to the calendar
+        // Actually fill the required fields (name/phone/email/address/suburb) so validation lets us through to the calendar
         await page.getByPlaceholder('Jane Smith').fill('Test Client');
         await page.getByPlaceholder('+27 81 000 0000').fill('0821234567');
+        await page.getByPlaceholder('jane@email.com').fill('playwright-mobile@example.com');
         await page.getByPlaceholder(/Ocean View Drive/).fill('12 Test Street');
         await page.getByPlaceholder(/Milnerton, Table View/).fill('Milnerton');
         await page.waitForTimeout(200);
