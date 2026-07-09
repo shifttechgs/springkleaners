@@ -9,7 +9,7 @@ Facts that inform copy, SEO, and product decisions. Sourced from the codebase (`
 - **Address**: 1 Stepney Road, Unit H1, Hampton Place, Parklands, Cape Town (service-area business — no public walk-in premises; this address is already public via a Google Maps link on the homepage testimonials section)
 - **Phone / WhatsApp**: +27 81 527 4711
 - **Email**: `bookings@springkleaners.co.za` — used consistently across every public-facing page (footer, CTAs, legal pages, meta/schema). `App\Support\Company::email()`'s fallback default was `sales@springkleaners.com` (a different address) — **fixed 2026-07-08**, fallback now matches the real address.
-- **Current domain**: live at `springkleaners.onrender.com`; `springkleaners.co.za` is purchased but DNS is not yet pointed (see [`docs/todo.md`](./todo.md) and [`docs/seo.md`](./seo.md)).
+- **Current domain**: live at `springkleaners.co.za` (DNS cut over from the old `springkleaners.onrender.com`, which is no longer used — see [`docs/deployment.md`](./deployment.md)).
 
 ## Services (20 real services, expanded 2026-07-08 — see `docs/seo.md` for the full change log)
 
@@ -61,7 +61,6 @@ Still no dedicated page for the rest of the booking form's autocomplete list (Sa
 
 ## Deployment
 
-- **Current**: Render (Docker), `render.yaml`. SQLite database with no persistent disk — resets on every deploy (known, accepted limitation for now).
-- **Planned**: migration to cPanel hosting (see [`docs/todo.md`](./todo.md)) — DB already switched to MySQL locally in preparation.
+- **Current**: Hosting Pods (cPanel), MySQL database, GitHub Actions builds and pushes over FTPS on every push to `main` (see [`docs/deployment.md`](./deployment.md)). Migrated off Render — that platform is no longer used.
 
 Banking details for client-facing invoices/quotes are configured via `App\Support\Company` / Admin → Business Details, and are intentionally **not** reproduced in this file.

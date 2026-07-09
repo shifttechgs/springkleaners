@@ -4,7 +4,7 @@ Practical conventions for anyone (human or AI) picking up this codebase. Read th
 
 ## Stack
 
-Laravel 12, Blade templates, Tailwind CSS v4 (real Vite build, **not** the CDN — see [Build process](#build-process)), Alpine.js (CDN, deferred), GSAP + ScrollTrigger + SplitText (homepage hero only), WOW.js + animate.css (scroll reveals, sitewide), Odometer.js (animated counters, sitewide). MySQL locally (WAMP), SQLite on the current Render deployment.
+Laravel 12, Blade templates, Tailwind CSS v4 (real Vite build, **not** the CDN — see [Build process](#build-process)), Alpine.js (CDN, deferred), GSAP + ScrollTrigger + SplitText (homepage hero only), WOW.js + animate.css (scroll reveals, sitewide), Odometer.js (animated counters, sitewide). MySQL both locally (WAMP) and in production (Hosting Pods/cPanel).
 
 ## The "static config, not a database" pattern
 
@@ -19,6 +19,8 @@ The **only** real database tables are `bookings`, `clients`, `users`, and `setti
 ## WhatsApp-first, no payment gateway
 
 Every client-facing CTA ends in a `wa.me/...?text=...` link, not a payment processor or email-only flow. This is intentional — keep reusing this pattern for new CTAs rather than introducing new channels unless explicitly asked. Transactional emails (quote/invoice/thank-you/confirmation) exist in `app/Mail/*` and are sent from the admin panel alongside the WhatsApp option, never instead of it.
+
+**Admin: invoicing/payment actions live under `/admin/invoices/{booking}` (added 2026-07-07), not the booking page.** `Admin\InvoiceController` owns `show`/`markPaid`/`markDepositPaid`/`sendEmail`, and `Admin\InvoicePdfController` is routed under the same `admin.invoices.*` prefix. `admin/bookings/show.blade.php` only keeps a "View Invoice →" link once `$booking->invoice_number` is set — add new invoice/payment features to `admin/invoices/show.blade.php` + `InvoiceController`, not back onto the booking page. One deliberate exception: the deposit **amount** is still set on the booking page (it's a quoting term, part of `sendQuote()`), and "Mark Deposit as Received" is reachable from both the booking page (needed pre-invoice, since deposits are usually paid to secure a booking before the job is ever completed/invoiced) and the invoice page — both post to the same `InvoiceController::markDepositPaid`. No new `Invoice` model/table was introduced; invoicing data still lives as columns on `bookings`, per the "only 4 real tables" convention above.
 
 **One deliberate exception (added 2026-07-07): the main booking wizard (`/book`, `booking/show.blade.php`) no longer redirects to WhatsApp.** Submitting it now requires a client email (validated in `BookingController::reserve()`), saves to the DB, emails the business (`NewBookingAlertMail`, unchanged) and automatically emails the client an acknowledgement (`App\Mail\BookingRequestReceivedMail` — deliberately distinct from `BookingConfirmationMail`, which still means "an admin has actually reviewed/priced this," not "we received your request"), then shows the existing on-page success screen. `quote.blade.php`, the homepage mini CTA (`components/cta.blade.php`), and the quote-acceptance flow (`client-quote/show.blade.php`) are unchanged and still WhatsApp-only — don't assume this exception extends to them without asking.
 
@@ -35,7 +37,7 @@ As of July 2026 the site no longer loads Tailwind from a CDN — it's a real com
 - `resources/css/app.css` → public site (`layouts/app.blade.php`)
 - `resources/css/admin.css` → admin panel + all 4 admin auth pages
 
-**Any time you change a CSS class or add a new one, run `npm run build`** before testing — there is no CDN fallback anymore to mask a stale build. The Render Dockerfile already runs `npm ci && npm run build` on deploy, so production doesn't need manual intervention.
+**Any time you change a CSS class or add a new one, run `npm run build`** before testing — there is no CDN fallback anymore to mask a stale build. The GitHub Actions deploy workflow already runs `npm ci && npm run build` before pushing to production over FTPS (see [Deployment](#deployment)), so production doesn't need manual intervention.
 
 Do not reintroduce jQuery, Swiper, or appear.js — all three were removed as dead/redundant (Swiper's target element no longer exists since testimonials moved to a CSS-only scroll animation; jQuery+appear.js were fully redundant with an IntersectionObserver fallback that already existed in the code). If a future feature needs a carousel, build it with Alpine or plain CSS, not a jQuery-era library.
 
@@ -47,7 +49,7 @@ GSAP/ScrollTrigger/SplitText load **only** on the homepage (`@push('scripts')` i
 
 ## Deployment
 
-Migrating from Render to Hosting Pods (cPanel) — see [`docs/deployment.md`](./deployment.md) for the full pipeline and [`docs/todo.md`](./todo.md) for what's still manual. Render's auto-deploy silently stopped working at some point and nobody noticed for weeks, which is the whole reason this migration includes an actual verification step (`docs/deployment.md`'s "Verifying a deploy actually landed" section) — don't assume a push succeeded just because CI didn't show red.
+Hosting Pods (cPanel), migrated off Render — see [`docs/deployment.md`](./deployment.md) for the full pipeline and [`docs/todo.md`](./todo.md) for what's still manual. Render's auto-deploy silently stopped working at some point and nobody noticed for weeks, which is the whole reason this pipeline includes an actual verification step (`docs/deployment.md`'s "Verifying a deploy actually landed" section) — don't assume a push succeeded just because CI didn't show red.
 
 `POST /deploy/migrate` (`DeployController`) is a CSRF-exempt, token-guarded endpoint that runs migrations and clears caches — it exists specifically for hosts with no SSH access, called from the GitHub Actions workflow. Don't remove its CSRF exception in `bootstrap/app.php` (it has to be callable by CI, which can't send a session-based CSRF token) — its actual protection is the constant-time `DEPLOY_TOKEN` comparison in the controller. If SSH access is later confirmed, this endpoint can be left dormant (safe — it 403s without the token) while the workflow switches to running `artisan` directly over SSH instead.
 
