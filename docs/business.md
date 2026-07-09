@@ -28,7 +28,7 @@ Extra bedrooms/bathrooms/rooms and add-ons (interior windows R200, balcony/patio
 
 **Quote-mode** (published benchmark price shown as text, but routed to a WhatsApp/email quote request instead of the wizard — `bookable = false`, since their pricing units don't fit the bedroom/bathroom model): Office & Commercial Cleaning (R10/m², R850 min), Carpet Cleaning (R250/room, R950 min), Upholstery Cleaning (R150/seat fabric, +25% leather, R800 min), Window Cleaning (from R1,400/property, or R40/R75 per pane).
 
-**Custom-quote-only** (no published price at all, `bookable = false`): Spring Cleaning, Oven Deep Cleaning, Fridge & Appliance Cleaning, Mattress Cleaning, Blind & Curtain Cleaning, Retail & Shop Cleaning, Medical & Clinic Cleaning, Restaurant & Commercial Kitchen Cleaning, School & Educational Facility Cleaning, Pressure Washing / Exterior Cleaning. Three of these have a deliberate scope carve-out to avoid overclaiming: Medical excludes biohazard waste, Restaurant excludes certified extraction-hood degreasing, Pressure Washing excludes roofs.
+**Custom-quote-only** (no published price at all, `bookable = false`): Spring Cleaning, Oven Deep Cleaning, Fridge & Appliance Cleaning, Blind & Curtain Cleaning.
 
 All pricing shown publicly is an **estimate** — confirmed via a free on-site (or details-based) inspection, approved by the client before work starts. This is a deliberate trust/transparency positioning, not just a legal hedge.
 

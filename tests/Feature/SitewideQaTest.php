@@ -116,7 +116,7 @@ class SitewideQaTest extends TestCase
         }
 
         // Every URL type is represented, not just a handful.
-        $this->assertGreaterThanOrEqual(20, $sitemapPaths->filter(fn ($p) => str_starts_with($p, '/services/'))->count());
+        $this->assertGreaterThanOrEqual(14, $sitemapPaths->filter(fn ($p) => str_starts_with($p, '/services/'))->count());
         $this->assertGreaterThanOrEqual(19, $sitemapPaths->filter(fn ($p) => str_starts_with($p, '/areas/'))->count());
         $this->assertGreaterThanOrEqual(16, $sitemapPaths->filter(fn ($p) => str_starts_with($p, '/blog/'))->count());
     }

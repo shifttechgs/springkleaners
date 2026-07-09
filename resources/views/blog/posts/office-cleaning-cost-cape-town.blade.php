@@ -34,5 +34,5 @@
 ]" />
 
 <p class="text-muted text-[15.5px] leading-[1.85]">
-    Running a shop instead of an office? <a href="{{ route('services.show', 'retail-shop-cleaning') }}" class="text-navy font-semibold underline">Retail & Shop Cleaning</a> uses a similar custom-quote model, scoped around shop floors and storefronts rather than desks and boardrooms. See our full <a href="{{ route('services.show', 'office-commercial-cleaning') }}" class="text-navy font-semibold underline">Office & Commercial Cleaning</a> page for everything included.
+    See our full <a href="{{ route('services.show', 'office-commercial-cleaning') }}" class="text-navy font-semibold underline">Office & Commercial Cleaning</a> page for everything included.
 </p>

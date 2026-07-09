@@ -140,7 +140,7 @@ class StructuredDataTest extends TestCase
 
         $this->assertNotNull($breadcrumb);
 
-        // Regression: this page's services grid loops all 19 services, including
+        // Regression: this page's services grid loops all services, including
         // custom-quote ones (base_price=0, unit_label=null) — must not render "From R0 /".
         $this->assertStringNotContainsString('From R0', $html);
     }
@@ -286,9 +286,7 @@ class StructuredDataTest extends TestCase
     {
         return collect([
             'spring-cleaning', 'oven-deep-cleaning', 'fridge-appliance-cleaning',
-            'mattress-cleaning', 'blind-curtain-cleaning', 'retail-shop-cleaning',
-            'medical-clinic-cleaning', 'restaurant-kitchen-cleaning',
-            'school-educational-cleaning', 'pressure-washing',
+            'blind-curtain-cleaning',
         ])->mapWithKeys(fn ($slug) => [$slug => [$slug]])->all();
     }
 
