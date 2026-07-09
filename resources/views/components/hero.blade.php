@@ -15,7 +15,7 @@
     <div class="section-wrap relative z-10 w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
 
-            <div class="lg:col-span-7 lg:translate-y-24">
+            <div class="lg:col-span-7 lg:translate-y-40">
                 <div id="hero-badge" class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-8">
                     <div class="flex text-[#f6e304] text-xs">★★★★★</div>
                     <span class="text-white/70 text-[13px] tracking-tight font-medium">Cape Town's Premium Cleaning Service</span>
@@ -29,24 +29,7 @@
                     Professional deep cleaning, end-of-tenancy &amp; post-construction cleaning for homes and businesses across Cape Town's Northern Suburbs.
                 </p>
 
-                <div id="hero-trust" class="flex flex-wrap gap-x-6 gap-y-3 mb-10">
-                    <div class="flex items-center gap-2 text-white/60 text-[13px]">
-                        <svg class="w-4 h-4 text-[#f6e304] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-                        Fully Insured
-                    </div>
-                    <div class="flex items-center gap-2 text-white/60 text-[13px]">
-                        <svg class="w-4 h-4 text-[#f6e304] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-                        Vetted Staff
-                    </div>
-                    <div class="flex items-center gap-2 text-white/60 text-[13px]">
-                        <svg class="w-4 h-4 text-[#f6e304] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-                        Eco-Friendly Products
-                    </div>
-                    <div class="flex items-center gap-2 text-white/60 text-[13px]">
-                        <svg class="w-4 h-4 text-[#f6e304] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-                        Free Inspection
-                    </div>
-                </div>
+                <x-trust-badges theme="dark" id="hero-trust" class="mb-10" />
 
                 <div class="flex gap-4 lg:hidden">
                     <a href="#services" class="btn-outline">Our Services</a>
@@ -283,8 +266,6 @@
                         <div class="text-white/50 text-[10px] uppercase tracking-wider mt-1.5">Years Exp.</div>
                     </div>
                 </div>
-
-                <x-trust-badges class="mt-4 justify-center" />
             </div>
         </div>
     </div>
