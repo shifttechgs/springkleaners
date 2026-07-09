@@ -122,8 +122,9 @@
             'Table View','Big Bay','Bloubergstrand','West Beach','Monte Vista',
             'Edgemead','Bothasig','Richwood','Burgundy Estate','Flamingo Vlei',
             'Sandown','Sunset Beach','Parklands North','Waves Edge','Montague Gardens',
-            'Blouber Rise','Summer Greens','Rugby','Paarden Eiland','Marconi Beam',
-            'Dunoon','Joe Slovo Park','Penhill','Kerria','Ravensmead'
+            'Blouberg Rise','Summer Greens','Rugby','Paarden Eiland','Marconi Beam',
+            'Dunoon','Joe Slovo Park','Penhill','Kerria','Ravensmead',
+            'Sea Point','Green Point'
         ],
         suburbQuery: '', filteredSuburbs: [], showSuggestions: false, selectedSuburb: '', locationStatus: null,
         form: {
@@ -241,24 +242,30 @@
         prevMonth() { this.calMonth--; if (this.calMonth < 0) { this.calMonth = 11; this.calYear--; } this.fetchAvailability(); },
         nextMonth() { this.calMonth++; if (this.calMonth > 11) { this.calMonth = 0; this.calYear++; } this.fetchAvailability(); },
         pickDate(d) {
-            if (!this.isSelectable(d)) return;
+            if (!d || this.isPast(d) || !this.isWeekend(d)) return;
+            if (this.isFull(d)) {
+                this.dateError = 'That date already has ' + this.bookedCount(d) + '/' + this.capacity + ' clients booked — please choose another date.';
+                return;
+            }
             this.selectedDate = new Date(this.calYear, this.calMonth, d);
             this.selectedTime = null;
             this.dateError = '';
             this.errors.dateTime = false;
         },
         get selectedDateLabel() { return this.selectedDate ? this.selectedDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : ''; },
+        get selectedDateBookedCount() { return this.selectedDate ? (this.availability[this.dateISO(this.selectedDate)] || 0) : 0; },
 
-        errors: { name: false, phone: false, email: false, address: false, suburb: false, dateTime: false },
+        errors: { name: false, phone: false, email: false, address: false, suburb: false, service: false, dateTime: false },
 
         validateStep1() {
             this.errors.name = !this.form.name.trim();
             this.errors.phone = !this.form.phone.trim();
             this.errors.email = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email.trim());
             this.errors.address = !this.form.address.trim();
-            this.errors.suburb = !this.suburbQuery.trim();
-            if (this.suburbQuery.trim()) { this.checkLocation(); }
-            return !this.errors.name && !this.errors.phone && !this.errors.email && !this.errors.address && !this.errors.suburb;
+            this.errors.service = !this.selectedService || !this.services[this.selectedService];
+            if (this.suburbQuery.trim()) { this.checkLocation(); } else { this.locationStatus = null; }
+            this.errors.suburb = !this.suburbQuery.trim() || this.locationStatus !== 'valid';
+            return !this.errors.name && !this.errors.phone && !this.errors.email && !this.errors.address && !this.errors.service && !this.errors.suburb;
         },
         validateStep2() {
             this.errors.dateTime = !this.selectedDate || !this.selectedTime;
@@ -442,13 +449,17 @@
                         <label class="fl">Which service do you need?</label>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                             <template x-for="(svc, slug) in services" :key="slug">
-                                <button type="button" @click="selectService(slug)"
-                                        class="service-pick" :class="selectedService === slug ? 'service-pick-active' : ''">
+                                <button type="button" @click="selectService(slug); errors.service = false"
+                                        class="service-pick" :class="selectedService === slug ? 'service-pick-active' : (errors.service ? 'fi-error' : '')">
                                     <span class="sp-name block" x-text="svc.name"></span>
                                     <span class="sp-sub block" x-text="'From R' + svc.base_price.toLocaleString()"></span>
                                 </button>
                             </template>
                         </div>
+                        <p x-show="errors.service" x-cloak class="field-err">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                            Please choose a service
+                        </p>
                     </div>
 
                     <div class="h-px bg-[#edf0f5] mb-7"></div>
@@ -580,8 +591,8 @@
                             <input type="text"
                                    x-model="suburbQuery"
                                    @input="filterSuburbs(); errors.suburb = false"
-                                   @blur="setTimeout(() => showSuggestions = false, 300)"
-                                   @keydown.enter.prevent="checkLocation()"
+                                   @blur="setTimeout(() => { showSuggestions = false; checkLocation(); errors.suburb = suburbQuery.trim() && locationStatus !== 'valid' }, 300)"
+                                   @keydown.enter.prevent="checkLocation(); errors.suburb = suburbQuery.trim() && locationStatus !== 'valid'"
                                    placeholder="e.g. Milnerton, Table View..."
                                    class="fi" :class="errors.suburb ? 'fi-error' : ''">
                             <div x-show="showSuggestions" x-cloak class="absolute left-0 right-0 top-full mt-1 bg-white border border-[#e8eaf0] rounded-xl shadow-lg z-50 max-h-48 overflow-y-auto">
@@ -589,11 +600,14 @@
                                     <div @click="selectSuburb(s)" class="px-4 py-2.5 text-[13.5px] text-[#4a5568] hover:bg-[#f4f6fb] hover:text-[#081d3a] cursor-pointer" x-text="s"></div>
                                 </template>
                             </div>
-                            <p x-show="errors.suburb" x-cloak class="field-err">
+                            <p x-show="errors.suburb && !suburbQuery.trim()" x-cloak class="field-err">
                                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
                                 Please enter your suburb
                             </p>
-                            <p x-show="!errors.suburb && locationStatus === 'invalid'" x-cloak class="text-rose-500 text-[12px] mt-1.5">We don't currently service this suburb — we'll still reach out.</p>
+                            <p x-show="errors.suburb && suburbQuery.trim() && locationStatus === 'invalid'" x-cloak class="field-err">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                                We don't currently service this suburb — please choose one from the list.
+                            </p>
                         </div>
                     </div>
 
@@ -633,7 +647,7 @@
                         </template>
                     </div>
 
-                    <p x-show="errors.name || errors.phone || errors.address || errors.suburb" x-cloak
+                    <p x-show="errors.name || errors.phone || errors.email || errors.address || errors.suburb || errors.service" x-cloak
                        class="flex items-center gap-2 bg-rose-50 text-rose-600 text-[13px] font-semibold rounded-lg px-4 py-3 mb-4">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
                         Please fill in the highlighted fields above to continue.
@@ -721,12 +735,15 @@
                         <div>
                             <p class="fl mb-3">Pick a time</p>
                             <div x-show="!selectedDate" class="text-[#adb5c4] text-[13px] bg-[#f8f9fc] rounded-xl p-5 text-center">Choose a date first.</div>
-                            <div x-show="selectedDate" x-cloak class="grid grid-cols-2 gap-2">
-                                <template x-for="t in timeSlots" :key="t">
-                                    <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }"
-                                         class="time-slot" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')"
-                                         :title="isTimeTaken(t) ? 'Already booked' : ''" x-text="t"></div>
-                                </template>
+                            <div x-show="selectedDate" x-cloak>
+                                <p class="text-[#8a94a6] text-[11.5px] font-semibold mb-2" x-text="selectedDateBookedCount + ' of ' + capacity + ' client slots already booked for this date'"></p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <template x-for="t in timeSlots" :key="t">
+                                        <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }"
+                                             class="time-slot" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')"
+                                             :title="isTimeTaken(t) ? 'Already booked' : ''" x-text="t"></div>
+                                    </template>
+                                </div>
                             </div>
                             <p class="text-[#adb5c4] text-[12px] mt-4">Need a different time? Mention it in your WhatsApp message and we'll do our best to accommodate.</p>
                         </div>
