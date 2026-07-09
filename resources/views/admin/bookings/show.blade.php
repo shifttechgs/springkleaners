@@ -51,15 +51,10 @@
         </a>
 
         @if ($booking->invoice_number)
-            <a href="{{ route('admin.bookings.invoice-pdf.preview', $booking) }}" target="_blank" rel="noopener noreferrer"
+            <a href="{{ route('admin.invoices.show', $booking) }}"
                class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                Preview Invoice
-            </a>
-            <a href="{{ route('admin.bookings.invoice-pdf', $booking) }}"
-               class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                Download Invoice
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M9 15h3.75M9 18h3.75"/></svg>
+                View Invoice — {{ $booking->invoice_number }}
             </a>
         @endif
 
@@ -208,7 +203,7 @@
                     </button>
                 </form>
                 @if ($booking->deposit_amount > 0 && ! $booking->deposit_paid_at)
-                    <form method="POST" action="{{ route('admin.bookings.mark-deposit-paid', $booking) }}" class="mt-3">
+                    <form method="POST" action="{{ route('admin.invoices.mark-deposit-paid', $booking) }}" class="mt-3">
                         @csrf
                         <button type="submit" class="w-full justify-center inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
                             Mark Deposit as Received
@@ -267,56 +262,6 @@
                     </div>
                     @if ($booking->thank_you_sent_at)
                         <p class="text-muted text-[11.5px] mt-2">Emailed {{ $booking->thank_you_sent_at->format('d M Y H:i') }}.</p>
-                    @endif
-                </div>
-            @endif
-
-            @if ($booking->invoice_number)
-                <div class="card p-6" x-data="{ copied: false }">
-                    <div class="flex items-center justify-between mb-1">
-                        <h2 class="font-bold text-[14px] tracking-tight">Invoice &amp; Payment</h2>
-                        <x-admin.status-badge :status="$booking->payment_status" />
-                    </div>
-                    <p class="text-muted text-[12.5px] mb-4">{{ $booking->invoice_number }}</p>
-
-                    @php
-                        $invoiceUrl = route('invoice.show', $booking->accepted_token);
-                        $invoiceMessage = "Hi {$booking->name}! Here's your invoice ({$booking->invoice_number}) from SpringKleaners: R".number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 2)."\n\nView & download: {$invoiceUrl}";
-                    @endphp
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <button type="button" @click="navigator.clipboard.writeText('{{ $invoiceUrl }}'); copied = true; setTimeout(() => copied = false, 2000)"
-                                class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
-                            <span x-text="copied ? 'Copied!' : 'Copy Link'"></span>
-                        </button>
-                        <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode($invoiceMessage) }}" target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center gap-2 bg-[#25d366] text-white font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:bg-[#20bd5a] transition-colors">
-                            WhatsApp
-                        </a>
-                        <form method="POST" action="{{ route('admin.bookings.send-invoice-email', $booking) }}">
-                            @csrf
-                            <button type="submit" class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
-                                Email
-                            </button>
-                        </form>
-                    </div>
-
-                    @if ($booking->payment_status->value === 'paid')
-                        <p class="text-emerald-600 text-[13px] font-semibold mb-4">
-                            Paid {{ $booking->paid_at->format('d M Y') }} &middot; {{ ucfirst($booking->payment_method) }}
-                        </p>
-                    @else
-                        <form method="POST" action="{{ route('admin.bookings.mark-paid', $booking) }}" class="space-y-3 border-t border-line pt-4">
-                            @csrf
-                            <div>
-                                <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Payment Method</label>
-                                <select name="payment_method" required class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
-                                    <option value="">Select method</option>
-                                    <option value="cash">Cash</option>
-                                    <option value="eft">EFT</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn-primary w-full justify-center">Mark as Paid</button>
-                        </form>
                     @endif
                 </div>
             @endif

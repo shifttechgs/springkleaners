@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\BookingRequestReceivedMail;
 use App\Mail\NewBookingAlertMail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,6 +22,7 @@ class BookingNotificationTest extends TestCase
             'time' => '9:00 AM',
             'name' => 'Test Client',
             'phone' => '0821234567',
+            'email' => 'client@example.com',
         ];
     }
 
@@ -33,7 +35,8 @@ class BookingNotificationTest extends TestCase
             ->assertJson(['status' => 'ok']);
 
         Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('bookings@springkleaners.co.za'));
-        Mail::assertSentCount(1);
+        Mail::assertSent(BookingRequestReceivedMail::class, fn ($mail) => $mail->hasTo('client@example.com'));
+        Mail::assertSentCount(2);
     }
 
     public function test_opted_in_subscriber_also_receives_it(): void
@@ -49,7 +52,8 @@ class BookingNotificationTest extends TestCase
 
         Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('bookings@springkleaners.co.za'));
         Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('staff@example.com'));
-        Mail::assertSentCount(2);
+        Mail::assertSent(BookingRequestReceivedMail::class, fn ($mail) => $mail->hasTo('client@example.com'));
+        Mail::assertSentCount(3);
     }
 
     public function test_no_duplicate_when_official_address_is_also_opted_in(): void
@@ -63,7 +67,8 @@ class BookingNotificationTest extends TestCase
 
         $this->postJson('/book/reserve', $this->validBookingPayload())->assertOk();
 
-        Mail::assertSentCount(1);
+        Mail::assertSentCount(2);
         Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('bookings@springkleaners.co.za'));
+        Mail::assertSent(BookingRequestReceivedMail::class, fn ($mail) => $mail->hasTo('client@example.com'));
     }
 }

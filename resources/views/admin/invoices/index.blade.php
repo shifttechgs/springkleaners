@@ -72,7 +72,7 @@
                                 <x-admin.status-badge :status="$booking->payment_status" />
                             </td>
                             <td class="px-6 py-3.5 text-right">
-                                <a href="{{ route('admin.bookings.show', $booking) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">View &rarr;</a>
+                                <a href="{{ route('admin.invoices.show', $booking) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">View &rarr;</a>
                             </td>
                         </tr>
                     @endforeach

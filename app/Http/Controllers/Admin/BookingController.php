@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\BookingStatus;
-use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\BookingConfirmationMail;
-use App\Mail\InvoiceMail;
 use App\Mail\ThankYouMail;
 use App\Models\Booking;
 use App\Models\Client;
@@ -17,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -168,41 +165,6 @@ class BookingController extends Controller
         ]);
 
         return back()->with('status', 'Quote generated — send it to the client below.');
-    }
-
-    public function markDepositPaid(Booking $booking): RedirectResponse
-    {
-        $booking->update(['deposit_paid_at' => now()]);
-
-        return back()->with('status', 'Deposit marked as received.');
-    }
-
-    public function markPaid(Request $request, Booking $booking): RedirectResponse
-    {
-        $data = $request->validate([
-            'payment_method' => ['required', Rule::in(['cash', 'eft'])],
-        ]);
-
-        $booking->update([
-            'payment_status' => PaymentStatus::Paid,
-            'payment_method' => $data['payment_method'],
-            'paid_at' => now(),
-        ]);
-
-        return back()->with('status', 'Marked as paid.');
-    }
-
-    public function sendInvoiceEmail(Booking $booking): RedirectResponse
-    {
-        $booking->loadMissing('client');
-
-        if (blank($booking->client?->email)) {
-            return back()->withErrors(['email' => 'This client has no email on file.']);
-        }
-
-        Mail::to($booking->client->email)->send(new InvoiceMail($booking));
-
-        return back()->with('status', 'Invoice emailed to '.$booking->client->email.'.');
     }
 
     public function sendConfirmationEmail(Booking $booking): RedirectResponse
