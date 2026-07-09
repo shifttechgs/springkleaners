@@ -22,6 +22,12 @@
                     <li><a href="{{ route('services.show', 'deep-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Deep Cleaning</a></li>
                     <li><a href="{{ route('services.show', 'end-of-tenancy') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">End-of-Tenancy Cleaning</a></li>
                     <li><a href="{{ route('services.show', 'post-construction') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Post Construction Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'office-commercial-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Office & Commercial Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'recurring-house-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Recurring House Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'carpet-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Carpet Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'upholstery-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Upholstery Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'window-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Window Cleaning</a></li>
+                    <li><a href="{{ route('services.show', 'airbnb-turnover-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Airbnb & Short-Let Cleaning</a></li>
                     <li><a href="{{ route('blog.index') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Blog</a></li>
                 </ul>
             </div>
@@ -53,12 +59,12 @@
                             bookings@springkleaners.co.za
                         </a>
                     </li>
-                    <li class="flex items-center gap-2 text-white/40 text-[14px]">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li class="flex items-start gap-2 text-white/40 text-[14px]">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
-                        Cape Town, Northern Suburbs
+                        <span>1 Stepney Road, Parklands, 7441, Cape Town</span>
                     </li>
                 </ul>
             </div>
@@ -74,7 +80,17 @@
                     <a href="{{ route('areas.show', 'table-view') }}" class="hover:text-[#f6e304] transition-colors">Table View</a> ·
                     <a href="{{ route('areas.show', 'big-bay') }}" class="hover:text-[#f6e304] transition-colors">Big Bay</a> ·
                     <a href="{{ route('areas.show', 'bloubergstrand') }}" class="hover:text-[#f6e304] transition-colors">Bloubergstrand</a> ·
-                    West Beach · Edgemead · Bothasig · Monte Vista &amp; surrounding areas
+                    <a href="{{ route('areas.show', 'sea-point') }}" class="hover:text-[#f6e304] transition-colors">Sea Point</a> ·
+                    <a href="{{ route('areas.show', 'green-point') }}" class="hover:text-[#f6e304] transition-colors">Green Point</a> ·
+                    <a href="{{ route('areas.show', 'west-beach') }}" class="hover:text-[#f6e304] transition-colors">West Beach</a> ·
+                    <a href="{{ route('areas.show', 'monte-vista') }}" class="hover:text-[#f6e304] transition-colors">Monte Vista</a> ·
+                    <a href="{{ route('areas.show', 'edgemead') }}" class="hover:text-[#f6e304] transition-colors">Edgemead</a> ·
+                    <a href="{{ route('areas.show', 'bothasig') }}" class="hover:text-[#f6e304] transition-colors">Bothasig</a> ·
+                    <a href="{{ route('areas.show', 'montague-gardens') }}" class="hover:text-[#f6e304] transition-colors">Montague Gardens</a> ·
+                    <a href="{{ route('areas.show', 'paarden-eiland') }}" class="hover:text-[#f6e304] transition-colors">Paarden Eiland</a> ·
+                    <a href="{{ route('areas.show', 'richwood') }}" class="hover:text-[#f6e304] transition-colors">Richwood</a> ·
+                    <a href="{{ route('areas.show', 'burgundy-estate') }}" class="hover:text-[#f6e304] transition-colors">Burgundy Estate</a> ·
+                    <a href="{{ route('areas.show', 'flamingo-vlei') }}" class="hover:text-[#f6e304] transition-colors">Flamingo Vlei</a> &amp; surrounding areas
                 </p>
             </div>
 

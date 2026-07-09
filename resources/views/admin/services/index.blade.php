@@ -46,7 +46,12 @@
                     @foreach ($services as $service)
                         <tr x-data="{ confirmOpen: false }">
                             <td class="px-6 py-3.5">
-                                <p class="font-semibold leading-tight">{{ $service->name }}</p>
+                                <div class="flex items-center gap-2">
+                                    <p class="font-semibold leading-tight">{{ $service->name }}</p>
+                                    @unless ($service->bookable)
+                                        <span class="text-[10px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">Quote only</span>
+                                    @endunless
+                                </div>
                                 <p class="text-label text-[12px] leading-tight mt-0.5">{{ $service->slug }}</p>
                             </td>
                             <td class="px-6 py-3.5 text-ink font-semibold">R{{ number_format((float) $service->base_price, 2) }}</td>

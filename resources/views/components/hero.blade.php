@@ -135,7 +135,7 @@
 
                     <div>
                         <div class="mb-1">
-                            <h3 class="text-[#081d3a] font-bold text-[20px] tracking-tight">Get Your Free Estimate</h3>
+                            <p class="text-[#081d3a] font-bold text-[20px] tracking-tight">Get Your Free Estimate</p>
                             <p class="text-[#647082] text-sm mt-1">Get your instant price estimate</p>
                         </div>
 
@@ -283,6 +283,8 @@
                         <div class="text-white/50 text-[10px] uppercase tracking-wider mt-1.5">Years Exp.</div>
                     </div>
                 </div>
+
+                <x-trust-badges class="mt-4 justify-center" />
             </div>
         </div>
     </div>

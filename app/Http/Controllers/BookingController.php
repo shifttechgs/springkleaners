@@ -22,7 +22,7 @@ class BookingController extends Controller
 {
     public function show(Request $request): View
     {
-        $services = Services::list();
+        $services = Services::bookable();
 
         $selected = $request->query('service');
 

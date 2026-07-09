@@ -1,6 +1,6 @@
 # Business Reference — SpringKleaners
 
-Facts that inform copy, SEO, and product decisions. Sourced from the codebase (`app/Support/Company.php` defaults, `config/*.php`, live templates) — treat as accurate as of 2026-07-06, re-verify before quoting externally if this file ages.
+Facts that inform copy, SEO, and product decisions. Sourced from the codebase (`app/Support/Company.php` defaults, `config/*.php`, live templates) — treat as accurate as of 2026-07-08 (updated after the service/area expansion below), re-verify before quoting externally if this file ages.
 
 ## Identity
 
@@ -8,26 +8,37 @@ Facts that inform copy, SEO, and product decisions. Sourced from the codebase (`
 - **Registration**: 2021/363748/07
 - **Address**: 1 Stepney Road, Unit H1, Hampton Place, Parklands, Cape Town (service-area business — no public walk-in premises; this address is already public via a Google Maps link on the homepage testimonials section)
 - **Phone / WhatsApp**: +27 81 527 4711
-- **Email**: `bookings@springkleaners.co.za` — used consistently across every public-facing page (footer, CTAs, legal pages, meta/schema). **Flagged discrepancy**: `App\Support\Company::email()`'s hardcoded fallback default is `sales@springkleaners.com` (a different address entirely) — this only matters if that fallback is ever actually rendered (e.g. an unconfigured `Setting`), but it's worth reconciling which address is actually correct for admin-generated documents (PDF quotes/invoices) rather than leaving two different emails live.
+- **Email**: `bookings@springkleaners.co.za` — used consistently across every public-facing page (footer, CTAs, legal pages, meta/schema). `App\Support\Company::email()`'s fallback default was `sales@springkleaners.com` (a different address) — **fixed 2026-07-08**, fallback now matches the real address.
 - **Current domain**: live at `springkleaners.onrender.com`; `springkleaners.co.za` is purchased but DNS is not yet pointed (see [`docs/todo.md`](./todo.md) and [`docs/seo.md`](./seo.md)).
 
-## Services (real — only these three exist)
+## Services (20 real services, expanded 2026-07-08 — see `docs/seo.md` for the full change log)
+
+**Wizard-bookable** (bedroom/bathroom-based instant quote, `bookable = true` in the `services` table):
 
 | Service | Base price (from) | Included | Avg. time | Unit |
 |---|---|---|---|---|
 | Deep Cleaning | R1,200 | 2 bed / 1 bath | 4 hrs | per visit |
 | End-of-Tenancy Cleaning | R1,200 | 2 bed / 1 bath | 5 hrs | per property |
 | Post-Construction Cleaning | R1,800 | 2 bed / 1 bath | 6 hrs | per project |
+| Move-In Cleaning | R1,200 | 2 bed / 1 bath | 5 hrs | per property |
+| Recurring / Weekly House Cleaning | R750 | 2 bed / 1 bath | 2 hrs (est.) | per visit |
+| Airbnb & Short-Let Turnover Cleaning | R900 | 1 bed / 1 bath | 2 hrs (est.) | per turnover |
 
-Extra bedrooms/bathrooms/rooms and add-ons (interior windows R200, balcony/patio R150, wall mark removal R150, garage R200) are priced per `config/cleaning_services.php`. **Do not build pages, schema, or marketing copy for Residential/Commercial/Office/Window-only/Carpet-only cleaning as standalone services** — confirmed directly with the business owner (2026-07-06) that these are not currently offered; treat them as a possible future expansion only, gated on the business actually adding that service line.
+Extra bedrooms/bathrooms/rooms and add-ons (interior windows R200, balcony/patio R150, wall mark removal R150, garage R200) are priced per `config/cleaning_services.php`.
+
+**Quote-mode** (published benchmark price shown as text, but routed to a WhatsApp/email quote request instead of the wizard — `bookable = false`, since their pricing units don't fit the bedroom/bathroom model): Office & Commercial Cleaning (R10/m², R850 min), Carpet Cleaning (R250/room, R950 min), Upholstery Cleaning (R150/seat fabric, +25% leather, R800 min), Window Cleaning (from R1,400/property, or R40/R75 per pane).
+
+**Custom-quote-only** (no published price at all, `bookable = false`): Spring Cleaning, Oven Deep Cleaning, Fridge & Appliance Cleaning, Mattress Cleaning, Blind & Curtain Cleaning, Retail & Shop Cleaning, Medical & Clinic Cleaning, Restaurant & Commercial Kitchen Cleaning, School & Educational Facility Cleaning, Pressure Washing / Exterior Cleaning. Three of these have a deliberate scope carve-out to avoid overclaiming: Medical excludes biohazard waste, Restaurant excludes certified extraction-hood degreasing, Pressure Washing excludes roofs.
 
 All pricing shown publicly is an **estimate** — confirmed via a free on-site (or details-based) inspection, approved by the client before work starts. This is a deliberate trust/transparency positioning, not just a legal hedge.
 
 ## Service area
 
-**8 core suburbs** with dedicated area pages (`config/locations.php`): Milnerton, Sunningdale, Blouberg, Parklands, Century City, Table View, Big Bay, Bloubergstrand.
+**19 suburbs** with dedicated area pages (`config/locations.php`): Milnerton, Sunningdale, Blouberg, Parklands, Century City, Table View, Big Bay, Bloubergstrand, Sea Point, Green Point, West Beach, Monte Vista, Edgemead, Bothasig, Montague Gardens, Paarden Eiland, Richwood, Burgundy Estate, Flamingo Vlei. All 19 are linked from the homepage, footer, and sitewide `areaServed` schema.
 
-**Extended area** covered by the booking form's autocomplete (no dedicated page — by design, to avoid thin/duplicate content) also includes: West Beach, Monte Vista, Edgemead, Bothasig, Richwood, Burgundy Estate, Flamingo Vlei, Sandown, Sunset Beach, Parklands North, Waves Edge, Montague Gardens, Blouberg Rise, Summer Greens, Rugby, Paarden Eiland, Marconi Beam, Dunoon, Joe Slovo Park, Penhill, Kerria, Ravensmead, Sea Point, Green Point.
+Sea Point and Green Point are Atlantic Seaboard suburbs, a meaningfully longer drive from the Parklands base than the other 17 (clustered in the Milnerton/Blaauwberg/Century City corridor) — worth a gut-check against real operational capacity.
+
+Still no dedicated page for the rest of the booking form's autocomplete list (Sandown, Sunset Beach, Parklands North, Waves Edge, Blouberg Rise, Summer Greens, Rugby, Marconi Beam, Dunoon, Joe Slovo Park, Penhill, Kerria, Ravensmead) — by design, to avoid thin/duplicate content until there's real demand evidence for those specifically.
 
 ## Operating model
 

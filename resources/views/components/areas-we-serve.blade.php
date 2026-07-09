@@ -2,12 +2,17 @@
     $areas = [
         'Milnerton', 'Blouberg', 'Table View', 'Parklands', 'Century City', 'Sunningdale',
         'Sea Point', 'Green Point', 'Big Bay', 'Bloubergstrand', 'West Beach', 'Monte Vista',
-        'Edgemead', 'Bothasig', 'Montague Gardens', 'Paarden Eiland',
+        'Edgemead', 'Bothasig', 'Montague Gardens', 'Paarden Eiland', 'Richwood',
+        'Burgundy Estate', 'Flamingo Vlei',
     ];
     $areaSlugs = [
         'Milnerton' => 'milnerton', 'Blouberg' => 'blouberg', 'Table View' => 'table-view',
         'Parklands' => 'parklands', 'Century City' => 'century-city', 'Sunningdale' => 'sunningdale',
         'Big Bay' => 'big-bay', 'Bloubergstrand' => 'bloubergstrand',
+        'Sea Point' => 'sea-point', 'Green Point' => 'green-point', 'West Beach' => 'west-beach',
+        'Monte Vista' => 'monte-vista', 'Edgemead' => 'edgemead', 'Bothasig' => 'bothasig',
+        'Montague Gardens' => 'montague-gardens', 'Paarden Eiland' => 'paarden-eiland',
+        'Richwood' => 'richwood', 'Burgundy Estate' => 'burgundy-estate', 'Flamingo Vlei' => 'flamingo-vlei',
     ];
 @endphp
 <section id="areas" class="bg-[#f8f9fc] section-py">

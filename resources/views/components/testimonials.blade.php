@@ -40,13 +40,13 @@
 
                     <div class="review-scroll review-scroll-up flex flex-col gap-6">
                         @php
-                            $columnA = [
-                                ['initials' => 'TK', 'name' => 'Tracy Kardolus', 'meta' => 'Local Guide, Google Review', 'source' => 'google', 'quote' => 'I am very impressed with the service we received. Charity is on point, very diligent and their cleaning is great. They were on time and thorough with the job. I have already booked our rental clean with them.'],
-                                ['initials' => 'MD', 'name' => 'Modesta De Wet', 'meta' => 'Deep Cleaning · Bark Review', 'source' => 'bark', 'quote' => 'Everything was done according to the current protocol regulations. What a friendly, clean looking group.'],
-                                ['initials' => 'SM', 'name' => 'Sandra Matthew', 'meta' => 'Google Review', 'source' => 'google', 'quote' => 'Extremely happy with the service that Spring Kleaners provided — they did an amazing job and got our carpets looking brand new again. I will definitely use their services again.'],
-                            ];
+                            $allReviews = collect(config('reviews'));
+                            $columnA = $allReviews->filter(fn ($r, $i) => $i % 2 === 0)->values()->all();
+                            $columnB = $allReviews->filter(fn ($r, $i) => $i % 2 === 1)->values()->all();
+                            $repeatA = max(2, (int) ceil(6 / max(1, count($columnA))));
+                            $repeatB = max(2, (int) ceil(6 / max(1, count($columnB))));
                         @endphp
-                        @for ($i = 0; $i < 2; $i++)
+                        @for ($i = 0; $i < $repeatA; $i++)
                             @foreach ($columnA as $r)
                                 <div class="flex-shrink-0 bg-[#f8f9fc] rounded-2xl p-6 border border-gray-100 relative overflow-hidden">
                                     <span class="absolute -top-2 -right-1 text-[80px] font-serif text-[#081d3a]/[0.05] leading-none select-none">"</span>
@@ -75,14 +75,7 @@
                     </div>
 
                     <div class="review-scroll review-scroll-down hidden md:flex flex-col gap-6">
-                        @php
-                            $columnB = [
-                                ['initials' => 'EP', 'name' => 'Elizabeth Pierson', 'meta' => 'Bark Review', 'source' => 'bark', 'quote' => 'Impressed with their punctuality. My bathroom looks new and I am happy my old stove stains are gone.'],
-                                ['initials' => 'MV', 'name' => 'Marili van der Merwe', 'meta' => 'Local Guide, Google Review', 'source' => 'google', 'quote' => 'Thanks so much for the cleaning service you provided! The house looks brand new and it is ready for the new owners to move in! Highly recommend their services to anyone.'],
-                                ['initials' => 'M', 'name' => 'Monique', 'meta' => 'House Cleaning · Bark Review', 'source' => 'bark', 'quote' => 'The cleaning was 100% perfect. Loved meeting Charity and Prosper.'],
-                            ];
-                        @endphp
-                        @for ($i = 0; $i < 2; $i++)
+                        @for ($i = 0; $i < $repeatB; $i++)
                             @foreach ($columnB as $r)
                                 <div class="flex-shrink-0 bg-[#f8f9fc] rounded-2xl p-6 border border-gray-100 relative overflow-hidden">
                                     <span class="absolute -top-2 -right-1 text-[80px] font-serif text-[#081d3a]/[0.05] leading-none select-none">"</span>

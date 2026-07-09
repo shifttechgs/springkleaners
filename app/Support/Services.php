@@ -24,6 +24,7 @@ class Services
                 'service_fee' => (float) $service->service_fee,
                 'avg_hours' => $service->avg_hours,
                 'unit_label' => $service->unit_label,
+                'bookable' => $service->bookable,
             ],
         ])->all();
     }
@@ -31,6 +32,11 @@ class Services
     public static function find(string $slug): ?array
     {
         return static::list()[$slug] ?? null;
+    }
+
+    public static function bookable(): array
+    {
+        return array_filter(static::list(), fn ($service) => $service['bookable']);
     }
 
     public static function addons(): array

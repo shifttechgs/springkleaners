@@ -24,6 +24,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClientInvoiceController;
 use App\Http\Controllers\ClientQuoteController;
 use App\Http\Controllers\DeployController;
+use App\Http\Controllers\LeadMagnetController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,12 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
+Route::get('/faq', function () {
+    return view('faq', ['clusters' => config('faq')]);
+})->name('faq');
+
+Route::post('/deposit-back-checklist', [LeadMagnetController::class, 'depositBackChecklist'])->name('lead-magnets.deposit-back-checklist');
+
 Route::get('/book/availability', [BookingController::class, 'availability'])->name('booking.availability');
 Route::post('/book/reserve', [BookingController::class, 'reserve'])->name('booking.reserve');
 Route::get('/book', [BookingController::class, 'show'])->name('booking.show');
@@ -57,9 +64,10 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/sitemap.xml', function () {
     $posts = collect(config('blog.posts'));
+    $services = \App\Models\Service::orderBy('sort_order')->get(['slug', 'updated_at']);
 
     return response()
-        ->view('sitemap', ['posts' => $posts])
+        ->view('sitemap', ['posts' => $posts, 'services' => $services])
         ->header('Content-Type', 'text/xml');
 });
 
@@ -116,15 +124,16 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('/bookings/{booking}/send-quote', [AdminBookingController::class, 'sendQuote'])->name('bookings.send-quote');
     Route::get('/bookings/{booking}/quote-pdf', [QuotePdfController::class, 'download'])->name('bookings.quote-pdf');
     Route::get('/bookings/{booking}/quote-pdf/preview', [QuotePdfController::class, 'preview'])->name('bookings.quote-pdf.preview');
-    Route::get('/bookings/{booking}/invoice-pdf', [InvoicePdfController::class, 'download'])->name('bookings.invoice-pdf');
-    Route::get('/bookings/{booking}/invoice-pdf/preview', [InvoicePdfController::class, 'preview'])->name('bookings.invoice-pdf.preview');
-    Route::post('/bookings/{booking}/mark-deposit-paid', [AdminBookingController::class, 'markDepositPaid'])->name('bookings.mark-deposit-paid');
-    Route::post('/bookings/{booking}/mark-paid', [AdminBookingController::class, 'markPaid'])->name('bookings.mark-paid');
-    Route::post('/bookings/{booking}/send-invoice-email', [AdminBookingController::class, 'sendInvoiceEmail'])->name('bookings.send-invoice-email');
     Route::post('/bookings/{booking}/send-confirmation-email', [AdminBookingController::class, 'sendConfirmationEmail'])->name('bookings.send-confirmation-email');
     Route::post('/bookings/{booking}/send-thank-you-email', [AdminBookingController::class, 'sendThankYouEmail'])->name('bookings.send-thank-you-email');
 
     Route::get('/invoices', [AdminInvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices/{booking}', [AdminInvoiceController::class, 'show'])->name('invoices.show');
+    Route::post('/invoices/{booking}/mark-deposit-paid', [AdminInvoiceController::class, 'markDepositPaid'])->name('invoices.mark-deposit-paid');
+    Route::post('/invoices/{booking}/mark-paid', [AdminInvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
+    Route::post('/invoices/{booking}/send-email', [AdminInvoiceController::class, 'sendEmail'])->name('invoices.send-email');
+    Route::get('/invoices/{booking}/pdf', [InvoicePdfController::class, 'download'])->name('invoices.pdf');
+    Route::get('/invoices/{booking}/pdf/preview', [InvoicePdfController::class, 'preview'])->name('invoices.pdf.preview');
 
     Route::get('/clients', [AdminClientController::class, 'index'])->name('clients.index');
     Route::get('/clients/{client}', [AdminClientController::class, 'show'])->name('clients.show');

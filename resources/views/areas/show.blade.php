@@ -1,28 +1,21 @@
 @extends('layouts.app')
-@section('title', 'Cleaning Services in '.$location['name'].' | SpringKleaners')
+@section('title', 'Cleaning Services in '.$location['name'].' | Cape Town Northern Suburbs | SpringKleaners')
 @section('description', $location['meta_description'])
 @section('content')
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "Service",
-        "serviceType": "Residential & Commercial Cleaning",
-        "name": {!! json_encode('Cleaning Services in '.$location['name']) !!},
-        "description": {!! json_encode($location['meta_description']) !!},
-        "provider": {
-            "@@type": "LocalBusiness",
-            "name": "SpringKleaners",
-            "telephone": "+27815274711",
-            "email": "bookings@springkleaners.co.za"
-        },
-        "areaServed": {
-            "@@type": "Place",
-            "name": {!! json_encode($location['name'].', Cape Town') !!}
-        }
-    }
-    </script>
-
     @php
+        $serviceJsonLd = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Service',
+            'serviceType' => 'Residential & Commercial Cleaning',
+            'name' => 'Cleaning Services in '.$location['name'],
+            'description' => $location['meta_description'],
+            'provider' => ['@id' => rtrim(config('app.url'), '/').'/#business'],
+            'areaServed' => [
+                '@type' => 'Place',
+                'name' => $location['name'].', Cape Town',
+            ],
+        ];
+
         $breadcrumbJsonLd = [
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
@@ -33,6 +26,7 @@
             ],
         ];
     @endphp
+    <script type="application/ld+json">{!! json_encode($serviceJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
     @include('components.navbar')
@@ -66,6 +60,7 @@
                     WhatsApp Us
                 </a>
             </div>
+            <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
         </div>
     </section>
 
@@ -81,14 +76,30 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
                 @foreach ($services as $svcSlug => $svc)
+                @php
+                    $svcContent = config('service_pages.'.$svcSlug, []);
+                    $svcPricingMode = $svcContent['pricing_mode'] ?? 'wizard';
+                @endphp
                 <div class="bg-[#f8f9fc] border border-gray-100 rounded-2xl p-6 flex flex-col">
                     <p class="text-[#081d3a] font-bold text-[16px] tracking-tight mb-2">{{ $svc['name'] }}</p>
                     <p class="text-[#647082] text-[13px] leading-relaxed mb-5 flex-1">{{ $svc['tagline'] }}</p>
+                    @if ($svcPricingMode === 'custom')
+                    <p class="text-[#647082] text-[11px] mb-4">Custom quote</p>
+                    @elseif ($svcPricingMode === 'quote')
+                    <p class="text-[#647082] text-[11px] mb-4">From <span class="text-[#081d3a] font-bold">{{ $svcContent['pricing_headline'] }}</span> {{ $svcContent['pricing_unit'] }}</p>
+                    @else
                     <p class="text-[#647082] text-[11px] mb-4">From <span class="text-[#081d3a] font-bold">R{{ number_format($svc['base_price']) }}</span> / {{ $svc['unit_label'] }}</p>
+                    @endif
                     <div class="flex flex-col gap-2">
+                        @if ($svcPricingMode === 'wizard')
                         <a href="{{ route('booking.show', ['service' => $svcSlug, 'suburb' => $location['name']]) }}" class="text-center bg-[#081d3a] text-[#f6e304] font-semibold py-2.5 rounded-full hover:bg-[#0d2a4a] transition-all text-[13px]">
                             Book in {{ $location['name'] }}
                         </a>
+                        @else
+                        <a href="https://wa.me/27815274711?text={{ rawurlencode('Hi, I\'d like a quote for '.$svc['name'].' in '.$location['name'].'.') }}" target="_blank" rel="noopener noreferrer" class="text-center bg-[#081d3a] text-[#f6e304] font-semibold py-2.5 rounded-full hover:bg-[#0d2a4a] transition-all text-[13px]">
+                            Get a Quote
+                        </a>
+                        @endif
                         <a href="{{ route('services.show', $svcSlug) }}" class="text-center text-[#081d3a]/60 font-semibold py-1 text-[12px] hover:text-[#081d3a] transition-colors">
                             Learn more →
                         </a>
@@ -148,6 +159,11 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+            <div class="max-w-2xl mx-auto mt-6 text-center wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
+                <a href="{{ route('faq') }}#areas" class="text-[#081d3a] font-semibold text-[13px] hover:text-[#a9791f] transition-colors">
+                    See more questions in our full FAQ →
+                </a>
             </div>
         </div>
     </section>

@@ -6,7 +6,7 @@ class Company
 {
     public static function name(): string
     {
-        return Setting::get('company_name', 'Spring Kleaners');
+        return Setting::get('company_name', 'SpringKleaners');
     }
 
     public static function addressLines(): array
@@ -33,7 +33,7 @@ class Company
 
     public static function email(): string
     {
-        return Setting::get('company_email', 'sales@springkleaners.com');
+        return Setting::get('company_email', 'bookings@springkleaners.co.za');
     }
 
     public static function bankName(): string

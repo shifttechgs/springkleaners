@@ -9,7 +9,7 @@ class Service extends Model
     protected $fillable = [
         'slug', 'name', 'tagline', 'icon', 'base_price', 'included_bedrooms',
         'included_bathrooms', 'bedroom_price', 'bathroom_price', 'extra_room_price',
-        'service_fee', 'avg_hours', 'unit_label', 'sort_order',
+        'service_fee', 'avg_hours', 'unit_label', 'sort_order', 'bookable',
     ];
 
     protected $casts = [
@@ -22,5 +22,6 @@ class Service extends Model
         'included_bathrooms' => 'integer',
         'avg_hours' => 'integer',
         'sort_order' => 'integer',
+        'bookable' => 'boolean',
     ];
 }

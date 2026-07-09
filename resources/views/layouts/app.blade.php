@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V00EMDHD3D"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-V00EMDHD3D');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -28,8 +38,12 @@
         $localBusinessLd = [
             '@context' => 'https://schema.org',
             '@type' => 'HousekeepingService',
+            '@id' => rtrim(config('app.url'), '/').'/#business',
             'name' => 'SpringKleaners',
+            'alternateName' => 'Spring Kleaners',
+            'legalName' => 'SpringKleaners (Reg. 2021/363748/07)',
             'url' => config('app.url'),
+            'logo' => url('/images/logo.webp'),
             'telephone' => '+27815274711',
             'email' => 'bookings@springkleaners.co.za',
             'image' => url('/images/works/1.png'),
@@ -39,7 +53,16 @@
                 'streetAddress' => '1 Stepney Rd',
                 'addressLocality' => 'Parklands',
                 'addressRegion' => 'Western Cape',
+                'postalCode' => '7441',
                 'addressCountry' => 'ZA',
+            ],
+            'geo' => [
+                '@type' => 'GeoCoordinates',
+                'latitude' => '-33.8038708',
+                'longitude' => '18.5154524',
+            ],
+            'sameAs' => [
+                'https://share.google/fP58DLAFT2V3FyTUK',
             ],
             'areaServed' => collect(config('locations'))->map(fn ($loc) => [
                 '@type' => 'Place',

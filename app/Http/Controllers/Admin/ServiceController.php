@@ -26,7 +26,7 @@ class ServiceController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Service::create($this->validated($request));
+        Service::create([...$this->validated($request), 'bookable' => $request->boolean('bookable')]);
 
         return redirect()->route('admin.services.index')->with('status', 'Service added.');
     }
@@ -38,7 +38,7 @@ class ServiceController extends Controller
 
     public function update(Request $request, Service $service): RedirectResponse
     {
-        $service->update($this->validated($request, $service));
+        $service->update([...$this->validated($request, $service), 'bookable' => $request->boolean('bookable')]);
 
         return redirect()->route('admin.services.index')->with('status', 'Service updated.');
     }

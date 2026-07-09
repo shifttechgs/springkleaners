@@ -99,6 +99,13 @@
                 </div>
             </div>
 
+            <label class="flex items-center gap-2.5 text-[13px] text-ink font-medium">
+                <input type="checkbox" name="bookable" value="1" {{ old('bookable', true) ? 'checked' : '' }}
+                       class="w-4 h-4 rounded border-line text-navy focus:ring-navy">
+                Bookable in the instant-quote wizard
+                <span class="font-normal text-label">(leave unchecked for services priced by m²/room/seat/pane — those get a "Request a Quote" page instead)</span>
+            </label>
+
             <button type="submit" class="btn-primary w-full justify-center">Save Service</button>
         </form>
     </div>

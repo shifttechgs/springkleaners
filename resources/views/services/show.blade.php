@@ -2,32 +2,34 @@
 @section('title', $content['meta_title'])
 @section('description', $content['meta_description'])
 @section('content')
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "Service",
-        "serviceType": {!! json_encode($content['label']) !!},
-        "name": {!! json_encode($content['label'].' | SpringKleaners') !!},
-        "description": {!! json_encode($content['meta_description']) !!},
-        "provider": {
-            "@@type": "LocalBusiness",
-            "name": "SpringKleaners",
-            "telephone": "+27815274711",
-            "email": "bookings@springkleaners.co.za"
-        },
-        "areaServed": {
-            "@@type": "City",
-            "name": "Cape Town, Northern Suburbs"
-        },
-        "offers": {
-            "@@type": "Offer",
-            "priceCurrency": "ZAR",
-            "price": {!! json_encode($service['base_price']) !!}
-        }
-    }
-    </script>
-
     @php
+        $pricingMode = $content['pricing_mode'] ?? 'wizard';
+        $isCustomQuote = $pricingMode === 'custom';
+        $isQuoteMode = in_array($pricingMode, ['quote', 'custom'], true);
+        $quoteWhatsappUrl = 'https://wa.me/27815274711?text='.rawurlencode("Hi, I'd like a quote for {$content['label']}.");
+
+        $serviceJsonLd = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Service',
+            'serviceType' => $content['label'],
+            'name' => $content['label'].' | SpringKleaners',
+            'description' => $content['meta_description'],
+            'provider' => ['@id' => rtrim(config('app.url'), '/').'/#business'],
+            'areaServed' => [
+                '@type' => 'City',
+                'name' => 'Cape Town, Northern Suburbs',
+            ],
+        ];
+
+        if (! $isCustomQuote) {
+            $serviceJsonLd['offers'] = [
+                '@type' => 'Offer',
+                'priceCurrency' => 'ZAR',
+                'price' => $service['base_price'],
+                'url' => url()->current(),
+            ];
+        }
+
         $faqJsonLd = [
             '@context' => 'https://schema.org',
             '@type' => 'FAQPage',
@@ -51,6 +53,7 @@
             ],
         ];
     @endphp
+    <script type="application/ld+json">{!! json_encode($serviceJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <script type="application/ld+json">{!! json_encode($faqJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
@@ -76,6 +79,15 @@
                         {{ $content['intro'] }}
                     </p>
                     <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
+                        @if ($isQuoteMode)
+                        <a href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="btn-gold">
+                            {{ $content['cta_label'] ?? 'Request a Quote' }}
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                        </a>
+                        <a href="mailto:bookings@springkleaners.co.za" class="btn-outline">
+                            Email Us
+                        </a>
+                        @else
                         <a href="{{ route('booking.show', ['service' => $slug]) }}" class="btn-gold">
                             Book This Service
                             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -83,7 +95,9 @@
                         <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="btn-outline">
                             WhatsApp Us
                         </a>
+                        @endif
                     </div>
+                    <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
                 </div>
                 <div class="lg:col-span-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
                     <div class="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
@@ -119,6 +133,42 @@
 
                 <div class="lg:col-span-5 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
                     <div class="bg-[#0d1b33] rounded-2xl p-7 lg:p-8 sticky top-28">
+                        @if ($isCustomQuote)
+                        <span class="text-white/50 text-[12px] font-medium">Pricing</span>
+                        <div class="flex items-baseline gap-2 mt-1 mb-5">
+                            <span class="text-white text-[32px] font-extrabold tracking-tight leading-none">Get a Custom Quote</span>
+                        </div>
+                        <ul class="space-y-2.5 mb-6 pb-6 border-b border-white/10">
+                            @foreach ($content['pricing_notes'] as $note)
+                            <li class="flex items-start gap-2 text-[13px] text-white/70">
+                                <span class="w-1 h-1 rounded-full bg-[#f6e304] flex-shrink-0 mt-1.5"></span>
+                                {{ $note }}
+                            </li>
+                            @endforeach
+                        </ul>
+                        <a href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
+                            {{ $content['cta_label'] ?? 'Get a Custom Quote' }}
+                        </a>
+                        <p class="text-center text-white/40 text-[11px] mt-3">Free walkthrough · Fixed quote before we start</p>
+                        @elseif ($isQuoteMode)
+                        <span class="text-white/50 text-[12px] font-medium">From</span>
+                        <div class="flex items-baseline gap-2 mt-1 mb-5">
+                            <span class="text-white text-[42px] font-extrabold tracking-tighter leading-none">{{ $content['pricing_headline'] }}</span>
+                            <span class="text-white/50 text-[13px]">{{ $content['pricing_unit'] }}</span>
+                        </div>
+                        <ul class="space-y-2.5 mb-6 pb-6 border-b border-white/10">
+                            @foreach ($content['pricing_notes'] as $note)
+                            <li class="flex items-start gap-2 text-[13px] text-white/70">
+                                <span class="w-1 h-1 rounded-full bg-[#f6e304] flex-shrink-0 mt-1.5"></span>
+                                {{ $note }}
+                            </li>
+                            @endforeach
+                        </ul>
+                        <a href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
+                            {{ $content['cta_label'] ?? 'Request a Quote' }}
+                        </a>
+                        <p class="text-center text-white/40 text-[11px] mt-3">Free walkthrough · Fixed quote before we start</p>
+                        @else
                         <span class="text-white/50 text-[12px] font-medium">From</span>
                         <div class="flex items-baseline gap-2 mt-1 mb-5">
                             <span class="text-white text-[42px] font-extrabold tracking-tighter leading-none">R{{ number_format($service['base_price']) }}</span>
@@ -146,6 +196,7 @@
                             Book This Service
                         </a>
                         <p class="text-center text-white/40 text-[11px] mt-3">Free inspection · Confirmed quote before we start</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -153,6 +204,7 @@
     </section>
 
     @include('components.how-it-works')
+    <x-before-after-gallery :service="$slug" />
     @include('components.why-us')
     @include('components.testimonials')
 
@@ -180,6 +232,11 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+            <div class="max-w-2xl mx-auto mt-6 text-center wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
+                <a href="{{ route('faq') }}#services" class="text-[#081d3a] font-semibold text-[13px] hover:text-[#a9791f] transition-colors">
+                    See more questions in our full FAQ →
+                </a>
             </div>
         </div>
     </section>
@@ -223,6 +280,10 @@
             </div>
         </div>
     </section>
+
+    @if ($slug === 'end-of-tenancy')
+    <x-lead-magnet-checklist />
+    @endif
 
     @include('components.final-cta')
     @include('components.footer')
