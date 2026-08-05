@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     protected $fillable = [
-        'slug', 'name', 'tagline', 'icon', 'base_price', 'included_bedrooms',
-        'included_bathrooms', 'bedroom_price', 'bathroom_price', 'extra_room_price',
-        'service_fee', 'avg_hours', 'unit_label', 'sort_order', 'bookable',
+        'slug', 'name', 'tagline', 'description', 'inclusions', 'icon', 'base_price',
+        'included_bedrooms', 'included_bathrooms', 'bedroom_price', 'bathroom_price',
+        'extra_room_price', 'service_fee', 'avg_hours', 'unit_label', 'sort_order', 'bookable',
     ];
 
     protected $casts = [
+        'inclusions' => 'array',
         'base_price' => 'decimal:2',
         'bedroom_price' => 'decimal:2',
         'bathroom_price' => 'decimal:2',

@@ -134,6 +134,69 @@ body {
 }
 .tbl tbody td.r { text-align: right; }
 
+.item-note {
+    display: block;
+    font-size: 9px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-top: 2px;
+}
+
+/* ── Scope of work ───────────────────────────────────────── */
+.scope-box {
+    margin-top: 16px;
+    background: #f9fafb;
+    border-left: 3px solid #081d3a;
+    padding: 11px 14px;
+    page-break-inside: avoid;
+}
+
+.scope-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 3px;
+}
+
+.scope-intro {
+    font-size: 10px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.scope-tbl { width: 100%; border-collapse: collapse; }
+.scope-tbl td {
+    width: 50%;
+    vertical-align: top;
+    padding: 2px 12px 2px 0;
+    font-size: 10px;
+    color: #374151;
+    line-height: 1.5;
+}
+.scope-bullet { color: #a9791f; font-weight: 700; }
+
+/* ── Job details ─────────────────────────────────────────── */
+.det-tbl { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.det-tbl td {
+    width: 33.33%;
+    vertical-align: top;
+    padding: 5px 12px 5px 0;
+    font-size: 10px;
+    color: #111827;
+    line-height: 1.45;
+}
+
+.det-lbl {
+    display: block;
+    font-size: 7.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9ca3af;
+    margin-bottom: 1px;
+}
+
 /* ── Totals ──────────────────────────────────────────────── */
 .totals {
     width: 100%;
@@ -228,6 +291,8 @@ body {
 
     @php
         $lineItems = \App\Support\QuotePricing::lineItems($booking);
+        $scope = \App\Support\ServiceSnapshot::for($booking);
+        $jobDetails = \App\Support\ServiceSnapshot::jobDetails($booking);
         $subtotal = (float) ($booking->quoted_price ?? $booking->total ?? 0);
         $depositPaid = $booking->deposit_paid_at ? (float) ($booking->deposit_amount ?? 0) : 0;
         $balanceDue = max(0, $subtotal - $depositPaid);
@@ -283,7 +348,12 @@ body {
         <tbody>
             @foreach($lineItems as $item)
             <tr>
-                <td>{{ $item['description'] }}</td>
+                <td>
+                    {{ $item['description'] }}
+                    @if (filled($item['note'] ?? null))
+                        <span class="item-note">{{ $item['note'] }}</span>
+                    @endif
+                </td>
                 <td class="r">{{ $item['qty'] }}</td>
                 <td class="r">R&nbsp;{{ number_format($item['unit_price'], 2) }}</td>
                 <td class="r">R&nbsp;{{ number_format($item['total'], 2) }}</td>
@@ -309,6 +379,42 @@ body {
             <td>R&nbsp;{{ number_format($balanceDue, 2) }}</td>
         </tr>
     </table>
+
+    {{-- Scope of work --}}
+    <div class="scope-box">
+        <div class="card-lbl">What This Service Covered</div>
+        <div class="scope-name">{{ $scope['name'] }}</div>
+        @if (filled($scope['description']))
+            <div class="scope-intro">{{ $scope['description'] }}</div>
+        @endif
+        @if (! empty($scope['inclusions']))
+            <table class="scope-tbl">
+                @foreach (array_chunk($scope['inclusions'], 2) as $row)
+                    <tr>
+                        @foreach ($row as $inclusion)
+                            <td><span class="scope-bullet">&bull;</span>&nbsp;{{ $inclusion }}</td>
+                        @endforeach
+                        @if (count($row) === 1)<td></td>@endif
+                    </tr>
+                @endforeach
+            </table>
+        @endif
+    </div>
+
+    {{-- Job details --}}
+    <div class="card-wrap">
+        <div class="card-lbl">Job Details</div>
+        <table class="det-tbl">
+            @foreach (array_chunk($jobDetails, 3) as $row)
+                <tr>
+                    @foreach ($row as $detail)
+                        <td><span class="det-lbl">{{ $detail['label'] }}</span>{{ $detail['value'] }}</td>
+                    @endforeach
+                    @for ($i = count($row); $i < 3; $i++)<td></td>@endfor
+                </tr>
+            @endforeach
+        </table>
+    </div>
 
     {{-- Payment status --}}
     @if ($booking->payment_status->value === 'paid')

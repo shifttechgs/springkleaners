@@ -38,6 +38,18 @@
                        class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
             </div>
 
+            <div>
+                <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Scope Summary <span class="normal-case font-normal text-label">(prints on quotes &amp; invoices)</span></label>
+                <textarea name="description" rows="3"
+                          class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">{{ old('description', $service->description) }}</textarea>
+            </div>
+
+            <div>
+                <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">What's Included <span class="normal-case font-normal text-label">(one per line — prints on quotes &amp; invoices)</span></label>
+                <textarea name="inclusions" rows="6" placeholder="Kitchen &amp; bathroom deep clean&#10;All rooms vacuumed &amp; mopped&#10;Inside appliances cleaned"
+                          class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">{{ old('inclusions', implode("\n", $service->inclusions ?? [])) }}</textarea>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Base Price (R)</label>

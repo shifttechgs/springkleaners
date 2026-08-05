@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Client;
 use App\Support\QuoteExpiry;
 use App\Support\Services;
+use App\Support\ServiceSnapshot;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -142,6 +143,9 @@ class BookingController extends Controller
             $data['invoice_number'] = 'INV-'.now()->format('Y').'-'.str_pad((string) $booking->id, 4, '0', STR_PAD_LEFT);
             $data['invoiced_at'] = now();
             $data['accepted_token'] = $booking->accepted_token ?? (string) Str::uuid();
+
+            // Bookings invoiced without a quote step still need their scope frozen.
+            ServiceSnapshot::ensureStored($booking);
         }
 
         $booking->update($data);
@@ -162,6 +166,8 @@ class BookingController extends Controller
             'status' => BookingStatus::Quoted,
             'accepted_token' => $booking->accepted_token ?? (string) Str::uuid(),
             'quote_sent_at' => now(),
+            // Freeze the scope the client is being quoted on.
+            'service_snapshot' => ServiceSnapshot::build($booking),
         ]);
 
         return back()->with('status', 'Quote generated — send it to the client below.');

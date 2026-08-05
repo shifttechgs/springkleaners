@@ -1,7 +1,7 @@
 @php
     $service = \App\Support\Services::find($booking->service);
-    $addonsList = collect(\App\Support\Services::addons());
-    $selectedAddons = collect($booking->addons ?? [])->map(fn ($key) => $addonsList->firstWhere('key', $key))->filter();
+    $scope = \App\Support\ServiceSnapshot::for($booking);
+    $selectedAddons = collect($scope['addons']);
     $floorTypes = collect($booking->floor_types ?? []);
 @endphp
 
@@ -9,7 +9,7 @@
     <div class="flex items-center justify-between pb-4 border-b border-gray-100">
         <div>
             <p class="text-[#647082] text-[11px] uppercase tracking-wider font-semibold">Service</p>
-            <p class="text-[#081d3a] font-bold text-[16px] mt-0.5">{{ $service['name'] ?? $booking->service }}</p>
+            <p class="text-[#081d3a] font-bold text-[16px] mt-0.5">{{ $scope['name'] }}</p>
         </div>
         <div class="text-right">
             <p class="text-[#647082] text-[11px] uppercase tracking-wider font-semibold">
@@ -20,6 +20,28 @@
             </p>
         </div>
     </div>
+
+    @if (filled($scope['description']) || ! empty($scope['inclusions']))
+        <div class="bg-[#f8f9fc] rounded-xl p-4">
+            <p class="text-[#647082] text-[11px] uppercase tracking-wider font-semibold mb-2">What this service covers</p>
+            @if (filled($scope['description']))
+                <p class="text-[#4b5563] text-[13px] leading-relaxed mb-3">{{ $scope['description'] }}</p>
+            @endif
+            @if (! empty($scope['inclusions']))
+                <ul class="grid sm:grid-cols-2 gap-x-4 gap-y-1.5">
+                    @foreach ($scope['inclusions'] as $inclusion)
+                        <li class="flex items-start gap-2 text-[13px] text-[#081d3a]">
+                            <svg class="w-3.5 h-3.5 text-[#a9791f] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>{{ $inclusion }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+            @if ($scope['avg_hours'])
+                <p class="text-[#647082] text-[12px] mt-3">Typically around {{ $scope['avg_hours'] }} hours on site.</p>
+            @endif
+        </div>
+    @endif
 
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-[13px]">
         <div>
@@ -55,11 +77,16 @@
     <div>
         <p class="text-[#647082] text-[11px] uppercase tracking-wider font-semibold mb-2">Add-ons</p>
         @if ($selectedAddons->isNotEmpty())
-            <ul class="space-y-1.5">
+            <ul class="space-y-2.5">
                 @foreach ($selectedAddons as $addon)
-                    <li class="flex items-center justify-between text-[13px]">
-                        <span class="text-[#081d3a]">{{ $addon['label'] }}</span>
-                        <span class="text-[#647082]">+R{{ number_format($addon['price']) }}</span>
+                    <li class="flex items-start justify-between gap-4 text-[13px]">
+                        <span>
+                            <span class="text-[#081d3a] block">{{ $addon['label'] }}</span>
+                            @if (filled($addon['description'] ?? null))
+                                <span class="text-[#647082] text-[12px] block mt-0.5">{{ $addon['description'] }}</span>
+                            @endif
+                        </span>
+                        <span class="text-[#647082] whitespace-nowrap">+R{{ number_format($addon['price']) }}</span>
                     </li>
                 @endforeach
             </ul>

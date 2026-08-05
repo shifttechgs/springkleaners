@@ -14,6 +14,8 @@ class Services
                 'slug' => $service->slug,
                 'name' => $service->name,
                 'tagline' => $service->tagline,
+                'description' => $service->description,
+                'inclusions' => $service->inclusions ?? [],
                 'icon' => $service->icon,
                 'base_price' => (float) $service->base_price,
                 'included_bedrooms' => $service->included_bedrooms,

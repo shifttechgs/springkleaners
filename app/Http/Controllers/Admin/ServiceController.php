@@ -52,10 +52,12 @@ class ServiceController extends Controller
 
     private function validated(Request $request, ?Service $service = null): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'slug' => 'required|alpha_dash|max:100|unique:services,slug'.($service ? ','.$service->id : ''),
             'name' => 'required|string|max:255',
             'tagline' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:2000',
+            'inclusions' => 'nullable|string|max:3000',
             'icon' => 'nullable|string|max:50',
             'base_price' => 'required|numeric|min:0',
             'included_bedrooms' => 'required|integer|min:0',
@@ -68,5 +70,14 @@ class ServiceController extends Controller
             'unit_label' => 'nullable|string|max:50',
             'sort_order' => 'nullable|integer|min:0',
         ]);
+
+        // The form takes one inclusion per line; store it as a clean list.
+        $data['inclusions'] = collect(preg_split('/\r\n|\r|\n/', $data['inclusions'] ?? ''))
+            ->map(fn (string $line) => trim(ltrim($line, "-•* \t")))
+            ->filter()
+            ->values()
+            ->all();
+
+        return $data;
     }
 }
