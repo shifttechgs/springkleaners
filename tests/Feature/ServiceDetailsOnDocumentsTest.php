@@ -143,6 +143,27 @@ class ServiceDetailsOnDocumentsTest extends TestCase
         $this->assertContains('Kitchen & bathroom deep clean', $scope['inclusions']);
     }
 
+    public function test_public_service_page_reads_inclusions_from_the_database(): void
+    {
+        Service::where('slug', 'deep-cleaning')->update([
+            'inclusions' => json_encode(['Chandeliers hand-polished']),
+        ]);
+
+        $this->get(route('services.show', 'deep-cleaning'))
+            ->assertOk()
+            ->assertSee('Chandeliers hand-polished')
+            ->assertDontSee('Kitchen &amp; bathroom deep clean', false);
+    }
+
+    public function test_public_service_page_falls_back_to_config_when_inclusions_are_cleared(): void
+    {
+        Service::where('slug', 'deep-cleaning')->update(['inclusions' => json_encode([])]);
+
+        $this->get(route('services.show', 'deep-cleaning'))
+            ->assertOk()
+            ->assertSee('Kitchen &amp; bathroom deep clean', false);
+    }
+
     public function test_admin_can_edit_the_scope_copy(): void
     {
         $service = Service::where('slug', 'deep-cleaning')->firstOrFail();

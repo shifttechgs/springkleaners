@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * Marketing copy for the public service pages.
+ *
+ * Note on 'included': the live list is the `inclusions` column on the
+ * services table, edited from Admin > Services > Edit, so the public page
+ * and the quote/invoice documents never drift apart. The arrays below
+ * seeded that column and remain the fallback if it is ever cleared —
+ * edit the service in admin, not here.
+ */
+
 return [
 
     'deep-cleaning' => [

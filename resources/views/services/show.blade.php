@@ -119,7 +119,7 @@
                         Every {{ strtolower($content['label']) }} covers this as standard.
                     </h2>
                     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-8">
-                        @foreach ($content['included'] as $item)
+                        @foreach ($inclusions as $item)
                         <li class="flex items-start gap-2.5 text-[#081d3a]/75 text-[14px] leading-relaxed">
                             <span class="w-1.5 h-1.5 rounded-full bg-[#f6e304] flex-shrink-0 mt-2"></span>
                             {{ $item }}

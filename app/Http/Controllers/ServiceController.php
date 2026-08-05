@@ -22,10 +22,16 @@ class ServiceController extends Controller
             ->take(3)
             ->values();
 
+        // Inclusions are maintained in the DB (Admin > Services > Edit) so the
+        // public page and the quote/invoice documents stay in step. The config
+        // list is the seed for that column and the fallback if it is cleared.
+        $inclusions = filled($service['inclusions'] ?? []) ? $service['inclusions'] : ($content['included'] ?? []);
+
         return view('services.show', [
             'slug' => $slug,
             'service' => $service,
             'content' => $content,
+            'inclusions' => $inclusions,
             'allServices' => $allServices,
             'posts' => $posts,
         ]);
