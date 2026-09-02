@@ -7,6 +7,7 @@
 | [`design.md`](./design.md) | Colors, typography, layout/motion conventions |
 | [`business.md`](./business.md) | Business facts — services, pricing, service area, operating model |
 | [`seo.md`](./seo.md) | Current SEO/GEO status — living document, update as work progresses |
+| [`gbp_posts.md`](./gbp_posts.md) | Queue + log of Google Business Profile posts, published manually |
 | [`todo.md`](./todo.md) | Deferred tasks (GA4 setup) |
 | [`deployment.md`](./deployment.md) | How the Hosting Pods deploy pipeline works, and the one-time cPanel setup it needs |
 | [`reports/`](./reports/) | Dated, point-in-time reports (audits, strategy docs) — snapshots, not living documents |
