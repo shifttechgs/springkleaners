@@ -61,20 +61,24 @@ Read this as: everything fixable from inside the codebase has moved meaningfully
 
 ## Still open
 
-**Needs the business owner, not code:**
-- DNS cutover to `springkleaners.co.za` + `APP_URL` update
-- GBP category/service-area/photos review
-- Claiming Hellopeter, a real Facebook Business Page, Bing Places
-- Re-entering the fixed `review_url` on the production database
+**Superseded 2026-09-02**: DNS cutover is done — the site is live at `springkleaners.co.za` with a valid Let's Encrypt cert, and `www.` now 301s to the non-www canonical host (`public/.htaccess`). Don't treat this as still-pending.
 
-**Content/backlink work not yet started (60–90 day items):**
+**Needs the business owner, not code:**
+- GBP category/service-area/photos review
+- Re-entering the fixed `review_url` on the production database
+- `aggregateRating.reviewCount` in the `LocalBusiness` schema (`layouts/app.blade.php`) is still hardcoded at `'10'` — confirm against the real current GBP review total (not `config/reviews.php`'s count, which is a curated display subset, not the full count) and update if it's drifted.
+- Submit `sitemap.xml` to Google Search Console (the file itself has always existed and is correct/current — this is just the manual GSC submission step, not yet confirmed done)
+
+**Off-site authority work — prepped, not yet claimed.** Full NAP block, ready-to-paste descriptions, per-directory claim steps, and outreach templates now live in [`docs/citations.md`](./citations.md):
+- Hellopeter, Facebook Business Page, Bing Places — claim steps ready, none claimed yet
+- Letting-agent/property-manager partnership outreach — email template ready, not yet sent
+- Digital PR pitch to hyperlocal Cape Town press — pitch template ready, not yet sent
+
+**Content work not yet started (60–90 day items):**
 - Cape Town Cleaning Price Index (original data pillar — the `bookings` table already has real pricing data to aggregate)
 - Public cleaning cost calculator (reuse the booking wizard's existing pricing logic)
-- Letting-agent/property-manager backlink-and-referral partnerships
 - Buyer's-guide/comparison content ("how to choose a cleaning company")
-- Digital PR pitch to hyperlocal Cape Town press
 - Wikidata entity groundwork
-- Submit `sitemap.xml` to Google Search Console (the file itself has always existed and is correct/current — this is just the manual GSC submission step, not yet confirmed done)
 
 **CRO refinements not yet started:**
 - Embedded real Google Reviews widget (currently hardcoded testimonials, even though the content itself is genuine)
