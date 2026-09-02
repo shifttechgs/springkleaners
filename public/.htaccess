@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # Redirect www to the canonical non-www host (matches APP_URL and every
+    # canonical/schema/sitemap URL the app itself generates)
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
