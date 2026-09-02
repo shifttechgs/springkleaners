@@ -22,6 +22,8 @@ A condensed build history and decision log, kept in-repo so the context survives
 
 **2026-07-06 — Copy fix.** Removed the hardcoded "10" from "rated by 10 Cape Town clients" (marquee) and "Based on 10 Google reviews" (testimonials) — a specific review count goes stale fast and the user wanted it gone from visible copy. The `reviewCount: '10'` value inside the invisible `LocalBusiness` schema in `layouts/app.blade.php` was left untouched since that's a data-accuracy question (does it match real GBP data), not a display preference — revisit it if the real count has changed.
 
+**2026-09-02 — Booking calendar opened to every day.** Removed the Sat/Sun-only restriction from `BookingController::reserve()`/`nextAvailableDate()` and `Admin\BookingController::store()`, and the matching weekend-only gating in the booking-wizard and admin-create calendar JS. `Booking::DAILY_CAPACITY = 2` per-day cap is unchanged. Updated copy that had asserted weekend-only operation across `config/faq.php`, `config/service_pages.php`, two blog posts, and `legal/terms.blade.php`.
+
 ## Standing decisions (don't silently reverse these)
 
 - **No database for content** — blog/services/areas stay as static config unless content genuinely outgrows it.

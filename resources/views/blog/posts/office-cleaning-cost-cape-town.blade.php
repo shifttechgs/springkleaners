@@ -22,14 +22,14 @@
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">Scheduling around a working office</h2>
 <p class="text-muted text-[15.5px] leading-[1.85] mb-5">
-    Most office contracts are scheduled over weekends or before/after business hours, so cleaning never overlaps with a working day. If your business needs a different weekday schedule, message us directly to talk through what's realistic.
+    Most office contracts are scheduled over weekends or before/after business hours, so cleaning never overlaps with a working day. We schedule every day of the week, so if your business needs a different weekday slot, just message us and we'll fit it in.
 </p>
 
 <x-blog.cta heading="Get a custom office cleaning quote" text="Free walkthrough, fixed quote before we start." />
 
 <x-blog.faq :items="[
     ['q' => 'How is office cleaning priced?', 'a' => 'R10 per m² per visit, with an R850 minimum call-out. We measure your actual floor area during a free walkthrough so the quote is exact, not estimated. Multi-floor or multi-tenant buildings get a custom monthly contract quote instead.'],
-    ['q' => 'Can you clean outside of business hours?', 'a' => 'Yes — most office contracts are cleaned over the weekend or before opening, so your team never works around us.'],
+    ['q' => 'Can you clean outside of business hours?', 'a' => 'Yes — we schedule around your business hours, whether that\'s early morning, evenings, or over the weekend, so your team never works around us.'],
     ['q' => 'Do you offer a fixed monthly contract rate?', 'a' => 'Yes — we quote both per-visit and monthly contract rates, whichever suits your business.'],
 ]" />
 

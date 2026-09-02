@@ -42,7 +42,7 @@ Still no dedicated page for the rest of the booking form's autocomplete list (Sa
 
 ## Operating model
 
-- **Weekend-only**: Saturdays and Sundays only, currently. Not open to weekday bookings.
+- **Every day**: bookable any day of the week (opened up from weekend-only in 2026-09).
 - **Capacity**: 2 bookings per day maximum, shared across all services (not per-service) — `Booking::DAILY_CAPACITY`.
 - **Booking flow**: single wizard at `/book`, ends in a WhatsApp message to the business (not a payment gateway — no online payment processing exists).
 - **Trust claims already made in copy**: fully insured (public liability), background-checked staff, satisfaction guarantee (return within 24 hours of a clean at no charge if unsatisfied), free inspection before quoting.

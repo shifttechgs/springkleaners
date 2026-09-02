@@ -99,14 +99,10 @@ class BookingController extends Controller
 
         $date = Carbon::parse($data['date']);
 
-        if (! in_array($date->dayOfWeekIso, [6, 7], true)) {
-            return back()->withErrors(['date' => 'SpringKleaners only services Saturdays and Sundays — pick a weekend date.'])->withInput();
-        }
-
         $existing = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->count();
 
         if ($existing >= Booking::DAILY_CAPACITY) {
-            return back()->withErrors(['date' => 'That date is already at capacity ('.Booking::DAILY_CAPACITY.' bookings) — pick another weekend date.'])->withInput();
+            return back()->withErrors(['date' => 'That date is already at capacity ('.Booking::DAILY_CAPACITY.' bookings) — pick another date.'])->withInput();
         }
 
         $timeTaken = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->where('time', $data['time'])->exists();

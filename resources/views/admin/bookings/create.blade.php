@@ -94,12 +94,11 @@
         },
         get calMonthLabel() { return new Date(this.calYear, this.calMonth, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }); },
         isPast(d) { if (!d) return false; const dt = new Date(this.calYear, this.calMonth, d); const today = new Date(); today.setHours(0,0,0,0); return dt < today; },
-        isWeekend(d) { if (!d) return false; const dow = new Date(this.calYear, this.calMonth, d).getDay(); return dow === 0 || dow === 6; },
         dateISO(date) { const y = date.getFullYear(); const m = String(date.getMonth() + 1).padStart(2, '0'); const dd = String(date.getDate()).padStart(2, '0'); return y + '-' + m + '-' + dd; },
         dateKey(d) { return this.dateISO(new Date(this.calYear, this.calMonth, d)); },
         bookedCount(d) { return this.availability[this.dateKey(d)] || 0; },
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
-        isSelectable(d) { return !!d && this.isWeekend(d) && !this.isPast(d) && !this.isFull(d); },
+        isSelectable(d) { return !!d && !this.isPast(d) && !this.isFull(d); },
         isSelected(d) { if (!d || !this.selectedDate) return false; return this.selectedDate.getFullYear() === this.calYear && this.selectedDate.getMonth() === this.calMonth && this.selectedDate.getDate() === d; },
         isTimeTaken(t) { if (!this.selectedDate) return false; return (this.bookedTimes[this.dateISO(this.selectedDate)] || []).includes(t); },
         prevMonth() { this.calMonth--; if (this.calMonth < 0) { this.calMonth = 11; this.calYear--; } this.fetchAvailability(); },
@@ -156,7 +155,7 @@
     <div class="mb-6">
         <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">Pipeline</p>
         <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Record a Booking</h1>
-        <p class="text-muted text-[13px] mt-1.5">For leads that came in by phone, WhatsApp, or in person — same fields and pricing as the website, same 2-per-day / 4-per-weekend capacity.</p>
+        <p class="text-muted text-[13px] mt-1.5">For leads that came in by phone, WhatsApp, or in person — same fields and pricing as the website, same {{ \App\Models\Booking::DAILY_CAPACITY }}-per-day capacity.</p>
     </div>
 
     @if ($errors->any())
@@ -415,7 +414,7 @@
 
                         <div x-show="nextAvailable" x-cloak class="flex items-center justify-between gap-3 bg-canvas border border-line rounded-xl px-4 py-3 mb-5">
                             <div class="min-w-0">
-                                <p class="text-ink text-[12.5px] font-bold">Next available weekend</p>
+                                <p class="text-ink text-[12.5px] font-bold">Next available date</p>
                                 <p class="text-label text-[11.5px]" x-text="nextAvailableLabel"></p>
                             </div>
                             <button type="button" @click="goToNextAvailable()" class="flex-shrink-0 bg-navy text-white text-[11.5px] font-bold px-3.5 py-2 rounded-lg hover:bg-[#0d2a4a] transition-colors">Select</button>
@@ -441,8 +440,8 @@
                                     <template x-for="(d, i) in calDays" :key="i">
                                         <div>
                                             <div x-show="d" @click="pickDate(d)" class="cal-cell"
-                                                 :class="{ 'cal-disabled': d && !isSelectable(d) && !isSelected(d), 'cal-full': d && isWeekend(d) && !isPast(d) && isFull(d), 'cal-selected': isSelected(d) }"
-                                                 :title="d && isWeekend(d) && !isPast(d) && isFull(d) ? 'Fully booked' : ''" x-text="d"></div>
+                                                 :class="{ 'cal-disabled': d && !isSelectable(d) && !isSelected(d), 'cal-full': d && !isPast(d) && isFull(d), 'cal-selected': isSelected(d) }"
+                                                 :title="d && !isPast(d) && isFull(d) ? 'Fully booked' : ''" x-text="d"></div>
                                         </div>
                                     </template>
                                 </div>
@@ -459,8 +458,8 @@
                             </div>
                         </div>
 
-                        <p x-show="errors.dateTime" x-cloak class="text-rose-500 text-[12.5px] font-semibold mt-4 bg-rose-50 rounded-lg px-4 py-3">Please select an available Saturday or Sunday and a time.</p>
-                        <p class="text-label text-[11.5px] mt-4">Weekends only, {{ \App\Models\Booking::DAILY_CAPACITY }} slots/day — same rule as the website.</p>
+                        <p x-show="errors.dateTime" x-cloak class="text-rose-500 text-[12.5px] font-semibold mt-4 bg-rose-50 rounded-lg px-4 py-3">Please select an available date and a time.</p>
+                        <p class="text-label text-[11.5px] mt-4">{{ \App\Models\Booking::DAILY_CAPACITY }} slots/day — same rule as the website.</p>
                     </div>
 
                     <div class="flex justify-end">

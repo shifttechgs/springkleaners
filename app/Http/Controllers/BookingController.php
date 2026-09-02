@@ -94,10 +94,6 @@ class BookingController extends Controller
 
         $date = Carbon::parse($data['date']);
 
-        if (! in_array($date->dayOfWeekIso, [6, 7], true)) {
-            return response()->json(['status' => 'invalid_day'], 422);
-        }
-
         if ($date->startOfDay()->lt(now()->startOfDay())) {
             return response()->json(['status' => 'invalid_day'], 422);
         }
@@ -185,11 +181,9 @@ class BookingController extends Controller
         $date = now()->startOfDay();
 
         for ($i = 0; $i < 120; $i++) {
-            if (in_array($date->dayOfWeekIso, [6, 7], true)) {
-                $count = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->count();
-                if ($count < Booking::DAILY_CAPACITY) {
-                    return $date->toDateString();
-                }
+            $count = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->count();
+            if ($count < Booking::DAILY_CAPACITY) {
+                return $date->toDateString();
             }
             $date->addDay();
         }

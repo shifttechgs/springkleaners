@@ -96,7 +96,7 @@ return [
         'label' => 'Office & Commercial Cleaning',
         'h1_line1' => 'Office & Commercial Cleaning',
         'h1_line2' => 'in Cape Town\'s Northern Suburbs',
-        'intro' => 'Reception areas, open-plan floors, boardrooms and staff kitchens that stay presentable for clients and comfortable for your team. We work around your business hours — most contracts are cleaned over weekends or before opening — and coordinate directly with building management for after-hours access in body-corporate blocks and multi-tenant office parks across Century City, Montague Gardens and Parklands.',
+        'intro' => 'Reception areas, open-plan floors, boardrooms and staff kitchens that stay presentable for clients and comfortable for your team. We work around your business hours — early mornings, evenings, or weekends, whatever suits your team — and coordinate directly with building management for after-hours access in body-corporate blocks and multi-tenant office parks across Century City, Montague Gardens and Parklands.',
         'included' => [
             'Workstations & desks wiped down',
             'Reception, boardroom & meeting rooms',
@@ -121,7 +121,7 @@ return [
         'cta_label' => 'Request a Quote',
         'faqs' => [
             ['q' => 'How is office cleaning priced?', 'a' => 'R10 per m² per visit, with an R850 minimum call-out for smaller units. We measure your actual floor area during a free walkthrough so the quote is exact, not estimated. Multi-floor or multi-tenant buildings get a custom monthly contract quote instead, since per-m² pricing stops scaling cleanly at that size.'],
-            ['q' => 'Can you clean outside business hours?', 'a' => 'Yes — most of our office contracts are cleaned over the weekend or before opening on Monday, so your team never works around us. We coordinate access with building management or body corporates ahead of time for secure office parks.'],
+            ['q' => 'Can you clean outside business hours?', 'a' => 'Yes — we schedule around your business hours, whether that\'s early morning, evenings, or over the weekend, so your team never works around us. We coordinate access with building management or body corporates ahead of time for secure office parks.'],
             ['q' => 'Do we need a long-term contract?', 'a' => 'No. We quote per visit or per month, whichever suits your business — there\'s no minimum-term lock-in for standard office cleaning. Multi-floor or multi-tenant contracts are quoted individually based on scope.'],
             ['q' => 'What size offices do you service?', 'a' => 'From single-office professional practices through to multi-room commercial units in Century City, Montague Gardens and the wider Northern Suburbs. Larger multi-floor or multi-tenant buildings are welcome too — those just move to a custom quote rather than the standard per-m² rate.'],
         ],
@@ -147,7 +147,7 @@ return [
         'hero_image' => '/images/works/home.avif',
         'faqs' => [
             ['q' => 'How is this different from a Deep Clean?', 'a' => 'A Deep Clean resets a home from scratch — inside appliances, cupboard interiors, built-up grime. Recurring cleaning maintains that standard in between, covering the surfaces and rooms that get used day to day, at a lighter (and lower) rate. Most clients pair a periodic Deep Clean with a weekly or bi-weekly recurring visit.'],
-            ['q' => 'How often can I book a recurring clean?', 'a' => 'Weekly or bi-weekly, on a standing slot. Because we currently operate weekend cleans with limited daily capacity, we lock in your recurring slot in advance so it\'s reserved before it fills up.'],
+            ['q' => 'How often can I book a recurring clean?', 'a' => 'Weekly or bi-weekly, on a standing slot. Because daily capacity is limited, we lock in your recurring slot in advance so it\'s reserved before it fills up.'],
             ['q' => 'Do I need to be home during the clean?', 'a' => 'No. Most recurring clients give access instructions once and we let ourselves in and out on the agreed schedule. If you\'d prefer to be present, that\'s fine too.'],
             ['q' => 'What\'s the price based on?', 'a' => 'From R750 per visit for 2 bedrooms and 1 bathroom, plus R100 for each additional bedroom or bathroom — the same scaling model as our Deep Clean, just at a lighter-scope, lower rate.'],
         ],
@@ -260,11 +260,11 @@ return [
 
     'airbnb-turnover-cleaning' => [
         'meta_title' => 'Airbnb & Short-Let Turnover Cleaning Cape Town | Northern Suburbs | SpringKleaners',
-        'meta_description' => 'Fast, photo-ready turnover cleaning for Airbnb & short-let hosts in Cape Town\'s Northern Suburbs. From R900/turnover, weekend changeovers. Book online.',
+        'meta_description' => 'Fast, photo-ready turnover cleaning for Airbnb & short-let hosts in Cape Town\'s Northern Suburbs. From R900/turnover, every-day changeovers. Book online.',
         'label' => 'Airbnb & Short-Let Turnover Cleaning',
         'h1_line1' => 'Airbnb & Short-Let',
         'h1_line2' => 'Turnover Cleaning',
-        'intro' => 'A faster, tighter-scope clean built for the gap between one guest leaving and the next arriving — beds stripped and remade, bathrooms reset, kitchen cleared, and the space left photo-ready for your listing. We currently schedule turnovers within our weekend availability, which suits the Friday-in/Sunday-out pattern common to weekend-getaway short-lets in Big Bay, Blouberg and Bloubergstrand.',
+        'intro' => 'A faster, tighter-scope clean built for the gap between one guest leaving and the next arriving — beds stripped and remade, bathrooms reset, kitchen cleared, and the space left photo-ready for your listing. We schedule turnovers every day of the week, so whether your guests follow the classic Friday-in/Sunday-out weekend-getaway pattern or check in and out mid-week, we can match your calendar in Big Bay, Blouberg and Bloubergstrand.',
         'included' => [
             'Beds stripped, linen changed & remade',
             'Bathrooms fully reset & restocked',
@@ -273,11 +273,11 @@ return [
             'Damage/missing-item check reported to host',
             'Photo-ready staging before you re-list',
         ],
-        'ideal_for' => 'Airbnb and short-let hosts in the Northern Suburbs with weekend guest changeovers, who need a consistent, photo-ready reset without managing the clean themselves.',
+        'ideal_for' => 'Airbnb and short-let hosts in the Northern Suburbs with guest changeovers on any day of the week, who need a consistent, photo-ready reset without managing the clean themselves.',
         'blog_categories' => ['Tips'],
         'hero_image' => '/images/works/we_clean.avif',
         'faqs' => [
-            ['q' => 'Can you turn a property around the same day a guest checks out?', 'a' => 'Yes, within our current weekend availability — this fits the Friday-in/Sunday-out pattern common to weekend-getaway short-lets in the Northern Suburbs. If your turnover schedule needs weekday cleaning, message us on WhatsApp and we\'ll see what we can arrange.'],
+            ['q' => 'Can you turn a property around the same day a guest checks out?', 'a' => 'Yes — we schedule turnovers every day of the week, so same-day changeovers work whether your guests follow the classic Friday-in/Sunday-out weekend pattern or check in and out mid-week.'],
             ['q' => 'What if something is damaged or missing after a guest checks out?', 'a' => 'We do a quick check during every turnover and report anything damaged, missing, or left behind, so you can follow up with the guest or platform before the next booking arrives.'],
             ['q' => 'Do you supply fresh linen, or do we?', 'a' => 'We strip, launder-ready and remake with whatever linen and towels you supply on-site. If you\'d like us to help coordinate a linen rotation, ask us when booking.'],
             ['q' => 'What\'s the price based on?', 'a' => 'From R900 per turnover for a studio or 1-bedroom unit, plus R100 for each additional bedroom. Larger short-lets are quoted the same way as our other bedroom-based services.'],

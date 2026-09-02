@@ -216,11 +216,6 @@
             const today = new Date(); today.setHours(0,0,0,0);
             return dt < today;
         },
-        isWeekend(d) {
-            if (!d) return false;
-            const dow = new Date(this.calYear, this.calMonth, d).getDay();
-            return dow === 0 || dow === 6;
-        },
         dateISO(date) {
             const y = date.getFullYear();
             const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -230,7 +225,7 @@
         dateKey(d) { return this.dateISO(new Date(this.calYear, this.calMonth, d)); },
         bookedCount(d) { return this.availability[this.dateKey(d)] || 0; },
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
-        isSelectable(d) { return !!d && this.isWeekend(d) && !this.isPast(d) && !this.isFull(d); },
+        isSelectable(d) { return !!d && !this.isPast(d) && !this.isFull(d); },
         isTimeTaken(t) {
             if (!this.selectedDate) return false;
             return (this.bookedTimes[this.dateISO(this.selectedDate)] || []).includes(t);
@@ -242,7 +237,7 @@
         prevMonth() { this.calMonth--; if (this.calMonth < 0) { this.calMonth = 11; this.calYear--; } this.fetchAvailability(); },
         nextMonth() { this.calMonth++; if (this.calMonth > 11) { this.calMonth = 0; this.calYear++; } this.fetchAvailability(); },
         pickDate(d) {
-            if (!d || this.isPast(d) || !this.isWeekend(d)) return;
+            if (!d || this.isPast(d)) return;
             if (this.isFull(d)) {
                 this.dateError = 'That date already has ' + this.bookedCount(d) + '/' + this.capacity + ' clients booked — please choose another date.';
                 return;
@@ -355,7 +350,7 @@
                         this.selectedTime = null;
                     } else {
                         this.nextAvailable = json.next_available || this.nextAvailable;
-                        this.dateError = 'That date just got fully booked for the weekend — please choose another date below.';
+                        this.dateError = 'That date just got fully booked — please choose another date below.';
                         this.selectedDate = null;
                         this.selectedTime = null;
                     }
@@ -669,12 +664,12 @@
                 {{-- ── STEP 2: SCHEDULE ── --}}
                 <div x-show="step === 2" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Choose your date &amp; time</h2>
-                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We clean on Saturdays &amp; Sundays only, with {{ \App\Models\Booking::DAILY_CAPACITY }} client slots per day — pick a date below.</p>
+                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We clean every day of the week, with {{ \App\Models\Booking::DAILY_CAPACITY }} client slots per day — pick a date below.</p>
 
                     <div x-show="nextAvailable && !isNextAvailableAlreadySelected" x-cloak
                          class="flex items-center justify-between gap-3 bg-[#f8f9fc] border border-[#e8eaf0] rounded-xl px-4 py-3 mb-6">
                         <div class="min-w-0">
-                            <p class="text-[#081d3a] text-[13px] font-bold">Next available weekend</p>
+                            <p class="text-[#081d3a] text-[13px] font-bold">Next available date</p>
                             <p class="text-[#8a94a6] text-[12px]" x-text="nextAvailableLabel"></p>
                         </div>
                         <button type="button" @click="goToNextAvailable()" class="flex-shrink-0 bg-[#081d3a] text-white text-[12.5px] font-bold px-4 py-2 rounded-lg hover:bg-[#0d2a4a] transition-colors">
@@ -718,10 +713,10 @@
                                         <div x-show="d" @click="pickDate(d)" class="cal-cell"
                                              :class="{
                                                 'cal-disabled': d && !isSelectable(d) && !isSelected(d),
-                                                'cal-full': d && isWeekend(d) && !isPast(d) && isFull(d),
+                                                'cal-full': d && !isPast(d) && isFull(d),
                                                 'cal-selected': isSelected(d)
                                              }"
-                                             :title="d && isWeekend(d) && !isPast(d) && isFull(d) ? 'Fully booked' : ''"
+                                             :title="d && !isPast(d) && isFull(d) ? 'Fully booked' : ''"
                                              x-text="d"></div>
                                     </div>
                                 </template>
@@ -752,7 +747,7 @@
                     <p x-show="dateError" x-cloak x-text="dateError" class="text-rose-500 text-[12.5px] font-semibold mt-5 bg-rose-50 rounded-lg px-4 py-3"></p>
                     <p x-show="errors.dateTime && !dateError" x-cloak class="field-err mt-5 bg-rose-50 rounded-lg px-4 py-3">
                         <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                        Please select an available Saturday or Sunday and a time.
+                        Please select an available date and a time.
                     </p>
 
                     <div class="flex items-center justify-between gap-4 mt-8">
