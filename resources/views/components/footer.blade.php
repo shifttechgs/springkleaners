@@ -70,7 +70,7 @@
             </div>
 
             <div>
-                <h3 class="text-white font-bold text-[15px] mb-5">Areas We Service</h3>
+                <h3 class="text-white font-bold text-[15px] mb-5"><a href="{{ route('areas.index') }}" class="hover:text-[#f6e304] transition-colors">Areas We Service</a></h3>
                 <p class="text-white/40 text-[13px] leading-loose">
                     <a href="{{ route('areas.show', 'milnerton') }}" class="hover:text-[#f6e304] transition-colors">Milnerton</a> ·
                     <a href="{{ route('areas.show', 'sunningdale') }}" class="hover:text-[#f6e304] transition-colors">Sunningdale</a> ·

@@ -7,6 +7,24 @@ use Illuminate\View\View;
 
 class LocationController extends Controller
 {
+    private const ATLANTIC_SEABOARD = ['sea-point', 'green-point'];
+
+    public function index(): View
+    {
+        $locations = collect(config('locations'));
+
+        $clusters = collect([
+            'Northern Suburbs & Blaauwberg' => $locations->except(self::ATLANTIC_SEABOARD),
+            'Atlantic Seaboard' => $locations->only(self::ATLANTIC_SEABOARD),
+        ]);
+
+        return view('areas.index', [
+            'clusters' => $clusters,
+            'totalAreas' => $locations->count(),
+            'services' => Services::list(),
+        ]);
+    }
+
     public function show(string $slug): View
     {
         $location = config('locations.'.$slug);

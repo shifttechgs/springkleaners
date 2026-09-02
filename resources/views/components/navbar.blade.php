@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="relative" x-data="{ areasOpen: false }" @mouseenter="areasOpen = true" @mouseleave="areasOpen = false">
-                    <a href="/#areas" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
+                    <a href="{{ route('areas.index') }}" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
                         Areas
                         <svg class="w-3 h-3 transition-transform duration-200" :class="areasOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </a>
@@ -91,7 +91,7 @@
                                 </a>
                             </div>
                             <div class="border-t border-black/5 mt-1.5 pt-1.5">
-                                <a href="/#areas" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[#081d3a]/40 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[12px] font-semibold tracking-tight transition-colors">
+                                <a href="{{ route('areas.index') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[#081d3a]/40 hover:bg-[#081d3a]/[0.05] hover:text-[#081d3a] text-[12px] font-semibold tracking-tight transition-colors">
                                     View all areas
                                     <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </a>
@@ -160,7 +160,7 @@
                     <a href="{{ route('areas.show', 'table-view') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Table View</a>
                     <a href="{{ route('areas.show', 'big-bay') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Big Bay</a>
                     <a href="{{ route('areas.show', 'bloubergstrand') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Bloubergstrand</a>
-                    <a href="/#areas" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/40 hover:text-[#f6e304] text-[13px] transition-colors">View all areas →</a>
+                    <a href="{{ route('areas.index') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/40 hover:text-[#f6e304] text-[13px] transition-colors">View all areas →</a>
                 </div>
             </div>
             <a href="/#how-it-works" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">How It Works</a>

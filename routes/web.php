@@ -34,6 +34,7 @@ Route::get('/', function () {
 });
 
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/areas', [LocationController::class, 'index'])->name('areas.index');
 Route::get('/areas/{slug}', [LocationController::class, 'show'])->name('areas.show');
 
 Route::get('/get-my-quote', function () {
@@ -80,6 +81,46 @@ Route::get('/robots.txt', function () {
         '',
         'Sitemap: '.rtrim(config('app.url'), '/').'/sitemap.xml',
     ];
+
+    return response(implode("\n", $lines), 200)->header('Content-Type', 'text/plain');
+});
+
+Route::get('/llms.txt', function () {
+    $base = rtrim(config('app.url'), '/');
+    $areaCount = count(config('locations'));
+
+    $lines = [
+        '# SpringKleaners',
+        '',
+        '> Fully insured, background-checked residential and commercial cleaning company based in Parklands, Cape Town, serving the Northern Suburbs and Atlantic Seaboard. Published starting prices, free on-site inspections, and same-week booking every day of the week — not just weekends.',
+        '',
+        'Registration 2021/363748/07. Contact: bookings@springkleaners.co.za, +27 81 527 4711.',
+        '',
+        '## Services',
+        '',
+    ];
+
+    foreach (\App\Support\Services::list() as $slug => $service) {
+        $tagline = $service['tagline'] ?? '';
+        $lines[] = "- [{$service['name']}]({$base}/services/{$slug}): {$tagline}";
+    }
+
+    $lines = array_merge($lines, [
+        '',
+        '## Areas served',
+        '',
+        "- [All {$areaCount} areas]({$base}/areas): Cleaning services across Cape Town's Northern Suburbs and Atlantic Seaboard, area by area.",
+        '',
+        '## Guides',
+        '',
+        "- [Pricing & how-to guides]({$base}/blog): Real pricing breakdowns, checklists, and cleaning tips for Cape Town homes and businesses.",
+        '',
+        '## More',
+        '',
+        "- [Book online]({$base}/book): Instant quote and live-availability booking wizard.",
+        "- [FAQ]({$base}/faq): Answers on pricing, trust/insurance, and per-service questions.",
+        "- [About]({$base}/about): Who SpringKleaners is and how the company operates.",
+    ]);
 
     return response(implode("\n", $lines), 200)->header('Content-Type', 'text/plain');
 });

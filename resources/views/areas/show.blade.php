@@ -21,7 +21,7 @@
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Areas We Serve', 'item' => url('/#areas')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Areas We Serve', 'item' => route('areas.index')],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $location['name'], 'item' => url()->current()],
             ],
         ];
@@ -38,7 +38,7 @@
             <div class="flex items-center gap-2 text-white/40 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                 <span>/</span>
-                <a href="/#areas" class="hover:text-[#f6e304] transition-colors">Areas We Serve</a>
+                <a href="{{ route('areas.index') }}" class="hover:text-[#f6e304] transition-colors">Areas We Serve</a>
                 <span>/</span>
                 <span class="text-white/60">{{ $location['name'] }}</span>
             </div>

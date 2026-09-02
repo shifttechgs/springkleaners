@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    public function index(): View
+    public const PER_PAGE = 9;
+
+    public function index(Request $request): View
     {
         $posts = collect(config('blog.posts'))
             ->sortByDesc('date')
@@ -15,9 +19,29 @@ class BlogController extends Controller
 
         $categories = $posts->pluck('category')->unique()->values();
 
+        $activeCategory = $request->query('category');
+        if (! $categories->contains($activeCategory)) {
+            $activeCategory = null;
+        }
+
+        $filtered = $activeCategory
+            ? $posts->where('category', $activeCategory)->values()
+            : $posts;
+
+        $page = LengthAwarePaginator::resolveCurrentPage();
+
+        $paginated = new LengthAwarePaginator(
+            $filtered->forPage($page, self::PER_PAGE)->values(),
+            $filtered->count(),
+            self::PER_PAGE,
+            $page,
+            ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
+        );
+
         return view('blog.index', [
-            'posts' => $posts,
+            'posts' => $paginated,
             'categories' => $categories,
+            'activeCategory' => $activeCategory,
         ]);
     }
 

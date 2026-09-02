@@ -24,6 +24,8 @@ A condensed build history and decision log, kept in-repo so the context survives
 
 **2026-09-02 — Booking calendar opened to every day.** Removed the Sat/Sun-only restriction from `BookingController::reserve()`/`nextAvailableDate()` and `Admin\BookingController::store()`, and the matching weekend-only gating in the booking-wizard and admin-create calendar JS. `Booking::DAILY_CAPACITY = 2` per-day cap is unchanged. Updated copy that had asserted weekend-only operation across `config/faq.php`, `config/service_pages.php`, two blog posts, and `legal/terms.blade.php`.
 
+**2026-09-02 — Real `/areas` hub + blog pagination + image-accuracy audit + `/llms.txt`.** `/areas` now exists as a real indexable page (grouped by Northern Suburbs/Blaauwberg vs. Atlantic Seaboard, cross-linking all 14 services) instead of just a homepage anchor — navbar/footer/breadcrumbs repointed to it. `/blog` got real server-side pagination (was rendering every post at once with only client-side filtering). Separately found and fixed a real bug while auditing blog/service images: several AVIFs were mislabeled by filename and in use on live pages that contradicted their own content — most notably an unrelated backpack-guy stock photo (`2.png`) as the Carpet Cleaning and Fridge/Appliance Cleaning hero image. Reassigned every mismatch to a genuinely accurate photo already in the library (see `docs/seo.md` for the full list). `/llms.txt` added, generated dynamically from real service/area data. Full detail in `docs/seo.md`.
+
 ## Standing decisions (don't silently reverse these)
 
 - **No database for content** — blog/services/areas stay as static config unless content genuinely outgrows it.

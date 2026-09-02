@@ -14,7 +14,7 @@ class SitewideQaTest extends TestCase
     public static function allPublicUrls(): array
     {
         $urls = [
-            '/', '/about', '/faq', '/book', '/blog',
+            '/', '/about', '/faq', '/book', '/blog', '/areas',
         ];
 
         foreach (Service::orderBy('sort_order')->pluck('slug') as $slug) {

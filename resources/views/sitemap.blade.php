@@ -1,6 +1,6 @@
 <?php echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
 
-<?php $sitewideLastmod = '2026-07-09'; ?>
+<?php $sitewideLastmod = '2026-09-02'; ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>{{ url('/') }}</loc>
@@ -43,6 +43,12 @@
         <lastmod>{{ $sitewideLastmod }}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>{{ url('/areas') }}</loc>
+        <lastmod>{{ $sitewideLastmod }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
     </url>
     @foreach ($posts as $post)
     <url>
