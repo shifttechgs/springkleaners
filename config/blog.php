@@ -3,6 +3,16 @@
 return [
     'posts' => [
         [
+            'slug' => 'window-cleaning-cost-cape-town',
+            'title' => 'How Much Does Window Cleaning Cost in Cape Town? Pricing & the Salt-Residue Problem',
+            'excerpt' => 'From R1,400 per property or R40 per pane — how window cleaning pricing works, and why coastal homes in Bloubergstrand, Big Bay and Table View need it far more often.',
+            'category' => 'Tips',
+            'cover' => '/images/works/premium_photo-1683141112334-d7d404f6e716.avif',
+            'date' => '2026-09-02',
+            'read_time' => 6,
+            'author' => 'SpringKleaners Team',
+        ],
+        [
             'slug' => 'carpet-cleaning-cost-cape-town',
             'title' => 'How Much Does Carpet Cleaning Cost in Cape Town? Pricing & How Often to Book',
             'excerpt' => 'R250 per room, R950 minimum call-out — how carpet cleaning pricing actually breaks down, and how often coastal Northern Suburbs homes should really be booking it.',
