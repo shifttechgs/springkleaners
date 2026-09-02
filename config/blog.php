@@ -3,6 +3,16 @@
 return [
     'posts' => [
         [
+            'slug' => 'carpet-cleaning-cost-cape-town',
+            'title' => 'How Much Does Carpet Cleaning Cost in Cape Town? Pricing & How Often to Book',
+            'excerpt' => 'R250 per room, R950 minimum call-out — how carpet cleaning pricing actually breaks down, and how often coastal Northern Suburbs homes should really be booking it.',
+            'category' => 'Tips',
+            'cover' => '/images/works/2.png',
+            'date' => '2026-09-02',
+            'read_time' => 6,
+            'author' => 'SpringKleaners Team',
+        ],
+        [
             'slug' => 'end-of-tenancy-cleaning-checklist-cape-town',
             'title' => 'End-of-Tenancy Cleaning Checklist: How to Get Your Full Deposit Back in Cape Town',
             'excerpt' => 'Landlords and agents in the Northern Suburbs inspect harder than ever. Here is the room-by-room checklist our crews use to help tenants recover their full deposit.',
