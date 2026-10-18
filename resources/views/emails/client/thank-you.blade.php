@@ -15,8 +15,7 @@
         <td style="background:#081d3a; padding:32px 36px;">
             <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td style="width:32px;height:32px;border-radius:8px;background:#f6e304;text-align:center;vertical-align:middle;font-size:12px;font-weight:700;color:#081d3a;font-family:Arial,sans-serif;">SK</td>
-                    <td style="padding-left:10px; font-size:18px; font-weight:800; color:#ffffff;">Spring<span style="color:#f6e304;">Kleaners</span></td>
+                    <td><img src="{{ asset('images/logo-light.png') }}" alt="SpringKleaners" width="77" height="56" style="display:block; width:77px; height:56px; border:0; outline:none; text-decoration:none;"></td>
                 </tr>
             </table>
         </td>

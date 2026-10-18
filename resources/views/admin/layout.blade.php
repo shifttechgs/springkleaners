@@ -19,13 +19,8 @@
     <div class="flex h-screen">
         {{-- Sidebar --}}
         <aside class="w-[236px] flex-shrink-0 bg-[#081d3a] flex flex-col overflow-y-auto">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-6 py-6">
-                <div class="w-8 h-8 rounded-lg bg-[#f6e304] flex items-center justify-center flex-shrink-0">
-                    <span class="text-[#081d3a] font-black text-[13px] tracking-tight leading-none">SK</span>
-                </div>
-                <span class="font-extrabold text-[16px] tracking-tight leading-none">
-                    <span class="text-white">Spring</span><span class="text-[#f6e304]">Kleaners</span>
-                </span>
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-5">
+                <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" class="h-14 w-auto">
             </a>
 
             <nav class="flex-1 px-6 py-3 space-y-0.5">

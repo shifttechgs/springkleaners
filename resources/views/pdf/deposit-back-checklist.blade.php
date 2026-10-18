@@ -23,19 +23,7 @@ body {
 .hdr { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
 .hdr td { vertical-align: middle; padding: 0; }
 
-.brand-mark {
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    background: #f6e304;
-    color: #081d3a;
-    font-size: 13px;
-    font-weight: 700;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.brand-name { font-size: 15px; font-weight: 700; color: #081d3a; padding-left: 10px; }
+.brand-logo { display: block; width: 72px; height: 52px; }
 
 .doc-title {
     font-size: 24px;
@@ -100,8 +88,7 @@ table.checklist td { padding: 5px 0; vertical-align: top; }
 
     <table class="hdr">
         <tr>
-            <td style="width: 34px;"><div class="brand-mark">SK</div></td>
-            <td class="brand-name">SpringKleaners</td>
+            <td><img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo-print.png'))) }}" alt="SpringKleaners" class="brand-logo" width="72" height="52"></td>
         </tr>
     </table>
 

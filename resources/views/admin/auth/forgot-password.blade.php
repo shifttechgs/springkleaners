@@ -16,13 +16,8 @@
     <div class="absolute inset-0 bg-grid pointer-events-none"></div>
 
     <div class="w-full max-w-[380px] relative z-10">
-        <div class="flex items-center justify-center gap-2.5 mb-8">
-            <div class="w-9 h-9 rounded-xl bg-[#f6e304] flex items-center justify-center flex-shrink-0">
-                <span class="text-[#081d3a] font-black text-[14px] tracking-tight leading-none">SK</span>
-            </div>
-            <span class="font-extrabold text-[19px] tracking-tight leading-none">
-                <span class="text-white">Spring</span><span class="text-[#f6e304]">Kleaners</span>
-            </span>
+        <div class="flex justify-center mb-8">
+            <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" class="h-20 w-auto">
         </div>
 
         <div class="bg-white rounded-2xl p-8" style="box-shadow: 0 20px 50px -12px rgba(0,0,0,0.4);">

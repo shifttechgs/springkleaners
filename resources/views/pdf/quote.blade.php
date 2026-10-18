@@ -49,18 +49,9 @@ body {
     margin-bottom: 8px;
 }
 
-.brand-mark {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #f6e304;
-    color: #081d3a;
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 32px;
-    display: block;
-    margin-left: auto;
+.brand-logo {
+    width: 83px;
+    height: 60px;
     margin-bottom: 10px;
 }
 
@@ -309,7 +300,7 @@ body {
                 <div class="meta-val">{{ $booking->date->format('d M Y') }} &middot; {{ $booking->time }}</div>
             </td>
             <td width="54%" align="right">
-                <div class="brand-mark">SK</div>
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo-print.png'))) }}" alt="SpringKleaners" class="brand-logo" width="83" height="60">
                 <div class="co">
                     <div class="co-name">{{ \App\Support\Company::name() }}</div>
                     @foreach (\App\Support\Company::addressLines() as $line)
