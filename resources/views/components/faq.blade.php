@@ -23,7 +23,7 @@
                     Chat on WhatsApp
                 </a>
                 <div class="rounded-2xl overflow-hidden bg-[#e8e8e4] hidden lg:block" style="max-height:320px">
-                    <img loading="lazy" decoding="async" src="/images/works/we_clean.avif" alt="Professional cleaner at work" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="/images/works/blog/home-faq.avif" alt="Two SpringKleaners team members cleaning a kitchen together" class="w-full h-full object-cover">
                 </div>
             </div>
 

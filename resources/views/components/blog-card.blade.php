@@ -4,7 +4,7 @@
    class="group block bg-white rounded-2xl overflow-hidden border border-black/5 shadow-[0_2px_20px_rgba(8,29,58,0.06)] hover:shadow-[0_20px_40px_rgba(8,29,58,0.12)] hover:-translate-y-1.5 transition-all duration-300 {{ $featured ? 'lg:col-span-2 lg:row-span-1' : '' }}">
     <div class="relative overflow-hidden {{ $featured ? 'aspect-[16/8]' : 'aspect-[16/10]' }}">
         <img src="{{ $post['cover'] }}"
-             alt="{{ $post['title'] }}"
+             alt="{{ $post['cover_alt'] ?? $post['title'] }}"
              loading="lazy"
              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-[#040f1f]/40 via-transparent to-transparent"></div>
