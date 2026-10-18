@@ -9,7 +9,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="mb-6 px-4 py-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-[13px] font-medium max-w-2xl">
+        <div class="mb-6 px-4 py-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-[13px] font-medium">
             {{ $errors->first() }}
         </div>
     @endif
@@ -26,7 +26,7 @@
                 document.getElementById('amount').value = this.fuelCost.toFixed(2);
                 document.getElementById('description').value = 'Fuel — ' + this.distanceKm + 'km @ R' + this.petrolPrice.toFixed(2) + '/L, ' + this.vehicleKmpl + 'km/L';
             }
-         }" class="card p-6 max-w-2xl">
+         }" class="card p-6">
 
         <form method="POST" action="{{ route('admin.expenses.store') }}" class="space-y-4">
             @csrf

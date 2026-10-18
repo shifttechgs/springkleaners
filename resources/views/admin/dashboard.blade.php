@@ -1,6 +1,6 @@
 @extends('admin.layout')
 @section('title', 'Dashboard')
-@section('contentPadding', 'px-8 py-5')
+@section('contentPadding', 'px-4 py-5 sm:px-6 lg:px-8')
 @section('content')
 
     {{-- Greeting header --}}
@@ -180,10 +180,10 @@
     </div>
 
     {{-- Bottom row: fills remaining height --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:flex-1 lg:min-h-0">
 
         {{-- Upcoming Jobs Schedule --}}
-        <div class="lg:col-span-2 card overflow-hidden flex flex-col min-h-0">
+        <div class="lg:col-span-2 card overflow-hidden flex flex-col lg:min-h-0">
             <div class="px-5 py-3 border-b border-line flex items-center justify-between flex-shrink-0">
                 <h2 class="font-bold text-[13px] tracking-tight">Upcoming Jobs</h2>
                 <a href="{{ route('admin.bookings.index', ['status' => 'accepted']) }}" class="text-navy font-semibold text-[12px] hover:opacity-70 transition-opacity">View all &rarr;</a>
@@ -228,7 +228,7 @@
         </div>
 
         {{-- Calendar --}}
-        <div class="card p-4 flex flex-col min-h-0">
+        <div class="card p-4 flex flex-col lg:min-h-0">
             @php
                 $prevMonth = $calendarMonth->copy()->subMonthNoOverflow();
                 $nextMonth = $calendarMonth->copy()->addMonthNoOverflow();
@@ -255,7 +255,7 @@
                 @endforeach
             </div>
 
-            <div class="grid grid-cols-7 gap-0.5 flex-1 min-h-0" style="grid-auto-rows: 1fr;">
+            <div class="grid grid-cols-7 gap-0.5 lg:flex-1 lg:min-h-0 auto-rows-[2.25rem] lg:auto-rows-fr">
                 @for ($i = 0; $i < $firstWeekday; $i++)
                     <div></div>
                 @endfor

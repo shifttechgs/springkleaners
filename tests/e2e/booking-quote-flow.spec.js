@@ -1,28 +1,17 @@
 import { test, expect } from '@playwright/test';
 
 // Full user journey: public booking wizard -> admin quote pricing -> client acceptance.
-// Admin credentials come from `php artisan db:seed --class=AdminUserSeeder`.
-const ADMIN_EMAIL = 'shifttechgs1@gmail.com';
-const ADMIN_PASSWORD = 'cq2m-QJR0989N/Ki';
+// Admin credentials: E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD if set, otherwise the account from
+// `php artisan db:seed --class=AdminUserSeeder`.
+const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL || 'shifttechgs1@gmail.com';
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD || 'cq2m-QJR0989N/Ki';
 
 const clientName = `Playwright E2E ${Date.now()}`;
-
-function nextSaturday() {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    const diff = (6 - d.getDay() + 7) % 7 || 7; // days until next Saturday, always in the future
-    d.setDate(d.getDate() + diff);
-    return d;
-}
 
 test.describe('Booking to accepted quote', () => {
     test.setTimeout(120_000);
 
     test('client books, admin quotes it, client accepts', async ({ page, browser }) => {
-        const target = nextSaturday();
-        const targetDay = String(target.getDate());
-        const today = new Date();
-
         // ── Step 1: Details ──
         await page.goto('/book?service=deep-cleaning');
         await expect(page.getByRole('heading', { name: 'Your details' })).toBeVisible();
@@ -52,12 +41,10 @@ test.describe('Booking to accepted quote', () => {
         // ── Step 2: Schedule ──
         await expect(page.getByRole('heading', { name: 'Choose your date & time' })).toBeVisible();
 
-        if (target.getMonth() !== today.getMonth() || target.getFullYear() !== today.getFullYear()) {
-            await page.locator('button:has(svg path[d^="M9 5l7"])').click();
-        }
-
-        await page.locator('.cal-cell').filter({ hasText: new RegExp(`^${targetDay}$`) }).click();
-        await page.getByText('9:00 AM', { exact: true }).click();
+        // Take the wizard's own "next available date" and the first free time, so repeat runs never
+        // land on a slot or day that earlier runs already booked.
+        await page.getByRole('button', { name: 'Select this date' }).click();
+        await page.locator('.time-slot:not(.time-taken)').first().click();
 
         await page.locator('div[x-show="step === 2"]').getByRole('button', { name: 'Continue' }).click();
 
@@ -79,7 +66,7 @@ test.describe('Booking to accepted quote', () => {
         await page.getByPlaceholder('Search name or phone...').fill(clientName);
         await page.getByRole('button', { name: 'Filter' }).click();
         await page.getByRole('link', { name: 'View' }).click();
-        await expect(page.getByRole('heading', { name: clientName })).toBeVisible();
+        await expect(page.getByRole('heading', { name: clientName, exact: true })).toBeVisible();
 
         // Confirm the full wizard payload actually persisted, not just the old 7 fields.
         // Note: the stored value uses a plain hyphen ("3-6 months ago") even though the
@@ -89,12 +76,14 @@ test.describe('Booking to accepted quote', () => {
         await expect(page.getByText('Interior windows')).toBeVisible();
 
         // ── Admin: send a quote ──
-        const quotedPriceInput = page.locator('form[action*="send-quote"] input[name="quoted_price"]');
+        const quotedPriceInput = page.locator('form[action*="send-quote"] input[type="number"][name="quoted_price"]');
         await quotedPriceInput.fill('1850');
-        await page.getByRole('button', { name: 'Generate Quote Link' }).click();
+        await page.getByRole('button', { name: 'Set Price & Send Quote' }).click();
         await expect(page.getByText('Quote generated')).toBeVisible();
 
-        const quoteUrl = await page.locator('input[readonly]').inputValue();
+        // The quote link is what the "Copy Link" button puts on the clipboard.
+        const copyHandler = await page.getByRole('button', { name: 'Copy Link' }).getAttribute('@click');
+        const quoteUrl = copyHandler.match(/writeText\('([^']+)'\)/)[1];
         expect(quoteUrl).toContain('/quote/');
 
         // ── Client: open the quote link in a fresh, unauthenticated context ──

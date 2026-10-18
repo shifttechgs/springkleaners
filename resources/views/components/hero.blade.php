@@ -309,8 +309,8 @@
         {{-- Slide label + counter, full width under the copy and the form. The line between the numbers fills while
              a slide is on screen and drives the autoplay. --}}
         <div class="hero-strip hero-settle mt-8 lg:mt-10 flex items-center gap-3 sm:gap-4 whitespace-nowrap border-t border-white/15 pt-4 text-[13px] text-white/80">
-            <span class="font-medium text-white">Cape Town</span>
-            <span class="h-3.5 w-px bg-white/35" aria-hidden="true"></span>
+            <span class="hidden min-[400px]:inline font-medium text-white">Cape Town</span>
+            <span class="hidden min-[400px]:inline h-3.5 w-px bg-white/35" aria-hidden="true"></span>
             <span class="hero-roll" data-hero-label>{{ $heroSlides[0]['label'] }}</span>
             <span class="ml-2 sm:ml-4 flex items-center gap-3 tabular-nums" aria-hidden="true">
                 <span data-hero-count>01</span>

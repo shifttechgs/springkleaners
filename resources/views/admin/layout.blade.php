@@ -14,14 +14,22 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @stack('styles')
 </head>
-<body class="bg-canvas text-[#0f2038] antialiased text-[13px] h-screen overflow-hidden">
+<body class="bg-canvas text-[#0f2038] antialiased text-[13px] h-screen overflow-hidden" x-data="{ nav: false }" x-on:keydown.escape.window="nav = false">
 
     <div class="flex h-screen">
+        {{-- Phones/tablets: the sidebar slides in over the page; the backdrop closes it --}}
+        <div x-show="nav" x-cloak x-on:click="nav = false" x-transition.opacity class="fixed inset-0 z-30 bg-[#081d3a]/50 lg:hidden" aria-hidden="true"></div>
+
         {{-- Sidebar --}}
-        <aside class="w-[236px] flex-shrink-0 bg-[#081d3a] flex flex-col overflow-y-auto">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-5">
-                <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" class="h-14 w-auto">
-            </a>
+        <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-[260px] -translate-x-full transition-transform duration-200 ease-out lg:static lg:z-auto lg:w-[236px] lg:translate-x-0 flex-shrink-0 bg-[#081d3a] flex flex-col overflow-y-auto" :class="nav ? 'translate-x-0' : ''">
+            <div class="flex items-center justify-between px-6 py-5">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center">
+                    <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" class="h-14 w-auto">
+                </a>
+                <button type="button" class="lg:hidden grid h-9 w-9 place-items-center rounded-lg text-white/70 hover:bg-white/[0.06] hover:text-white" x-on:click="nav = false" aria-label="Close menu">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
 
             <nav class="flex-1 px-6 py-3 space-y-0.5">
                 <a href="{{ route('admin.dashboard') }}"
@@ -95,10 +103,15 @@
         {{-- Main --}}
         <main class="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
             {{-- Topbar --}}
-            <header class="flex-shrink-0 z-10 bg-white/90 border-b border-line px-10 py-3.5 flex items-center justify-between" style="backdrop-filter: blur(8px);">
-                <h2 class="font-bold text-[14px] tracking-tight text-ink">@yield('title', 'Dashboard')</h2>
+            <header class="flex-shrink-0 z-10 bg-white border-b border-line px-4 sm:px-6 lg:px-10 py-3 lg:py-3.5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <button type="button" class="lg:hidden -ml-1 grid h-9 w-9 flex-shrink-0 place-items-center rounded-lg text-ink hover:bg-canvas" x-on:click="nav = true" aria-controls="admin-sidebar" :aria-expanded="nav" aria-label="Open menu">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <h2 class="font-bold text-[14px] tracking-tight text-ink truncate">@yield('title', 'Dashboard')</h2>
+                </div>
                 <div class="flex items-center gap-3">
-                    <div class="text-right leading-tight">
+                    <div class="hidden sm:block text-right leading-tight">
                         <p class="font-semibold text-[13px]">{{ auth()->user()->name }}</p>
                         <p class="text-label text-[11px]">{{ auth()->user()->email }}</p>
                     </div>
@@ -106,8 +119,8 @@
                 </div>
             </header>
 
-            <div class="flex-1 min-h-0 overflow-y-auto @yield('contentPadding', 'px-10 py-9')">
-                <div class="max-w-6xl mx-auto h-full flex flex-col">
+            <div class="flex-1 min-h-0 overflow-y-auto @yield('contentPadding', 'px-4 py-5 sm:px-6 sm:py-7 lg:px-10 lg:py-9')">
+                <div class="w-full h-full flex flex-col">
                     @if (session('status'))
                         <div class="mb-6 px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-700 text-[13px] font-medium flex items-center gap-2 flex-shrink-0">
                             <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>

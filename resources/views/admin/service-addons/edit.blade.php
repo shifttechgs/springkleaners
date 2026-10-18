@@ -9,12 +9,12 @@
     </div>
 
     @if ($errors->any())
-        <div class="mb-6 px-4 py-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-[13px] font-medium max-w-2xl">
+        <div class="mb-6 px-4 py-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 text-[13px] font-medium">
             {{ $errors->first() }}
         </div>
     @endif
 
-    <div class="card p-6 max-w-2xl">
+    <div class="card p-6">
         <form method="POST" action="{{ route('admin.service-addons.update', $addon) }}" class="space-y-4">
             @csrf
             @method('PUT')

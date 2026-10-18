@@ -93,11 +93,13 @@ test.describe('Mobile interaction checks (iPhone 12 viewport)', () => {
 
     test('mobile sticky WhatsApp/quote bar is visible and not covering content', async ({ page }) => {
         await page.goto('/');
-        const stickyBar = page.locator('.fixed.bottom-0.left-0.right-0.z-50.lg\\:hidden');
+        // Floating pills inset from the bottom edge (WhatsApp + Get My Instant Quote)
+        const stickyBar = page.locator('div.fixed.z-50.lg\\:hidden').filter({ has: page.getByText('WhatsApp Us') });
         await expect(stickyBar).toBeVisible();
         const box = await stickyBar.boundingBox();
         console.log('Sticky bar box:', JSON.stringify(box));
-        expect(box.y + box.height).toBeCloseTo(844, -1);
+        expect(box.y + box.height).toBeGreaterThan(844 - 24);
+        expect(box.y + box.height).toBeLessThanOrEqual(844);
     });
 
     test('booking wizard: service picker + calendar render without overflow', async ({ page }) => {
