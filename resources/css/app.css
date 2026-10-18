@@ -195,52 +195,76 @@
 
 #hero-headline { letter-spacing: -0.03em; }
 
-/* Same idea as the reference: no tinted overlay. The photo fades into a neutral near-black section
-   background with a mask, so colours stay clean instead of getting a navy haze. */
+/* Same idea as the reference: no tinted overlay. Each slide's photo fades into the neutral near-black section
+   background with a mask; --dim (desktop) and --dim-m (phones) set how much of the photo shows through. */
 .hero-photo {
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 1) 78%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 1) 78%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, var(--dim, 0.8)) 0%, rgba(0, 0, 0, var(--dim, 0.8)) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, var(--dim, 0.8)) 0%, rgba(0, 0, 0, var(--dim, 0.8)) 100%);
 }
 
-/* Phones: the headline sits over the bright gloves, so keep the photo a little dimmer there. */
+/* Phones: the photo covers only the first screen (so it is not blown up across the whole tall hero) and fades
+   into the base colour at the bottom. */
 @media (max-width: 1023px) {
     .hero-photo {
-        -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 1) 82%);
-        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 1) 82%);
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, var(--dim-m, 0.55)) 0%, rgba(0, 0, 0, var(--dim-m, 0.55)) 80%, transparent 100%);
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, var(--dim-m, 0.55)) 0%, rgba(0, 0, 0, var(--dim-m, 0.55)) 80%, transparent 100%);
     }
 }
 
-.hero-film {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-.hero-film__panel {
-    position: absolute;
-    inset: 0 -2px 0 0;
-    background-color: rgba(6, 18, 36, 0.9);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%);
-    mask-image: linear-gradient(to right, transparent 0, #000 7%);
-    transform: translate3d(105%, 0, 0);
-    animation: hero-wipe 1.7s cubic-bezier(0.65, 0, 0.2, 1) 0.15s backwards;
+/* Hero slider (motion modelled on arlink28.com): slides stack, the current one drifts and zooms slowly,
+   the incoming one is revealed through stripes by the script in hero.blade.php. */
+.hero-slide { position: absolute; inset: 0; visibility: hidden; }
+.hero-slide.is-on { visibility: visible; z-index: 2; }
+.hero-slide.is-prev { visibility: visible; z-index: 1; }
+.hero-slide-zoom { position: absolute; inset: 0; overflow: hidden; }
+.hero-slide.is-on .hero-slide-zoom,
+.hero-slide.is-prev .hero-slide-zoom {
+    animation: hero-drift 9.5s linear forwards;
     will-change: transform;
 }
-.hero-film__panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 6%;
-    width: 3px;
-    background: linear-gradient(to bottom, transparent, #f6e304 18%, #f6e304 82%, transparent);
-    box-shadow: 0 0 36px 4px rgba(246, 227, 4, 0.28);
+.hero-slide:nth-child(2) .hero-slide-zoom { --drift-x: -1.2%; }
+[data-hero-slider].is-paused .hero-slide-zoom { animation-play-state: paused; }
+@keyframes hero-drift {
+    from { transform: scale(1.02) translate(0, 0); }
+    to { transform: scale(1.12) translate(var(--drift-x, 1.2%), -1.5%); }
 }
-@keyframes hero-wipe {
-    from { transform: translate3d(-8%, 0, 0); }
-    to { transform: translate3d(105%, 0, 0); }
+
+/* The line between the slide numbers: fills over a slide's time on screen; its end advances the slider. */
+.hero-progress { position: absolute; inset: 0; background: #fff; transform: scaleX(0); transform-origin: left; }
+.hero-progress.is-running { animation: hero-progress 8s linear forwards; }
+.hero-progress.is-paused { animation-play-state: paused; }
+@keyframes hero-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
 }
+
+/* Slide label rolls up into place when it changes */
+.hero-roll { display: inline-block; }
+.hero-roll.is-rolling { animation: hero-roll 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes hero-roll {
+    from { opacity: 0; transform: translateY(70%); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Thumbnails + pause */
+.hero-thumb { cursor: pointer; border-radius: 0.5rem; }
+.hero-thumb__img {
+    width: 5rem; height: 3.25rem; object-fit: cover; border-radius: 0.5rem;
+    opacity: 0.6; outline: 2px solid transparent; outline-offset: 3px;
+    transition: opacity 0.3s ease, outline-color 0.3s ease;
+}
+.hero-thumb:hover .hero-thumb__img, .hero-thumb.is-active .hero-thumb__img { opacity: 1; }
+.hero-thumb.is-active .hero-thumb__img { outline-color: #f6e304; }
+.hero-thumb:focus-visible { outline: none; }
+.hero-thumb:focus-visible .hero-thumb__img { outline-color: #fff; }
+.hero-pause {
+    display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.35); color: #fff; transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.hero-pause:hover { background-color: rgba(255, 255, 255, 0.12); border-color: #fff; }
+.hero-pause:focus-visible { outline: 2px solid #f6e304; outline-offset: 2px; }
+.hero-pause__icon-play, .hero-pause.is-paused .hero-pause__icon-pause { display: none; }
+.hero-pause.is-paused .hero-pause__icon-play { display: block; }
 
 .hero-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
 .hero-line > span {
@@ -261,8 +285,7 @@
 }
 @media (min-width: 1280px) { .hero-line { white-space: nowrap; } }
 @media (prefers-reduced-motion: reduce) {
-    .hero-film { display: none; }
-    .hero-line > span, .hero-settle { animation: none; }
+    .hero-line > span, .hero-settle, .hero-roll.is-rolling, .hero-slide-zoom { animation: none !important; }
 }
 
 /* Decorative glyphs rendered via CSS so they're not announced or contrast-audited as text. */
@@ -366,3 +389,39 @@
 .link-arrow svg { width: 1rem; height: 1rem; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
 .link-arrow:hover svg, .link-arrow:focus-visible svg { transform: translate(3px, -3px); }
 @media (prefers-reduced-motion: reduce) { .link-arrow svg { transition: none; } }
+
+/* Keep the whole hero (headline, form, slide controls) on the first screen of shorter laptops (1366x768, 1280x720).
+   ID selectors so these win over the Tailwind spacing utilities without !important. */
+@media (min-width: 1024px) and (max-height: 860px) {
+    .hero-compact { padding-top: 5.75rem; padding-bottom: 1.75rem; }
+    .hero-compact #hero-badge { margin-bottom: 1.25rem; }
+    .hero-compact #hero-headline { margin-bottom: 1.25rem; }
+    .hero-compact #hero-sub { margin-bottom: 1.5rem; font-size: 16px; }
+    .hero-compact #hero-trust + div { margin-top: 1.25rem; }
+    .hero-compact #hero-form > div { padding: 1.25rem 1.5rem; }
+    .hero-compact #hero-form .my-4 { margin-top: 0.75rem; margin-bottom: 0.75rem; }
+    .hero-compact #hero-form input, .hero-compact #hero-form #hero-service { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+}
+@media (min-width: 1024px) and (max-height: 740px) {
+    .hero-compact { padding-top: 5.25rem; padding-bottom: 1.25rem; }
+    .hero-compact #hero-form .mt-3 > p { display: none; }
+    .hero-compact #hero-form .btn-arrow + p, .hero-compact #hero-form [x-show] + p { margin-top: 0.25rem; }
+}
+
+/* Phones: fit the whole intro (headline to slide counter) above the floating WhatsApp/Quote bar.
+   The quote form follows directly below, one tap away via the hero button. */
+@media (max-width: 1023px) {
+    .hero-compact { padding-top: 6rem; }
+    .hero-compact #hero-badge { margin-bottom: 1rem; }
+    .hero-compact #hero-headline { margin-bottom: 1rem; }
+    .hero-compact #hero-sub { margin-bottom: 1.5rem; font-size: 16px; }
+    .hero-compact #hero-sub + div { margin-bottom: 1.5rem; }
+    .hero-compact #hero-trust > div { padding-top: 0.75rem; }
+    .hero-compact #hero-trust + div { margin-top: 1rem; }
+}
+@media (max-width: 1023px) and (max-height: 780px) {
+    .hero-compact { padding-top: 5.25rem; }
+    .hero-compact #hero-sub { margin-bottom: 1.25rem; font-size: 15px; line-height: 1.55; }
+    .hero-compact #hero-trust dd { display: none; }
+    .hero-compact #hero-trust { row-gap: 0.25rem; }
+}
