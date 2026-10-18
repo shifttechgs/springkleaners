@@ -59,8 +59,9 @@
                     4.9 from our Google reviews
                 </p>
 
-                <h1 id="hero-headline" class="font-display text-white text-[34px] sm:text-[48px] xl:text-[46px] 2xl:text-[56px] min-[2400px]:text-[68px] leading-[1.08] mb-8">
-                    <span class="hero-line"><span>Cape Town's Northern Suburbs,</span></span>
+                <h1 id="hero-headline" class="font-display text-white text-[40px] sm:text-[54px] lg:text-[60px] xl:text-[66px] 2xl:text-[74px] min-[2400px]:text-[88px] leading-[1.04] mb-8">
+                    <span class="hero-line"><span>Cape Town's</span></span>
+                    <span class="hero-line"><span>Northern Suburbs,</span></span>
                     <span class="hero-line"><span>cleaned properly.</span></span>
                 </h1>
 
