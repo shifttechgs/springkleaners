@@ -21,13 +21,6 @@
         position: relative;
         overflow: hidden;
     }
-    .quote-hero::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse 70% 80% at 50% 120%, rgba(246,227,4,0.045) 0%, transparent 65%);
-        pointer-events: none;
-    }
 
     /* ── Content area ── */
     .quote-body {

@@ -19,7 +19,6 @@
 
     {{-- Hero --}}
     <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
-        <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 max-w-3xl">
             <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
@@ -125,9 +124,12 @@
                         Read our Google reviews
                     </a>
                 </div>
-                <div class="rounded-2xl overflow-hidden aspect-[4/3] wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
-                    <img src="/images/works/1.avif" alt="SpringKleaners team at work" class="w-full h-full object-cover">
-                </div>
+                <figure class="wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
+                    <div class="rounded-2xl overflow-hidden aspect-[4/3]">
+                        <img src="/images/works/real-team-with-client.avif" alt="Two SpringKleaners team members in uniform standing with a happy client in her home" width="960" height="720" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                    </div>
+                    <figcaption class="mt-3 text-[13px] text-[#5b6779]">Our team with a happy client.</figcaption>
+                </figure>
             </div>
         </div>
     </section>

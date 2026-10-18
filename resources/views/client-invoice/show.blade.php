@@ -8,7 +8,6 @@
     @include('components.navbar')
 
     <section class="bg-[#081d3a] pt-36 pb-14 lg:pt-44 lg:pb-16 relative overflow-hidden">
-        <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 max-w-2xl mx-auto text-center">
             <p class="text-white/60 text-[11px] font-semibold uppercase tracking-[0.22em] mb-4">Your Invoice</p>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight mb-3">

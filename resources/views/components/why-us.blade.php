@@ -51,7 +51,7 @@
 
             {{-- B2: Image --}}
             <div class="sk-b2 rounded-2xl overflow-hidden bg-[#0a1628]" style="min-height:210px">
-                <img loading="lazy" decoding="async" src="/images/works/1.avif" alt="SpringKleaners professional at work" class="w-full h-full object-cover" style="min-height:210px;display:block">
+                <img loading="lazy" decoding="async" src="/images/works/real-window-cleaning.avif" alt="SpringKleaners team member cleaning a large window" class="w-full h-full object-cover" style="min-height:210px;display:block">
             </div>
 
             {{-- B3: White — Experience --}}
@@ -118,7 +118,7 @@
                 <p class="text-[#081d3a] font-bold text-[15px] tracking-tight">Free Inspection</p>
                 <p class="text-[#5b6779] text-[13px] mt-1 mb-3 leading-snug">We visit before we quote — no commitment, no surprises.</p>
                 <div class="flex-1 rounded-xl overflow-hidden bg-[#e5e5e0]" style="min-height:110px">
-                    <img loading="lazy" decoding="async" src="/images/works/3.avif" alt="Free property inspection" class="w-full h-full object-cover" style="display:block">
+                    <img loading="lazy" decoding="async" src="/images/works/real-walkthrough.avif" alt="SpringKleaners team member walking through an empty apartment" class="w-full h-full object-cover" style="display:block">
                 </div>
             </div>
 

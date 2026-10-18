@@ -368,7 +368,6 @@
      }">
 
     <div class="bg-[#081d3a] pt-20 pb-8 relative overflow-hidden">
-        <div class="absolute inset-0 hero-pattern"></div>
         @include('components.navbar')
 
         <div class="relative z-10 section-wrap pt-10 pb-2 text-center">

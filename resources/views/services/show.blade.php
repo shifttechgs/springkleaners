@@ -61,7 +61,6 @@
 
     {{-- Hero --}}
     <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
-        <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10">
             <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
@@ -91,7 +90,7 @@
                 </div>
                 <div class="lg:col-span-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
                     <div class="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
-                        <img src="{{ $content['hero_image'] }}" alt="{{ $content['label'] }} — SpringKleaners" class="w-full h-full object-cover">
+                        <img src="{{ $content['hero_image'] }}" alt="{{ $content['hero_alt'] ?? $content['label'] . ' — SpringKleaners' }}" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>

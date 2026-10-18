@@ -8,7 +8,6 @@
     @include('components.navbar')
 
     <section class="bg-[#081d3a] pt-36 pb-20 lg:pt-44 lg:pb-24 relative overflow-hidden">
-        <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 text-center max-w-3xl mx-auto">
             <div class="w-8 h-[2px] bg-[#f6e304] mb-3 mx-auto"></div>
             <p class="text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em] mb-4">The SpringKleaners Blog</p>

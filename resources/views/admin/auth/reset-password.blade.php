@@ -12,8 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/admin.css'])
 </head>
-<body class="min-h-screen flex items-center justify-center px-4" style="background: radial-gradient(120% 120% at 50% -10%, #0d2a4a 0%, #081d3a 45%, #040f1f 100%);">
-    <div class="absolute inset-0 bg-grid pointer-events-none"></div>
+<body class="min-h-screen flex items-center justify-center px-4 bg-[#081d3a]">
 
     <div class="w-full max-w-[380px] relative z-10">
         <div class="flex justify-center mb-8">
