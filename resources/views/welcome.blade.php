@@ -40,10 +40,10 @@
     @include('components.services')
     @include('components.how-it-works')
     @include('components.why-us')
-    <x-before-after-gallery />
-    @include('components.areas-we-serve')
     @include('components.testimonials')
+    <x-before-after-gallery />
     @include('components.pricing')
+    @include('components.areas-we-serve')
     @include('components.faq')
     @include('components.blog-teaser')
     @include('components.final-cta')

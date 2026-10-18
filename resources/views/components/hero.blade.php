@@ -2,32 +2,25 @@
 <link rel="preload" href="/fonts/geist-600.woff2" as="font" type="font/woff2" crossorigin>
 @endpush
 @php
-    // Names, taglines and prices come from the services table so the dropdown can't drift from the
-    // real prices. If the database is unreachable the homepage still renders, using these defaults.
+    // Titles come from the services table so the dropdown matches the rest of the site. If the
+    // database is unreachable the homepage still renders, using these defaults.
     $heroServices = [
-        ['value' => 'deep-cleaning', 'name' => 'Deep Cleaning', 'short' => 'Deep Cleaning', 'note' => 'A thorough top-to-bottom clean of every surface, corner and room.', 'price' => 'R1,200', 'unit' => 'visit'],
-        ['value' => 'end-of-tenancy', 'name' => 'End-of-Tenancy Cleaning', 'short' => 'End-of-Tenancy', 'note' => 'Move-in/move-out cleaning to landlord and letting-agent standard.', 'price' => 'R1,200', 'unit' => 'property'],
-        ['value' => 'post-construction', 'name' => 'Post Construction Cleaning', 'short' => 'Post Construction', 'note' => 'We remove what the builders left behind, to a move-in ready standard.', 'price' => 'R1,800', 'unit' => 'project'],
+        ['value' => 'deep-cleaning', 'name' => 'Deep Cleaning', 'short' => 'Deep Cleaning'],
+        ['value' => 'end-of-tenancy', 'name' => 'End-of-Tenancy Cleaning', 'short' => 'End-of-Tenancy'],
+        ['value' => 'post-construction', 'name' => 'Post Construction Cleaning', 'short' => 'Post Construction'],
     ];
     try {
         $liveServices = \App\Support\Services::list();
-        $heroServices = array_map(function (array $option) use ($liveServices) {
-            $live = $liveServices[$option['value']] ?? null;
-
-            return $live ? [
-                'value' => $option['value'],
-                'name' => $live['name'],
-                'short' => $option['short'],
-                'note' => $live['tagline'],
-                'price' => 'R'.number_format($live['base_price']),
-                'unit' => $live['unit_label'],
-            ] : $option;
-        }, $heroServices);
+        $heroServices = array_map(fn (array $option) => [
+            'value' => $option['value'],
+            'name' => $liveServices[$option['value']]['name'] ?? $option['name'],
+            'short' => $option['short'],
+        ], $heroServices);
     } catch (\Throwable $e) {
         // keep the defaults above
     }
 @endphp
-<section class="relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#040f1f] pt-28 pb-10 lg:pt-32 lg:pb-14">
+<section class="relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-14">
 
     {{-- Photograph. Object position keeps the cleaner in the right half, clear of the headline. --}}
     <img src="/images/works/hero/hero2_cleaning-1280.avif"
@@ -36,16 +29,10 @@
          width="1680" height="1020"
          fetchpriority="high" decoding="async"
          alt="SpringKleaners cleaner vacuuming a carpet"
-         class="absolute inset-0 -z-30 h-full w-full object-cover object-[62%_center]">
+         class="hero-photo absolute inset-0 -z-30 h-full w-full object-cover object-[62%_center]">
 
     {{-- The film the squeegee wipes off (CSS only, see .hero-film in app.css) --}}
     <div class="hero-film -z-20" aria-hidden="true"><div class="hero-film__panel"></div></div>
-
-    {{-- Scrim: guarantees headline contrast, stronger on mobile where text sits over the photo --}}
-    <div class="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(4,15,31,0.96)_0%,rgba(4,15,31,0.82)_55%,rgba(4,15,31,0.55)_100%)] lg:bg-[linear-gradient(95deg,rgba(4,15,31,0.97)_0%,rgba(4,15,31,0.86)_34%,rgba(4,15,31,0.3)_66%,rgba(4,15,31,0.1)_100%)]" aria-hidden="true"></div>
-
-    {{-- Keeps the flat header legible over the bright window and gloves --}}
-    <div class="absolute inset-x-0 top-0 -z-10 h-44 bg-gradient-to-b from-[#040f1f]/85 via-[#040f1f]/45 to-transparent" aria-hidden="true"></div>
 
     <div class="section-wrap w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-end">
@@ -78,15 +65,7 @@
 
             <div class="lg:col-span-5" id="hero-form">
                 <div x-data="{
-                    suburbs: [
-                        'Milnerton', 'Sunningdale', 'Blouberg', 'Parklands', 'Century City',
-                        'Table View', 'Big Bay', 'Bloubergstrand', 'West Beach', 'Monte Vista',
-                        'Edgemead', 'Bothasig', 'Richwood', 'Burgundy Estate', 'Flamingo Vlei',
-                        'Sandown', 'Sunset Beach', 'Parklands North', 'Waves Edge', 'Montague Gardens',
-                        'Blouberg Rise', 'Summer Greens', 'Rugby', 'Paarden Eiland', 'Marconi Beam',
-                        'Dunoon', 'Joe Slovo Park', 'Penhill', 'Kerria', 'Ravensmead',
-                        'Sea Point', 'Green Point'
-                    ],
+                    suburbs: @js(config('served_suburbs')),
                     suburbQuery: '',
                     filteredSuburbs: [],
                     showSuggestions: false,
@@ -265,7 +244,7 @@
                                                 x-on:click="open = !open"
                                                 class="w-full flex items-center justify-between gap-2 bg-white border rounded-lg px-4 py-3 text-left text-[14px] text-[#081d3a] transition-colors cursor-pointer"
                                                 :class="serviceError ? 'border-red-400' : (open ? 'border-[#f6e304]' : 'border-[#081d3a]/15')">
-                                            <span class="truncate" :class="label ? '' : 'text-[#081d3a]/45'" x-text="label || 'Select one'">Select one</span>
+                                            <span class="truncate" :class="label ? '' : 'text-[#081d3a]/65'" x-text="label || 'Select one'">Select one</span>
                                             <svg class="h-4 w-4 flex-shrink-0 text-[#081d3a]/55 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                                         </button>
                                         <div x-show="open" x-cloak role="listbox" aria-label="Service"
@@ -275,24 +254,14 @@
                                              x-transition:leave="transition ease-in duration-100"
                                              x-transition:leave-start="opacity-100"
                                              x-transition:leave-end="opacity-0"
-                                             class="absolute right-0 top-full z-50 mt-2 w-[19rem] max-w-[calc(100vw-3rem)] rounded-xl bg-white p-1.5 shadow-[0_24px_60px_-16px_rgba(8,29,58,0.45)] ring-1 ring-[#081d3a]/10"
+                                             class="absolute right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-3rem)] rounded-xl bg-white p-1.5 shadow-[0_24px_60px_-16px_rgba(8,29,58,0.45)] ring-1 ring-[#081d3a]/10"
                                              style="display:none;">
                                             <template x-for="o in options" :key="o.value">
                                                 <button type="button" role="option" :aria-selected="form.service === o.value" x-on:click="pick(o)"
-                                                        class="flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-[#081d3a]/[0.05] focus-visible:bg-[#081d3a]/[0.05] focus-visible:outline-none"
+                                                        class="flex w-full items-center justify-between gap-4 rounded-lg px-3 py-3 text-left text-[14px] font-semibold text-[#081d3a] transition-colors hover:bg-[#081d3a]/[0.05] focus-visible:bg-[#081d3a]/[0.05] focus-visible:outline-none"
                                                         :class="form.service === o.value ? 'bg-[#081d3a]/[0.06]' : ''">
-                                                    <span class="min-w-0">
-                                                        <span class="flex items-center gap-1.5 text-[14px] font-semibold text-[#081d3a]">
-                                                            <span x-text="o.name"></span>
-                                                            <svg x-show="form.service === o.value" class="h-3.5 w-3.5 text-[#081d3a]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                                        </span>
-                                                        <span class="mt-0.5 line-clamp-2 text-[12.5px] leading-snug text-[#5b6779]" x-text="o.note"></span>
-                                                    </span>
-                                                    <span class="flex-shrink-0 text-right leading-tight">
-                                                        <span class="block text-[11px] text-[#5b6779]">From</span>
-                                                        <span class="block text-[13px] font-bold text-[#081d3a]" x-text="o.price"></span>
-                                                        <span class="block text-[11px] text-[#5b6779]" x-text="'/ ' + o.unit"></span>
-                                                    </span>
+                                                    <span x-text="o.name"></span>
+                                                    <svg x-show="form.service === o.value" class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                                 </button>
                                             </template>
                                         </div>

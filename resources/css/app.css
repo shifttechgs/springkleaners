@@ -103,11 +103,20 @@
 
 @keyframes review-scroll-y {
     from { transform: translateY(0); }
-    to { transform: translateY(-50%); }
+    to { transform: translateY(var(--review-shift, -50%)); }
 }
 .review-scroll { animation: review-scroll-y 32s linear infinite; }
 .review-scroll-down { animation-direction: reverse; }
 .review-scroll:hover { animation-play-state: paused; }
+/* Fade the reviews out at the top and bottom edge of their window, and stand still if motion is reduced. */
+.review-marquee {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+    .review-scroll { animation: none; }
+    .review-marquee { overflow-y: auto; }
+}
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #040f1f; }
@@ -185,6 +194,21 @@
 }
 
 #hero-headline { letter-spacing: -0.03em; }
+
+/* Same idea as the reference: no tinted overlay. The photo fades into a neutral near-black section
+   background with a mask, so colours stay clean instead of getting a navy haze. */
+.hero-photo {
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 1) 78%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 1) 78%);
+}
+
+/* Phones: the headline sits over the bright gloves, so keep the photo a little dimmer there. */
+@media (max-width: 1023px) {
+    .hero-photo {
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 1) 82%);
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 1) 82%);
+    }
+}
 
 .hero-film {
     position: absolute;
