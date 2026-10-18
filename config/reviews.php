@@ -8,4 +8,5 @@ return [
     ['initials' => 'SM', 'name' => 'Sandra Matthew', 'meta' => 'Google Review', 'source' => 'google', 'quote' => 'Extremely happy with the service that Spring Kleaners provided — they did an amazing job and got our carpets looking brand new again. I will definitely use their services again.'],
     ['initials' => 'M', 'name' => 'Monique', 'meta' => 'House Cleaning · Bark Review', 'source' => 'bark', 'quote' => 'The cleaning was 100% perfect. Loved meeting Charity and Prosper.'],
     ['initials' => 'MN', 'name' => 'Mbali Ntshangase', 'meta' => 'End-of-Tenancy · Google Review', 'source' => 'google', 'quote' => 'The team did such a good job with the end of Tenancy. Highly recommend them, affordable, efficient and reliable.'],
+    ['initials' => 'SF', 'name' => 'Sharon Flanigan', 'meta' => 'Google Review', 'source' => 'google', 'quote' => 'Amazing friendly ladies, were on time, totally trustworthy… left my place the whole time they were there… cleaned very nicely. Will definitely use them again and recommend to anyone.'],
 ];

@@ -21,14 +21,12 @@
         ],
     ];
 
-    // Trust early: two short real reviews, one per column, drifting in opposite directions.
+    // Trust early: our two most recent real reviews, side by side.
     $reviews = collect(config('reviews'));
-    $picked = $reviews->whereIn('name', ['Elizabeth Pierson', 'Mbali Ntshangase'])->values();
+    $picked = $reviews->whereIn('name', ['Sharon Flanigan', 'Mbali Ntshangase'])->reverse()->values();
     if ($picked->count() < 2) {
-        $picked = $reviews->filter(fn ($r) => mb_strlen($r['quote']) <= 120)->take(2)->values();
+        $picked = $reviews->take(-2)->reverse()->values();
     }
-    $columns = [['up', $picked->take(1)], ['down', $picked->slice(1, 1)->values()]];
-    $copies = 3; // repeats so the window never runs out of content
 @endphp
 <section class="bg-[#f8f9fc] section-py">
     <div class="section-wrap">
@@ -47,27 +45,17 @@
             </div>
 
             <div class="w-full lg:w-[34rem] lg:flex-shrink-0">
-                <div class="review-marquee relative h-[15rem] overflow-hidden rounded-2xl" role="region" aria-label="Customer reviews">
-                    <div class="absolute inset-0 grid grid-cols-1 gap-4 md:grid-cols-2">
-                        @foreach ($columns as [$direction, $column])
-                            <div class="{{ $direction === 'down' ? 'hidden md:block' : '' }} overflow-hidden">
-                                <div class="review-scroll {{ $direction === 'down' ? 'review-scroll-down' : '' }} flex flex-col gap-4" style="--review-shift: -{{ 100 / $copies }}%">
-                                    @for ($copy = 0; $copy < $copies; $copy++)
-                                        @foreach ($column as $r)
-                                            <figure class="flex-shrink-0 rounded-2xl border border-gray-100 bg-white p-5" @if ($copy > 0) aria-hidden="true" @endif>
-                                                <x-stars class="h-3.5 w-[77px]" />
-                                                <blockquote class="mt-3 text-[14px] leading-relaxed text-[#081d3a]/85">&ldquo;{{ $r['quote'] }}&rdquo;</blockquote>
-                                                <figcaption class="mt-4 text-[12.5px] leading-snug">
-                                                    <span class="block font-semibold text-[#081d3a]">{{ $r['name'] }}</span>
-                                                    <span class="block text-[#5b6779]">{{ $r['meta'] }}</span>
-                                                </figcaption>
-                                            </figure>
-                                        @endforeach
-                                    @endfor
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2" role="region" aria-label="Customer reviews">
+                    @foreach ($picked as $r)
+                        <figure class="flex flex-col rounded-2xl border border-gray-100 bg-white p-5">
+                            <x-stars class="h-3.5 w-[77px]" />
+                            <blockquote class="mt-3 text-[14px] leading-relaxed text-[#081d3a]/85">&ldquo;{{ $r['quote'] }}&rdquo;</blockquote>
+                            <figcaption class="mt-auto pt-4 text-[12.5px] leading-snug">
+                                <span class="block font-semibold text-[#081d3a]">{{ $r['name'] }}</span>
+                                <span class="block text-[#5b6779]">{{ $r['meta'] }}</span>
+                            </figcaption>
+                        </figure>
+                    @endforeach
                 </div>
                 <div class="mt-6">
                     <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>

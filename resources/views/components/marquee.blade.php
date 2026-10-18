@@ -14,8 +14,8 @@
         <div class="marquee-track marquee-track-reverse flex items-center gap-0">
             @for ($i = 0; $i < 2; $i++)
                 @foreach ($serviceAreas as $area)
-                    <span class="text-white/60 text-[15px] font-medium flex-shrink-0 px-6">{{ $area }}</span>
-                    <span class="text-[#f6e304] flex-shrink-0">•</span>
+                    <span class="text-white/70 text-[18px] lg:text-[22px] font-medium flex-shrink-0 px-6 lg:px-8">{{ $area }}</span>
+                    <span class="text-[#f6e304] text-[18px] lg:text-[22px] flex-shrink-0">•</span>
                 @endforeach
             @endfor
         </div>

@@ -111,23 +111,6 @@
 .marquee-track-lg { animation-duration: 45s; }
 .marquee-track-reverse { animation-direction: reverse; }
 
-@keyframes review-scroll-y {
-    from { transform: translateY(0); }
-    to { transform: translateY(var(--review-shift, -50%)); }
-}
-.review-scroll { animation: review-scroll-y 32s linear infinite; }
-.review-scroll-down { animation-direction: reverse; }
-.review-scroll:hover { animation-play-state: paused; }
-/* Fade the reviews out at the top and bottom edge of their window, and stand still if motion is reduced. */
-.review-marquee {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
-}
-@media (prefers-reduced-motion: reduce) {
-    .review-scroll { animation: none; }
-    .review-marquee { overflow-y: auto; }
-}
-
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #040f1f; }
 ::-webkit-scrollbar-thumb { background: #081d3a; border-radius: 3px; }
@@ -249,7 +232,7 @@
 }
 
 /* The line between the slide numbers: fills over a slide's time on screen; its end advances the slider. */
-.hero-progress { position: absolute; inset: 0; background: #fff; transform: scaleX(0); transform-origin: left; }
+.hero-progress { position: absolute; inset: 0; background: #f6e304; transform: scaleX(0); transform-origin: left; }
 .hero-progress.is-running { animation: hero-progress 8s linear forwards; }
 .hero-progress.is-paused { animation-play-state: paused; }
 @keyframes hero-progress {
