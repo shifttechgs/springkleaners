@@ -10,7 +10,7 @@
             'alternateName' => 'Spring Kleaners',
             'legalName' => 'SpringKleaners (Reg. 2021/363748/07)',
             'url' => config('app.url'),
-            'logo' => url('/images/logo.webp'),
+            'logo' => url('/images/logo.png'),
             'foundingDate' => '2021',
             'identifier' => '2021/363748/07',
             'contactPoint' => [

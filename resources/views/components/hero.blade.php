@@ -22,8 +22,9 @@
     // Hero slides: background photos that change with a striped reveal (see the hero slider script at the end).
     // `dim` is how much of the photo shows through on desktop, `dimMobile` on phones (lower = darker, for text contrast).
     $heroSlides = [
-        ['name' => 'slide-gloves', 'label' => 'Deep Cleaning', 'alt' => 'Gloved hands scrubbing a soapy floor during a deep clean', 'w' => 2560, 'h' => 1467, 'pos' => '70% center', 'dim' => 0.38, 'dimMobile' => 0.38],
-        ['name' => 'slide-kitchen', 'label' => 'Move-in Ready', 'alt' => 'A spotless, move-in ready kitchen with a navy island', 'w' => 2560, 'h' => 1706, 'pos' => '40% center', 'dim' => 0.44, 'dimMobile' => 0.42],
+        ['name' => 'slide-kitchen', 'label' => 'Deep Cleaning', 'alt' => 'A spotless, deep-cleaned kitchen with a navy island', 'w' => 2560, 'h' => 1706, 'pos' => '40% center', 'dim' => 0.44, 'dimMobile' => 0.42],
+        ['name' => 'slide-movein', 'label' => 'Move-in Ready', 'alt' => 'A bright, move-in ready kitchen with white cabinets and a grey island', 'w' => 2560, 'h' => 1707, 'pos' => '45% center', 'dim' => 0.4, 'dimMobile' => 0.38],
+        ['name' => 'slide-postcon', 'label' => 'Post Construction', 'alt' => 'A mop bucket, broom and ladder outside a newly built house, ready for the post-construction clean', 'w' => 2560, 'h' => 1707, 'pos' => '60% center', 'dim' => 0.36, 'dimMobile' => 0.34],
     ];
 @endphp
 <section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-14">
@@ -58,12 +59,12 @@
                     4.9 from our Google reviews
                 </p>
 
-                <h1 id="hero-headline" class="font-display text-white text-[34px] sm:text-[48px] xl:text-[46px] leading-[1.08] mb-8">
+                <h1 id="hero-headline" class="font-display text-white text-[34px] sm:text-[48px] xl:text-[46px] 2xl:text-[56px] min-[2400px]:text-[68px] leading-[1.08] mb-8">
                     <span class="hero-line"><span>Cape Town's Northern Suburbs,</span></span>
                     <span class="hero-line"><span>cleaned properly.</span></span>
                 </h1>
 
-                <p id="hero-sub" class="hero-settle max-w-[34rem] text-[17px] leading-relaxed text-white/75 mb-9">
+                <p id="hero-sub" class="hero-settle max-w-[34rem] 2xl:max-w-[40rem] text-[17px] 2xl:text-[19px] leading-relaxed text-white/75 mb-9">
                     Deep cleaning, end-of-tenancy and post-construction cleaning for homes and businesses, with your price before you book.
                 </p>
 
@@ -73,29 +74,6 @@
                 </div>
 
                 <x-trust-badges theme="ledger" id="hero-trust" class="hero-settle" />
-
-                {{-- Slide label + counter. The line between the numbers fills while a slide is on screen and drives the autoplay. --}}
-                <div class="hero-settle mt-8 flex items-center gap-3 sm:gap-4 whitespace-nowrap text-[13px] text-white/80">
-                    <span class="font-medium text-white">Cape Town</span>
-                    <span class="h-3.5 w-px bg-white/35" aria-hidden="true"></span>
-                    <span class="hero-roll" data-hero-label>{{ $heroSlides[0]['label'] }}</span>
-                    <span class="ml-2 sm:ml-4 flex items-center gap-3 tabular-nums" aria-hidden="true">
-                        <span data-hero-count>01</span>
-                        <span class="relative h-px w-12 overflow-hidden bg-white/25"><span class="hero-progress" data-hero-progress></span></span>
-                        <span>{{ str_pad(count($heroSlides), 2, '0', STR_PAD_LEFT) }}</span>
-                    </span>
-                    <span class="ml-auto flex items-center gap-3">
-                        @foreach ($heroSlides as $i => $slide)
-                            <button type="button" class="hero-thumb hidden lg:flex {{ $i === 0 ? 'is-active' : '' }}" data-hero-thumb="{{ $i }}" aria-label="Show slide {{ $i + 1 }}: {{ $slide['label'] }}" @if ($i === 0) aria-current="true" @endif>
-                                <img src="/images/works/hero/{{ $slide['name'] }}-828.avif" alt="{{ $slide['alt'] }}" width="80" height="52" loading="lazy" decoding="async" class="hero-thumb__img">
-                            </button>
-                        @endforeach
-                        <button type="button" class="hero-pause" data-hero-pause aria-label="Pause background slideshow" aria-pressed="false">
-                            <svg class="hero-pause__icon-pause h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg>
-                            <svg class="hero-pause__icon-play h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-                        </button>
-                    </span>
-                </div>
             </div>
 
             <div class="lg:col-span-5" id="hero-form">
@@ -327,6 +305,30 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        {{-- Slide label + counter, full width under the copy and the form. The line between the numbers fills while
+             a slide is on screen and drives the autoplay. --}}
+        <div class="hero-settle mt-10 lg:mt-12 flex items-center gap-3 sm:gap-4 whitespace-nowrap border-t border-white/15 pt-5 text-[13px] text-white/80">
+            <span class="font-medium text-white">Cape Town</span>
+            <span class="h-3.5 w-px bg-white/35" aria-hidden="true"></span>
+            <span class="hero-roll" data-hero-label>{{ $heroSlides[0]['label'] }}</span>
+            <span class="ml-2 sm:ml-4 flex items-center gap-3 tabular-nums" aria-hidden="true">
+                <span data-hero-count>01</span>
+                <span class="relative h-px w-12 overflow-hidden bg-white/25"><span class="hero-progress" data-hero-progress></span></span>
+                <span>{{ str_pad(count($heroSlides), 2, '0', STR_PAD_LEFT) }}</span>
+            </span>
+            <span class="ml-auto flex items-center gap-3">
+                @foreach ($heroSlides as $i => $slide)
+                    <button type="button" class="hero-thumb hidden lg:flex {{ $i === 0 ? 'is-active' : '' }}" data-hero-thumb="{{ $i }}" aria-label="Show slide {{ $i + 1 }}: {{ $slide['label'] }}" @if ($i === 0) aria-current="true" @endif>
+                        <img src="/images/works/hero/{{ $slide['name'] }}-828.avif" alt="{{ $slide['alt'] }}" width="80" height="52" loading="lazy" decoding="async" class="hero-thumb__img">
+                    </button>
+                @endforeach
+                <button type="button" class="hero-pause" data-hero-pause aria-label="Pause background slideshow" aria-pressed="false">
+                    <svg class="hero-pause__icon-pause h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg>
+                    <svg class="hero-pause__icon-play h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+            </span>
         </div>
     </div>
 </section>

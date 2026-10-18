@@ -82,6 +82,16 @@
     @media (min-width: 1024px) {
         .section-wrap { padding-left: 3rem; padding-right: 3rem; }
     }
+    /* Big screens: let the content grow instead of sitting in a narrow column (keep #mainNav .nav-bar in step). */
+    @media (min-width: 1536px) {
+        .section-wrap { max-width: 96rem; padding-left: 4rem; padding-right: 4rem; }
+    }
+    @media (min-width: 1920px) {
+        .section-wrap { max-width: 112rem; }
+    }
+    @media (min-width: 2400px) {
+        .section-wrap { max-width: 136rem; padding-left: 5rem; padding-right: 5rem; }
+    }
     .section-py { padding-top: 5rem; padding-bottom: 5rem; }
     @media (min-width: 1024px) {
         .section-py { padding-top: 7rem; padding-bottom: 7rem; }
@@ -144,6 +154,15 @@
 }
 @media (min-width: 1024px) {
     #mainNav .nav-bar { padding-inline: 3rem; }
+}
+@media (min-width: 1536px) {
+    #mainNav .nav-bar { max-width: 96rem; padding-inline: 4rem; }
+}
+@media (min-width: 1920px) {
+    #mainNav .nav-bar { max-width: 112rem; }
+}
+@media (min-width: 2400px) {
+    #mainNav .nav-bar { max-width: 136rem; padding-inline: 5rem; }
 }
 #mainNav.nav-scrolled { padding-inline: 0.75rem; }
 #mainNav.nav-scrolled .nav-bar {
@@ -222,7 +241,7 @@
     animation: hero-drift 9.5s linear forwards;
     will-change: transform;
 }
-.hero-slide:nth-child(2) .hero-slide-zoom { --drift-x: -1.2%; }
+.hero-slide:nth-child(2n) .hero-slide-zoom { --drift-x: -1.2%; }
 [data-hero-slider].is-paused .hero-slide-zoom { animation-play-state: paused; }
 @keyframes hero-drift {
     from { transform: scale(1.02) translate(0, 0); }

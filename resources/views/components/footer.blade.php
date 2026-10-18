@@ -3,13 +3,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
             <div>
-                <a href="/" class="inline-flex items-center gap-2.5 mb-4">
-                    <div class="w-9 h-9 rounded-xl bg-[#f6e304] flex items-center justify-center flex-shrink-0 shadow-md">
-                        <span class="text-[#081d3a] font-black text-[14px] tracking-tight leading-none">SK</span>
-                    </div>
-                    <span class="font-extrabold text-[20px] tracking-tight leading-none">
-                        <span class="text-white">Spring</span><span class="text-[#f6e304]">Kleaners</span>
-                    </span>
+                <a href="/" class="inline-flex mb-4">
+                    <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" loading="lazy" decoding="async" class="h-24 w-auto">
                 </a>
                 <p class="text-white/50 text-[13px] leading-relaxed mt-3 mb-6 max-w-[220px]">
                     Professional deep cleaning, end-of-tenancy & post-construction cleaning for homes and businesses across Cape Town's Northern Suburbs.

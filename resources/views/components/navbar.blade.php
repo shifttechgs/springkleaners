@@ -1,13 +1,8 @@
 <nav id="mainNav" class="fixed top-0 inset-x-0 z-50" x-data="{ open: false }">
     <div class="nav-bar max-w-7xl mx-auto">
-        <div class="flex items-center justify-between h-16 lg:gap-4">
-            <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
-                <div class="w-9 h-9 rounded-xl bg-[#f6e304] flex items-center justify-center flex-shrink-0 shadow-md">
-                    <span class="text-[#081d3a] font-black text-[14px] tracking-tight leading-none">SK</span>
-                </div>
-                <span class="font-extrabold text-[20px] tracking-tight leading-none">
-                    <span class="text-white">Spring</span><span class="text-[#f6e304]">Kleaners</span>
-                </span>
+        <div class="flex items-center justify-between h-[72px] lg:h-20 lg:gap-4">
+            <a href="/" class="flex items-center flex-shrink-0">
+                <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" class="h-[60px] lg:h-[72px] w-auto">
             </a>
 
             <div class="hidden lg:flex items-center justify-center gap-5 xl:gap-8">
