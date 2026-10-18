@@ -59,13 +59,13 @@
                     4.9 from our Google reviews
                 </p>
 
-                <h1 id="hero-headline" class="font-display text-white text-[40px] sm:text-[54px] lg:text-[60px] xl:text-[66px] 2xl:text-[74px] min-[2400px]:text-[88px] leading-[1.04] mb-8">
+                <h1 id="hero-headline" class="font-display text-white text-[40px] sm:text-[58px] lg:text-[62px] xl:text-[76px] 2xl:text-[84px] min-[2400px]:text-[100px] leading-[1.04] mb-8">
                     <span class="hero-line"><span>Cape Town's</span></span>
                     <span class="hero-line"><span>Northern Suburbs,</span></span>
                     <span class="hero-line"><span>cleaned properly.</span></span>
                 </h1>
 
-                <p id="hero-sub" class="hero-settle max-w-[34rem] 2xl:max-w-[40rem] text-[17px] 2xl:text-[19px] leading-relaxed text-white/75 mb-9">
+                <p id="hero-sub" class="hero-settle max-w-[34rem] lg:max-w-[38rem] 2xl:max-w-[44rem] text-[17px] lg:text-[19px] 2xl:text-[21px] leading-relaxed text-white/75 mb-9 lg:mb-0">
                     Deep cleaning, end-of-tenancy and post-construction cleaning for homes and businesses, with your price before you book.
                 </p>
 
@@ -73,8 +73,6 @@
                     <x-arrow-button href="#hero-form">Get my instant quote</x-arrow-button>
                     <a href="#services" class="link-arrow text-[15px] font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-[#f6e304]">See our services<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
                 </div>
-
-                <x-trust-badges theme="ledger" id="hero-trust" class="hero-settle" />
             </div>
 
             <div class="lg:col-span-5" id="hero-form">

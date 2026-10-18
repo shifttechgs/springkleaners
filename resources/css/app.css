@@ -274,9 +274,8 @@
    in one screen without the form riding up under the navbar. */
 @media (min-width: 1024px) and (max-height: 860px) {
     .hero-compact { padding-top: 6.5rem; padding-bottom: 1.5rem; }
-    #hero-headline { font-size: 54px; margin-bottom: 1.25rem; }
+    #hero-headline { font-size: min(66px, 5.8vw); margin-bottom: 1.25rem; }
     #hero-badge { margin-bottom: 1rem; }
-    #hero-sub { margin-bottom: 1.5rem; }
     #hero-form > div { padding: 1.25rem 1.5rem; }
     #hero-form input, #hero-form #hero-service { padding-top: 0.55rem; padding-bottom: 0.55rem; }
     #hero-form .my-4 { margin-top: 0.75rem; margin-bottom: 0.75rem; }
@@ -288,8 +287,8 @@
     #hero-form .hero-popular, #hero-form .hero-form-note { display: none !important; }
 }
 @media (min-width: 1024px) and (max-height: 740px) {
-    #hero-headline { font-size: 48px; }
-    #hero-sub { font-size: 16px; }
+    #hero-headline { font-size: min(58px, 5.8vw); }
+    #hero-sub { font-size: 17px; }
     #hero-form .hero-form-sub { display: none; }
 }
 .hero-pause:hover { background-color: rgba(255, 255, 255, 0.12); border-color: #fff; }
@@ -427,8 +426,7 @@
     .hero-compact { padding-top: 5.75rem; padding-bottom: 1.75rem; }
     .hero-compact #hero-badge { margin-bottom: 1.25rem; }
     .hero-compact #hero-headline { margin-bottom: 1.25rem; }
-    .hero-compact #hero-sub { margin-bottom: 1.5rem; font-size: 16px; }
-    .hero-compact #hero-trust + div { margin-top: 1.25rem; }
+    .hero-compact #hero-sub { font-size: 18px; }
     .hero-compact #hero-form > div { padding: 1.25rem 1.5rem; }
     .hero-compact #hero-form .my-4 { margin-top: 0.75rem; margin-bottom: 0.75rem; }
     .hero-compact #hero-form input, .hero-compact #hero-form #hero-service { padding-top: 0.6rem; padding-bottom: 0.6rem; }
@@ -445,14 +443,10 @@
     .hero-compact { padding-top: 6rem; }
     .hero-compact #hero-badge { margin-bottom: 1rem; }
     .hero-compact #hero-headline { margin-bottom: 1rem; }
-    .hero-compact #hero-sub { margin-bottom: 1.5rem; font-size: 16px; }
+    .hero-compact #hero-sub { margin-bottom: 1.5rem; font-size: 17px; }
     .hero-compact #hero-sub + div { margin-bottom: 1.5rem; }
-    .hero-compact #hero-trust > div { padding-top: 0.75rem; }
-    .hero-compact #hero-trust + div { margin-top: 1rem; }
 }
 @media (max-width: 1023px) and (max-height: 780px) {
     .hero-compact { padding-top: 5.25rem; }
     .hero-compact #hero-sub { margin-bottom: 1.25rem; font-size: 15px; line-height: 1.55; }
-    .hero-compact #hero-trust dd { display: none; }
-    .hero-compact #hero-trust { row-gap: 0.25rem; }
 }
