@@ -27,7 +27,7 @@
         ['name' => 'slide-postcon', 'label' => 'Post Construction', 'alt' => 'A mop bucket, broom and ladder outside a newly built house, ready for the post-construction clean', 'w' => 2560, 'h' => 1707, 'pos' => '60% center', 'dim' => 0.36, 'dimMobile' => 0.34],
     ];
 @endphp
-<section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-14">
+<section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-10">
 
     {{-- Background slides. Each photo fades into the near-black base (mask on .hero-photo) and drifts slowly while on
          screen; the next one arrives through horizontal stripes. Decorative, so hidden from screen readers. --}}
@@ -152,7 +152,7 @@
                     <div>
                         <div class="mb-1">
                             <p class="font-display text-[#081d3a] text-[26px] leading-none">Get your instant quote</p>
-                            <p class="text-[#5b6779] text-[14px] mt-2">Free, with no obligation.</p>
+                            <p class="hero-form-sub text-[#5b6779] text-[14px] mt-2">Free, with no obligation.</p>
                         </div>
 
                         <div class="border-t border-[#081d3a]/10 my-4"></div>
@@ -198,7 +198,7 @@
                                 <span>We don't service <span x-text="suburbQuery || 'that area'" class="font-semibold"></span> yet</span>
                             </div>
 
-                            <div x-show="locationStatus !== 'valid' && !showSuggestions" class="mt-3" style="display:none;">
+                            <div x-show="locationStatus !== 'valid' && !showSuggestions" class="hero-popular mt-3" style="display:none;">
                                 <p class="text-[#081d3a]/65 text-[12.5px] mb-2">Popular areas</p>
                                 <div class="flex flex-wrap gap-1.5">
                                     <template x-for="suburb in ['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown']" :key="suburb">
@@ -301,7 +301,7 @@
                             </div>
                             <p x-show="errors.name || errors.phone || serviceError || locationStatus === 'required'" x-cloak class="text-red-500 text-[12px] -mt-1">Please fill in the highlighted fields above to continue.</p>
                             <x-arrow-button block x-on:click="submitForm()">Get my instant quote</x-arrow-button>
-                            <p class="text-center text-[#5b6779] text-[12.5px]">Free inspection. No commitment.</p>
+                            <p class="hero-form-note text-center text-[#5b6779] text-[12.5px]">Free inspection. No commitment.</p>
                         </div>
                     </div>
                 </div>
@@ -310,7 +310,7 @@
 
         {{-- Slide label + counter, full width under the copy and the form. The line between the numbers fills while
              a slide is on screen and drives the autoplay. --}}
-        <div class="hero-settle mt-10 lg:mt-12 flex items-center gap-3 sm:gap-4 whitespace-nowrap border-t border-white/15 pt-5 text-[13px] text-white/80">
+        <div class="hero-strip hero-settle mt-8 lg:mt-10 flex items-center gap-3 sm:gap-4 whitespace-nowrap border-t border-white/15 pt-4 text-[13px] text-white/80">
             <span class="font-medium text-white">Cape Town</span>
             <span class="h-3.5 w-px bg-white/35" aria-hidden="true"></span>
             <span class="hero-roll" data-hero-label>{{ $heroSlides[0]['label'] }}</span>
