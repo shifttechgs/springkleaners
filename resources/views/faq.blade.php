@@ -87,7 +87,7 @@
                         {{-- Left: image + intro --}}
                         <div class="lg:col-span-2 lg:sticky lg:top-24">
                             <div class="rounded-2xl overflow-hidden bg-[#e8e8e4] mb-6 aspect-[4/3]">
-                                <img src="{{ $cluster['image'] }}" alt="{{ $cluster['label'] }} — SpringKleaners" class="w-full h-full object-cover">
+                                <img src="{{ $cluster['image'] }}" alt="{{ $cluster['image_alt'] ?? $cluster['label'] . ' — SpringKleaners' }}" class="w-full h-full object-cover">
                             </div>
                             <div class="w-8 h-[2px] bg-[#f6e304] mb-3"></div>
                             <span class="text-[#081d3a] text-[11px] font-semibold uppercase tracking-[0.18em]">{{ $cluster['label'] }}</span>

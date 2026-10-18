@@ -5,7 +5,8 @@ return [
     'pricing' => [
         'label' => 'Pricing & Process',
         'icon' => 'pricing',
-        'image' => '/images/works/2.avif',
+        'image' => '/images/works/faq/pricing-process.avif',
+        'image_alt' => 'Two SpringKleaners team members setting up their cleaning kit in a kitchen',
         'blurb' => 'What things cost, how quotes work, and when you pay.',
         'faqs' => [
             ['q' => 'How much does a deep clean cost in Cape Town?', 'a' => 'From R1,200 for 2 bedrooms and 1 bathroom, plus R100 per extra bedroom or bathroom — confirmed with a free inspection before we start.', 'link' => ['route' => 'services.show', 'param' => 'deep-cleaning', 'label' => 'Deep Cleaning']],
@@ -24,7 +25,8 @@ return [
     'trust' => [
         'label' => 'Trust, Insurance & Safety',
         'icon' => 'trust',
-        'image' => '/images/works/1.avif',
+        'image' => '/images/works/real-team-with-client.avif',
+        'image_alt' => 'Two SpringKleaners team members in uniform with a happy client in her home',
         'blurb' => 'Insurance, vetting, guarantees — what protects you.',
         'faqs' => [
             ['q' => 'Are your cleaners background-checked?', 'a' => 'Yes — every team member is background-checked before joining us.'],
@@ -41,7 +43,8 @@ return [
     'services' => [
         'label' => 'Per-Service',
         'icon' => 'services',
-        'image' => '/images/works/we_clean.avif',
+        'image' => '/images/works/faq/per-service.avif',
+        'image_alt' => 'SpringKleaners team member in uniform cleaning a bathroom mirror',
         'blurb' => 'Specifics on Deep Cleaning, End-of-Tenancy, Post-Construction, Office & Commercial, and Carpet/Upholstery/Window Cleaning.',
         'faqs' => [
             // Deep Cleaning
@@ -85,7 +88,8 @@ return [
     'areas' => [
         'label' => 'Areas We Serve',
         'icon' => 'areas',
-        'image' => '/images/works/home.avif',
+        'image' => '/images/works/faq/areas.avif',
+        'image_alt' => 'SpringKleaners team member on a step-ladder cleaning a ceiling light in an empty apartment',
         'blurb' => 'The 19 Cape Town suburbs we cover, and what happens if yours isn\'t listed.',
         'faqs' => [
             ['q' => 'Which Cape Town suburbs do you service?', 'a' => 'Milnerton, Sunningdale, Blouberg, Parklands, Century City, Table View, Big Bay, Bloubergstrand, Sea Point, Green Point, West Beach, Monte Vista, Edgemead, Bothasig, Montague Gardens, Paarden Eiland, Richwood, Burgundy Estate and Flamingo Vlei, plus a wider surrounding area covered on request.'],
@@ -97,7 +101,8 @@ return [
     'comparison' => [
         'label' => 'Comparisons',
         'icon' => 'comparison',
-        'image' => '/images/works/3.avif',
+        'image' => '/images/works/faq/comparisons.avif',
+        'image_alt' => 'SpringKleaners team member in uniform cleaning a bathroom vanity',
         'blurb' => 'Which service actually fits your situation.',
         'faqs' => [
             ['q' => 'What\'s the difference between a regular clean and a deep clean?', 'a' => 'A Deep Clean resets a home from scratch — inside appliances, cupboard interiors, built-up grime. Our Recurring House Cleaning service maintains that standard week to week at a lighter, lower-cost scope. Most clients use both.'],

@@ -126,9 +126,9 @@
                 </div>
                 <figure class="wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
                     <div class="rounded-2xl overflow-hidden aspect-[4/3]">
-                        <img src="/images/works/real-team-with-client.avif" alt="Two SpringKleaners team members in uniform standing with a happy client in her home" width="960" height="720" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                        <img src="/images/works/real-team-light-fitting.avif" alt="SpringKleaners team member on a step-ladder dusting a ceiling light fitting" width="960" height="720" loading="lazy" decoding="async" class="w-full h-full object-cover">
                     </div>
-                    <figcaption class="mt-3 text-[13px] text-[#5b6779]">Our team with a happy client.</figcaption>
+                    <figcaption class="mt-3 text-[13px] text-[#5b6779]">One of our team members on a job, detailing a light fitting.</figcaption>
                 </figure>
             </div>
         </div>
