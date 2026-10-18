@@ -10,7 +10,7 @@
                 <h2 class="text-3xl lg:text-[36px] font-extrabold text-[#081d3a] tracking-tight leading-[1.12] mt-3 mb-4">
                     Questions we get<br>all the time.
                 </h2>
-                <p class="text-[#647082] text-[13px] leading-relaxed mb-5 max-w-xs">
+                <p class="text-[#5b6779] text-[13px] leading-relaxed mb-5 max-w-xs">
                     Can't find your answer? WhatsApp us — we reply instantly.
                 </p>
                 <a href="https://wa.me/27815274711"
@@ -23,7 +23,7 @@
                     Chat on WhatsApp
                 </a>
                 <div class="rounded-2xl overflow-hidden bg-[#e8e8e4] hidden lg:block" style="max-height:320px">
-                    <img src="/images/works/we_clean.avif" alt="Professional cleaner at work" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="/images/works/we_clean.avif" alt="Professional cleaner at work" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
                          x-transition:leave-end="opacity-0"
                          class="px-5 pb-4 pl-[52px]"
                          style="display:none;">
-                        <p class="text-[#647082] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
+                        <p class="text-[#5b6779] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
                     </div>
                 </div>
                 @endforeach

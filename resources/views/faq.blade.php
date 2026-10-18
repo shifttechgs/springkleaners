@@ -46,7 +46,7 @@
         <section class="bg-[#081d3a] pt-36 pb-14 lg:pt-44 lg:pb-16 relative overflow-hidden">
             <div class="absolute inset-0 hero-pattern"></div>
             <div class="section-wrap relative z-10 max-w-3xl">
-                <div class="flex items-center gap-2 text-white/40 text-[12px] font-medium mb-6">
+                <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                     <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                     <span>/</span>
                     <span class="text-white/60">FAQ</span>
@@ -67,7 +67,7 @@
                     @foreach ($clusters as $clusterKey => $cluster)
                     <button type="button"
                             @click="tab = '{{ $clusterKey }}'"
-                            class="flex items-center gap-2 whitespace-nowrap px-4 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200 flex-shrink-0"
+                            class="flex items-center gap-2 whitespace-nowrap px-4 py-2.5 rounded-full text-[13px] font-semibold transition-all duration-200 flex-shrink-0"
                             :class="tab === '{{ $clusterKey }}' ? 'bg-[#081d3a] text-white shadow-md' : 'text-[#081d3a]/60 hover:bg-white hover:text-[#081d3a]'">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $clusterIcons[$clusterKey] }}"/></svg>
                         {{ $cluster['label'] }}
@@ -117,7 +117,7 @@
                                     </span>
                                 </button>
                                 <div x-show="active === {{ $i }}" x-transition class="px-5 pb-4" style="display:none;">
-                                    <p class="text-[#647082] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
+                                    <p class="text-[#5b6779] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
                                     @if (isset($faq['link']))
                                     <a href="{{ route($faq['link']['route'], $faq['link']['param']) }}" class="inline-flex items-center gap-1.5 text-[#081d3a] font-semibold text-[12px] mt-2.5 hover:text-[#a9791f] transition-colors">
                                         {{ $faq['link']['label'] }}
@@ -142,9 +142,7 @@
         <div class="section-wrap text-center max-w-xl mx-auto">
             <h2 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-4">Still have a question?</h2>
             <p class="text-white/50 text-[14px] mb-7">Message us on WhatsApp — we reply fast, no bots.</p>
-            <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
-                WhatsApp Us
-            </a>
+            <x-arrow-button href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
         </div>
     </section>
 

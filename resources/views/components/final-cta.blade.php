@@ -3,7 +3,7 @@
         <div class="relative rounded-3xl overflow-hidden wow fadeIn" data-wow-duration="0.9s" style="min-height: 420px;">
 
             {{-- Background image --}}
-            <img src="/images/works/final_cta_image.webp"
+            <img loading="lazy" decoding="async" src="/images/works/final_cta_image.webp"
                  alt="SpringKleaners professional cleaning service"
                  class="absolute inset-0 w-full h-full object-cover object-center">
 
@@ -29,7 +29,7 @@
 
                     {{-- Right: Service list --}}
                     <div class="flex flex-col justify-center items-start lg:items-end gap-4 lg:gap-5">
-                        <p class="text-white/40 text-[11px] font-bold uppercase tracking-widest mb-1">What we do</p>
+                        <p class="text-white/60 text-[11px] font-bold uppercase tracking-widest mb-1">What we do</p>
                         <p class="text-white font-bold uppercase tracking-widest text-[13px] sm:text-[15px]">Deep Cleaning</p>
                         <p class="text-white font-bold uppercase tracking-widest text-[13px] sm:text-[15px]">End-of-Tenancy Cleaning</p>
                         <p class="text-white font-bold uppercase tracking-widest text-[13px] sm:text-[15px]">Post Construction Cleaning</p>
@@ -43,15 +43,7 @@
                         <p class="text-[#081d3a] font-black uppercase tracking-tight text-[15px] sm:text-[17px] leading-snug">
                             Got a space in need of a refresh?
                         </p>
-                        <a href="{{ route('booking.show') }}"
-                           class="inline-flex items-center gap-3 bg-[#081d3a] text-white font-semibold px-6 py-3.5 rounded-full hover:bg-[#0d2a4a] active:scale-95 transition-all text-[14px] tracking-tight whitespace-nowrap flex-shrink-0">
-                            Get My Instant Quote
-                            <span class="w-7 h-7 bg-[#f6e304] rounded-full flex items-center justify-center flex-shrink-0">
-                                <svg class="w-3.5 h-3.5 text-[#081d3a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 17L17 7M17 7H7M17 7v10"/>
-                                </svg>
-                            </span>
-                        </a>
+                        <x-arrow-button variant="navy" href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
                     </div>
                 </div>
 

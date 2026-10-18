@@ -50,7 +50,7 @@
     <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 max-w-3xl">
-            <div class="flex items-center gap-2 text-white/40 text-[12px] font-medium mb-6">
+            <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                 <span>/</span>
                 <span class="text-white/60">Areas We Serve</span>
@@ -62,13 +62,8 @@
                 SpringKleaners provides deep cleaning, end-of-tenancy, post-construction, office &amp; commercial and specialist cleaning services (carpet, upholstery, window and more) across {{ $totalAreas }} suburbs spanning the Northern Suburbs, Blaauwberg and the Atlantic Seaboard — every service priced upfront, booked online, and confirmed with a free inspection.
             </p>
             <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
-                <a href="{{ route('booking.show') }}" class="btn-gold">
-                    Get My Instant Quote
-                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                </a>
-                <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="btn-outline">
-                    WhatsApp Us
-                </a>
+                <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
+                <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
             <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
         </div>
@@ -89,7 +84,7 @@
                     @foreach ($clusterAreas as $slug => $area)
                     <a href="{{ route('areas.show', $slug) }}" class="group block bg-[#f8f9fc] border border-black/5 rounded-2xl p-6 hover:border-[#f6e304] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
                         <h3 class="text-[#081d3a] font-extrabold text-[17px] tracking-tight mb-2 group-hover:text-[#0d2a4a]">{{ $area['name'] }}</h3>
-                        <p class="text-[#647082] text-[13px] leading-relaxed line-clamp-2 mb-4">{{ $area['property_note'] }}</p>
+                        <p class="text-[#5b6779] text-[13px] leading-relaxed line-clamp-2 mb-4">{{ $area['property_note'] }}</p>
                         <span class="inline-flex items-center gap-1.5 text-[#081d3a] font-bold text-[12.5px]">
                             View {{ $area['name'] }} cleaning
                             <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -141,7 +136,7 @@
                 @foreach ($areaFaqs as $faq)
                 <div>
                     <h3 class="text-[#081d3a] font-bold text-[15px] tracking-tight mb-1.5">{{ $faq['q'] }}</h3>
-                    <p class="text-[#647082] text-[14px] leading-relaxed">{{ $faq['a'] }}</p>
+                    <p class="text-[#5b6779] text-[14px] leading-relaxed">{{ $faq['a'] }}</p>
                 </div>
                 @endforeach
             </div>

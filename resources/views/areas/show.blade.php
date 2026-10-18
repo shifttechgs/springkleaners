@@ -35,7 +35,7 @@
     <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 max-w-3xl">
-            <div class="flex items-center gap-2 text-white/40 text-[12px] font-medium mb-6">
+            <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                 <span>/</span>
                 <a href="{{ route('areas.index') }}" class="hover:text-[#f6e304] transition-colors">Areas We Serve</a>
@@ -48,17 +48,12 @@
             <p class="text-white/60 text-[16px] leading-relaxed mb-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
                 {{ $location['blurb'] }}
             </p>
-            <p class="text-white/40 text-[13px] mb-8 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
+            <p class="text-white/60 text-[13px] mb-8 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
                 {{ $location['property_note'] }}
             </p>
             <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
-                <a href="{{ route('booking.show', ['suburb' => $location['name']]) }}" class="btn-gold">
-                    Get My Free Estimate
-                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                </a>
-                <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="btn-outline">
-                    WhatsApp Us
-                </a>
+                <x-arrow-button href="{{ route('booking.show', ['suburb' => $location['name']]) }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
+                <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
             <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
         </div>
@@ -82,13 +77,13 @@
                 @endphp
                 <div class="bg-[#f8f9fc] border border-gray-100 rounded-2xl p-6 flex flex-col">
                     <p class="text-[#081d3a] font-bold text-[16px] tracking-tight mb-2">{{ $svc['name'] }}</p>
-                    <p class="text-[#647082] text-[13px] leading-relaxed mb-5 flex-1">{{ $svc['tagline'] }}</p>
+                    <p class="text-[#5b6779] text-[13px] leading-relaxed mb-5 flex-1">{{ $svc['tagline'] }}</p>
                     @if ($svcPricingMode === 'custom')
-                    <p class="text-[#647082] text-[11px] mb-4">Custom quote</p>
+                    <p class="text-[#5b6779] text-[11px] mb-4">Custom quote</p>
                     @elseif ($svcPricingMode === 'quote')
-                    <p class="text-[#647082] text-[11px] mb-4">From <span class="text-[#081d3a] font-bold">{{ $svcContent['pricing_headline'] }}</span> {{ $svcContent['pricing_unit'] }}</p>
+                    <p class="text-[#5b6779] text-[11px] mb-4">From <span class="text-[#081d3a] font-bold">{{ $svcContent['pricing_headline'] }}</span> {{ $svcContent['pricing_unit'] }}</p>
                     @else
-                    <p class="text-[#647082] text-[11px] mb-4">From <span class="text-[#081d3a] font-bold">R{{ number_format($svc['base_price']) }}</span> / {{ $svc['unit_label'] }}</p>
+                    <p class="text-[#5b6779] text-[11px] mb-4">From <span class="text-[#081d3a] font-bold">R{{ number_format($svc['base_price']) }}</span> / {{ $svc['unit_label'] }}</p>
                     @endif
                     <div class="flex flex-col gap-2">
                         @if ($svcPricingMode === 'wizard')
@@ -155,7 +150,7 @@
                         </span>
                     </button>
                     <div x-show="active === {{ $i }}" x-transition class="px-5 pb-4" style="display:none;">
-                        <p class="text-[#647082] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
+                        <p class="text-[#5b6779] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
                     </div>
                 </div>
                 @endforeach

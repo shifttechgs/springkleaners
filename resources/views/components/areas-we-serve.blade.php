@@ -24,7 +24,7 @@
             <h2 class="text-4xl lg:text-5xl font-extrabold text-[#081d3a] tracking-tight leading-tight mt-3 mb-5">
                 Cleaning services across<br>Cape Town suburbs.
             </h2>
-            <p class="text-[#647082] text-lg font-normal">
+            <p class="text-[#5b6779] text-lg font-normal">
                 From the Northern Suburbs to the Atlantic Seaboard, our teams are on the road every day.
             </p>
         </div>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="text-center wow fadeInUp" data-wow-duration="0.7s">
-            <p class="text-[#647082] text-[14px]">
+            <p class="text-[#5b6779] text-[14px]">
                 Servicing Cape Town's Northern Suburbs &amp; Atlantic Seaboard — don't see your area?
                 <a href="https://wa.me/27815274711?text=Hi%20SpringKleaners!%20Do%20you%20service%20my%20area%3F" target="_blank" rel="noopener noreferrer" class="text-[#081d3a] font-semibold underline hover:text-[#f6e304] transition-colors">
                     Ask us on WhatsApp

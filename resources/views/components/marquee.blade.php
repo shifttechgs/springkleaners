@@ -13,8 +13,8 @@
 
     <div class="text-center mb-8 px-5">
         <span class="text-[#f6e304] text-lg tracking-tight">★★★★★</span>
-        <span class="text-white font-bold text-lg ml-2">4.9<span class="text-white/40 font-normal">/5</span></span>
-        <span class="text-white/50 text-[15px]"> · Rated by Cape Town clients</span>
+        <span class="text-white font-bold text-lg ml-2">4.9<span class="text-white/70 font-normal">/5</span></span>
+        <span class="text-white/75 text-[15px]"> · Rated by Cape Town clients</span>
     </div>
 
     <div class="relative flex mb-8">
@@ -28,7 +28,7 @@
                             <div class="w-9 h-9 rounded-full bg-[#f6e304] flex items-center justify-center text-[#081d3a] font-bold text-[12px] flex-shrink-0">{{ $r['initials'] }}</div>
                             <div>
                                 <p class="text-white text-[13px] font-semibold">{{ $r['name'] }}</p>
-                                <p class="text-white/40 text-[11px]">{{ $r['meta'] }}</p>
+                                <p class="text-white/60 text-[11px]">{{ $r['meta'] }}</p>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
-<nav id="mainNav" class="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-4 lg:inset-x-6 z-50" x-data="{ open: false }">
-    <div class="max-w-7xl mx-auto rounded-2xl border border-white/10 shadow-2xl px-4 sm:px-5 lg:px-6" style="background: rgba(13,27,51,0.55); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);">
+<nav id="mainNav" class="fixed top-0 inset-x-0 z-50" x-data="{ open: false }">
+    <div class="nav-bar max-w-7xl mx-auto">
         <div class="flex items-center justify-between h-16 lg:gap-4">
             <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
                 <div class="w-9 h-9 rounded-xl bg-[#f6e304] flex items-center justify-center flex-shrink-0 shadow-md">
@@ -12,7 +12,7 @@
 
             <div class="hidden lg:flex items-center justify-center gap-5 xl:gap-8">
                 <div class="relative" x-data="{ servicesOpen: false }" @mouseenter="servicesOpen = true" @mouseleave="servicesOpen = false">
-                    <a href="/#services" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
+                    <a href="/#services" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[16px] tracking-tight transition-colors duration-200">
                         Services
                         <svg class="w-3 h-3 transition-transform duration-200" :class="servicesOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </a>
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="relative" x-data="{ areasOpen: false }" @mouseenter="areasOpen = true" @mouseleave="areasOpen = false">
-                    <a href="{{ route('areas.index') }}" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">
+                    <a href="{{ route('areas.index') }}" class="flex items-center gap-1 text-white/70 hover:text-[#f6e304] font-medium text-[16px] tracking-tight transition-colors duration-200">
                         Areas
                         <svg class="w-3 h-3 transition-transform duration-200" :class="areasOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </a>
@@ -99,11 +99,9 @@
                         </div>
                     </div>
                 </div>
-                <a href="/#how-it-works" class="whitespace-nowrap text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">How It Works</a>
-                <a href="/#pricing" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Pricing</a>
-                <a href="{{ route('about') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">About</a>
-                <a href="{{ route('blog.index') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">Blog</a>
-                <a href="{{ route('faq') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[14px] tracking-tight transition-colors duration-200">FAQ</a>
+                <a href="/#pricing" class="text-white/70 hover:text-[#f6e304] font-medium text-[16px] tracking-tight transition-colors duration-200">Pricing</a>
+                <a href="{{ route('about') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[16px] tracking-tight transition-colors duration-200">About</a>
+                <a href="{{ route('faq') }}" class="text-white/70 hover:text-[#f6e304] font-medium text-[16px] tracking-tight transition-colors duration-200">FAQ</a>
             </div>
 
             <div class="hidden lg:flex items-center justify-end gap-5">
@@ -111,9 +109,7 @@
                     <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-.826 1.677l-.916.458a1 1 0 00-.464 1.30 12.05 12.05 0 005.52 5.52 1 1 0 001.30-.464l.458-.916a1.5 1.5 0 011.677-.826l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-7.18 0-13-5.82-13-13V3.5z"/></svg>
                     <span class="hidden xl:inline">+27 81 527 4711</span>
                 </a>
-                <a href="{{ route('booking.show') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#f6e304] text-[#081d3a] font-bold rounded-xl hover:bg-yellow-300 active:scale-95 transition-all duration-200 text-sm tracking-tight shadow-lg flex-shrink-0">
-                    Get My Instant Quote
-                </a>
+                <x-arrow-button size="sm" :href="route('booking.show')" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
             </div>
 
             <button @click="open = !open" class="lg:hidden justify-self-end p-2 rounded-lg text-white hover:bg-white/10 transition-colors duration-200" aria-label="Toggle menu">
@@ -131,11 +127,11 @@
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-2"
-         class="lg:hidden mt-2 rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
+         class="nav-menu lg:hidden mt-2 rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
          style="display: none; background: rgba(13,27,51,0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
         <div class="py-6 px-5 flex flex-col gap-1">
             <div x-data="{ servicesOpen: false }">
-                <button type="button" @click="servicesOpen = !servicesOpen" class="w-full flex items-center justify-between py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">
+                <button type="button" @click="servicesOpen = !servicesOpen" class="w-full flex items-center justify-between py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">
                     <span>Services</span>
                     <svg class="w-4 h-4 transition-transform duration-200" :class="servicesOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -143,11 +139,11 @@
                     <a href="{{ route('services.show', 'deep-cleaning') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Deep Cleaning</a>
                     <a href="{{ route('services.show', 'end-of-tenancy') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">End-of-Tenancy Cleaning</a>
                     <a href="{{ route('services.show', 'post-construction') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Post Construction Cleaning</a>
-                    <a href="/#services" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/40 hover:text-[#f6e304] text-[13px] transition-colors">View all services →</a>
+                    <a href="/#services" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:text-[#f6e304] text-[13px] transition-colors">View all services →</a>
                 </div>
             </div>
             <div x-data="{ areasOpen: false }">
-                <button type="button" @click="areasOpen = !areasOpen" class="w-full flex items-center justify-between py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">
+                <button type="button" @click="areasOpen = !areasOpen" class="w-full flex items-center justify-between py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">
                     <span>Areas We Serve</span>
                     <svg class="w-4 h-4 transition-transform duration-200" :class="areasOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -160,18 +156,14 @@
                     <a href="{{ route('areas.show', 'table-view') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Table View</a>
                     <a href="{{ route('areas.show', 'big-bay') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Big Bay</a>
                     <a href="{{ route('areas.show', 'bloubergstrand') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:bg-white/5 hover:text-[#f6e304] text-[14px] transition-colors">Bloubergstrand</a>
-                    <a href="{{ route('areas.index') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/40 hover:text-[#f6e304] text-[13px] transition-colors">View all areas →</a>
+                    <a href="{{ route('areas.index') }}" @click="open = false" class="block py-2.5 px-4 rounded-lg text-white/60 hover:text-[#f6e304] text-[13px] transition-colors">View all areas →</a>
                 </div>
             </div>
-            <a href="/#how-it-works" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">How It Works</a>
-            <a href="/#pricing" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Pricing</a>
-            <a href="{{ route('about') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">About</a>
-            <a href="{{ route('blog.index') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">Blog</a>
-            <a href="{{ route('faq') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[15px] transition-colors">FAQ</a>
+            <a href="/#pricing" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">Pricing</a>
+            <a href="{{ route('about') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">About</a>
+            <a href="{{ route('faq') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">FAQ</a>
             <div class="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
-                <a href="{{ route('booking.show') }}" @click="open = false" class="flex items-center justify-center py-3 px-4 bg-[#f6e304] text-[#081d3a] rounded-xl font-bold text-[14px] hover:bg-yellow-300 transition-colors">
-                    Get My Instant Quote
-                </a>
+                <x-arrow-button block :href="route('booking.show')" x-on:click="open = false">Get My Instant Quote</x-arrow-button>
             </div>
         </div>
     </div>

@@ -14,8 +14,8 @@
                     <div class="flex items-center gap-3">
                         <span class="text-4xl font-extrabold text-[#081d3a] leading-none">4.9</span>
                         <div>
-                            <div class="text-[#f6e304] text-base leading-none">★★★★★</div>
-                            <p class="text-[#647082] text-[13px] mt-1.5">Based on real Google reviews</p>
+                            <div class="text-[#f6e304] text-base leading-none" role="img" aria-label="5 out of 5 stars"><span class="stars-5" aria-hidden="true"></span></div>
+                            <p class="text-[#5b6779] text-[13px] mt-1.5">Based on real Google reviews</p>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                 </a>
 
                 <div class="rounded-2xl overflow-hidden hidden lg:block" style="min-height:220px">
-                    <img src="/images/works/1.png" alt="SpringKleaners professional at work" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="/images/works/1.avif" alt="SpringKleaners professional at work" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -51,9 +51,9 @@
                                 <div class="flex-shrink-0 bg-[#f8f9fc] rounded-2xl p-6 border border-gray-100 relative overflow-hidden">
                                     <span class="absolute -top-2 -right-1 text-[80px] font-serif text-[#081d3a]/[0.05] leading-none select-none">"</span>
                                     <div class="flex items-center justify-between mb-4 relative">
-                                        <div class="text-[#f6e304] text-sm">★★★★★</div>
+                                        <div class="text-[#f6e304] text-sm" role="img" aria-label="5 out of 5 stars"><span class="stars-5" aria-hidden="true"></span></div>
                                         @if ($r['source'] === 'google')
-                                            <div class="flex items-center gap-1.5 text-[#647082] text-[12px] font-medium">
+                                            <div class="flex items-center gap-1.5 text-[#5b6779] text-[12px] font-medium">
                                                 <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47c-.28 1.5-1.13 2.78-2.4 3.63v3h3.89c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.9l-3.89-3.02c-1.08.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.73-4.96H1.26v3.11C3.24 21.3 7.29 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.27a7.2 7.2 0 010-4.54V6.62H1.26a11.98 11.98 0 000 10.76l4.01-3.11z"/><path fill="#EA4335" d="M12 4.77c1.76 0 3.34.61 4.58 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0 7.29 0 3.24 2.7 1.26 6.62l4.01 3.11C6.22 6.88 8.87 4.77 12 4.77z"/></svg>
                                                 Google
                                             </div>
@@ -66,7 +66,7 @@
                                         <div class="w-10 h-10 rounded-full bg-[#081d3a] flex items-center justify-center text-[#f6e304] font-bold text-[13px] flex-shrink-0">{{ $r['initials'] }}</div>
                                         <div>
                                             <p class="text-[#081d3a] text-[14px] font-semibold">{{ $r['name'] }}</p>
-                                            <p class="text-[#647082] text-[12px]">{{ $r['meta'] }}</p>
+                                            <p class="text-[#5b6779] text-[12px]">{{ $r['meta'] }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -80,9 +80,9 @@
                                 <div class="flex-shrink-0 bg-[#f8f9fc] rounded-2xl p-6 border border-gray-100 relative overflow-hidden">
                                     <span class="absolute -top-2 -right-1 text-[80px] font-serif text-[#081d3a]/[0.05] leading-none select-none">"</span>
                                     <div class="flex items-center justify-between mb-4 relative">
-                                        <div class="text-[#f6e304] text-sm">★★★★★</div>
+                                        <div class="text-[#f6e304] text-sm" role="img" aria-label="5 out of 5 stars"><span class="stars-5" aria-hidden="true"></span></div>
                                         @if ($r['source'] === 'google')
-                                            <div class="flex items-center gap-1.5 text-[#647082] text-[12px] font-medium">
+                                            <div class="flex items-center gap-1.5 text-[#5b6779] text-[12px] font-medium">
                                                 <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47c-.28 1.5-1.13 2.78-2.4 3.63v3h3.89c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.9l-3.89-3.02c-1.08.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.73-4.96H1.26v3.11C3.24 21.3 7.29 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.27a7.2 7.2 0 010-4.54V6.62H1.26a11.98 11.98 0 000 10.76l4.01-3.11z"/><path fill="#EA4335" d="M12 4.77c1.76 0 3.34.61 4.58 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0 7.29 0 3.24 2.7 1.26 6.62l4.01 3.11C6.22 6.88 8.87 4.77 12 4.77z"/></svg>
                                                 Google
                                             </div>
@@ -95,7 +95,7 @@
                                         <div class="w-10 h-10 rounded-full bg-[#081d3a] flex items-center justify-center text-[#f6e304] font-bold text-[13px] flex-shrink-0">{{ $r['initials'] }}</div>
                                         <div>
                                             <p class="text-[#081d3a] text-[14px] font-semibold">{{ $r['name'] }}</p>
-                                            <p class="text-[#647082] text-[12px]">{{ $r['meta'] }}</p>
+                                            <p class="text-[#5b6779] text-[12px]">{{ $r['meta'] }}</p>
                                         </div>
                                     </div>
                                 </div>

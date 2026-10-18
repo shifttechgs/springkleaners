@@ -17,7 +17,7 @@
             </div>
 
             <div>
-                <h3 class="text-white font-bold text-[15px] mb-5">Services</h3>
+                <h2 class="text-white font-bold text-[15px] mb-5">Services</h2>
                 <ul class="space-y-3">
                     <li><a href="{{ route('services.show', 'deep-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Deep Cleaning</a></li>
                     <li><a href="{{ route('services.show', 'end-of-tenancy') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">End-of-Tenancy Cleaning</a></li>
@@ -33,7 +33,7 @@
             </div>
 
             <div>
-                <h3 class="text-white font-bold text-[15px] mb-5">Contact Us</h3>
+                <h2 class="text-white font-bold text-[15px] mb-5">Contact Us</h2>
                 <ul class="space-y-3">
                     <li>
                         <a href="tel:+27815274711" class="flex items-center gap-2 text-white/60 hover:text-[#f6e304] text-[14px] transition-colors">
@@ -59,7 +59,7 @@
                             bookings@springkleaners.co.za
                         </a>
                     </li>
-                    <li class="flex items-start gap-2 text-white/40 text-[14px]">
+                    <li class="flex items-start gap-2 text-white/60 text-[14px]">
                         <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -70,8 +70,8 @@
             </div>
 
             <div>
-                <h3 class="text-white font-bold text-[15px] mb-5"><a href="{{ route('areas.index') }}" class="hover:text-[#f6e304] transition-colors">Areas We Service</a></h3>
-                <p class="text-white/40 text-[13px] leading-loose">
+                <h2 class="text-white font-bold text-[15px] mb-5"><a href="{{ route('areas.index') }}" class="hover:text-[#f6e304] transition-colors">Areas We Service</a></h2>
+                <p class="text-white/60 text-[13px] leading-loose">
                     <a href="{{ route('areas.show', 'milnerton') }}" class="hover:text-[#f6e304] transition-colors">Milnerton</a> ·
                     <a href="{{ route('areas.show', 'sunningdale') }}" class="hover:text-[#f6e304] transition-colors">Sunningdale</a> ·
                     <a href="{{ route('areas.show', 'blouberg') }}" class="hover:text-[#f6e304] transition-colors">Blouberg</a> ·
@@ -98,13 +98,13 @@
 
         <div class="border-t border-white/10 mt-12 pt-8">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p class="text-white/30 text-[12px]">© {{ date('Y') }} SpringKleaners. All rights reserved.</p>
+                <p class="text-white/60 text-[12px]">© {{ date('Y') }} SpringKleaners. All rights reserved.</p>
                 <div class="flex gap-6 items-center">
-                    <a href="{{ route('privacy') }}" class="text-white/30 hover:text-[#f6e304] text-[12px] transition-colors">Privacy Policy</a>
-                    <a href="{{ route('terms') }}" class="text-white/30 hover:text-[#f6e304] text-[12px] transition-colors">Terms of Service</a>
-                    <a href="{{ route('login') }}" class="text-white/30 hover:text-[#f6e304] text-[12px] transition-colors">Staff Login</a>
-                    <span class="text-white/20 text-[11px]">·</span>
-                    <span class="text-white/30 text-[12px]">Designed by <a href="#" class="hover:text-[#f6e304] transition-colors font-medium">ShiftTech</a></span>
+                    <a href="{{ route('privacy') }}" class="text-white/60 hover:text-[#f6e304] text-[12px] transition-colors">Privacy Policy</a>
+                    <a href="{{ route('terms') }}" class="text-white/60 hover:text-[#f6e304] text-[12px] transition-colors">Terms of Service</a>
+                    <a href="{{ route('login') }}" class="text-white/60 hover:text-[#f6e304] text-[12px] transition-colors">Staff Login</a>
+                    <span class="text-white/60 text-[11px]">·</span>
+                    <span class="text-white/60 text-[12px]">Designed by <a href="#" class="hover:text-[#f6e304] transition-colors font-medium">ShiftTech</a></span>
                 </div>
             </div>
         </div>

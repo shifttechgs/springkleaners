@@ -197,7 +197,7 @@
     @include('components.navbar')
 
     <div class="relative z-10 px-5 py-14 sm:py-20 text-center w-full">
-        <p class="au d1 text-white/40 text-[11.5px] font-semibold uppercase tracking-[0.22em] mb-5"
+        <p class="au d1 text-white/60 text-[11.5px] font-semibold uppercase tracking-[0.22em] mb-5"
            style="font-family:'Plus Jakarta Sans',sans-serif;">
             Get a Quote
         </p>
@@ -466,7 +466,7 @@
                             <p class="text-[#adb5c4] text-[13px] mb-4" style="font-family:'Plus Jakarta Sans',sans-serif;">Join our waitlist — be the first to know.</p>
                             <div class="flex gap-2">
                                 <input type="email" x-model="waitlistEmail" placeholder="Your email address" class="wl-input">
-                                <button type="button" class="px-5 py-3 bg-[#081d3a] text-white font-bold rounded-xl text-[13px] hover:bg-[#0d2a4a] transition-colors flex-shrink-0" style="font-family:'Geist',sans-serif;">
+                                <button type="button" class="px-5 py-3 bg-[#081d3a] text-white font-bold rounded-full text-[13px] hover:bg-[#0d2a4a] transition-colors flex-shrink-0" style="font-family:'Geist',sans-serif;">
                                     Join
                                 </button>
                             </div>

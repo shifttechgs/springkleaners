@@ -51,7 +51,7 @@
 
             {{-- B2: Image --}}
             <div class="sk-b2 rounded-2xl overflow-hidden bg-[#0a1628]" style="min-height:210px">
-                <img src="/images/works/1.png" alt="SpringKleaners professional at work" class="w-full h-full object-cover" style="min-height:210px;display:block">
+                <img loading="lazy" decoding="async" src="/images/works/1.avif" alt="SpringKleaners professional at work" class="w-full h-full object-cover" style="min-height:210px;display:block">
             </div>
 
             {{-- B3: White — Experience --}}
@@ -61,7 +61,7 @@
                     <p class="text-[#081d3a] text-[11px] font-bold uppercase tracking-widest mt-2 mb-4">Years Of Experience</p>
                     <hr class="border-[#081d3a]/10">
                 </div>
-                <p class="text-[#647082] text-[13px] leading-relaxed mt-4">We don't just clean, we obsess over detail.</p>
+                <p class="text-[#5b6779] text-[13px] leading-relaxed mt-4">We don't just clean, we obsess over detail.</p>
             </div>
 
             {{-- B4: Cream — Cleans Completed (3 rows tall) --}}
@@ -79,7 +79,7 @@
                     <span class="sk-stat text-[#081d3a]">500+</span>
                     <p class="text-[#081d3a] text-[11px] font-bold uppercase tracking-widest mt-2 mb-4">Cleans Completed</p>
                     <hr class="border-[#081d3a]/10">
-                    <p class="text-[#647082] text-[13px] leading-relaxed mt-4">Hundreds of homes and businesses across Cape Town's Northern Suburbs trust us with their clean.</p>
+                    <p class="text-[#5b6779] text-[13px] leading-relaxed mt-4">Hundreds of homes and businesses across Cape Town's Northern Suburbs trust us with their clean.</p>
                 </div>
             </div>
 
@@ -116,9 +116,9 @@
             {{-- B7: White + image — Free Inspection --}}
             <div class="sk-b7 bg-white rounded-2xl p-5 flex flex-col" style="min-height:210px">
                 <p class="text-[#081d3a] font-bold text-[15px] tracking-tight">Free Inspection</p>
-                <p class="text-[#647082] text-[13px] mt-1 mb-3 leading-snug">We visit before we quote — no commitment, no surprises.</p>
+                <p class="text-[#5b6779] text-[13px] mt-1 mb-3 leading-snug">We visit before we quote — no commitment, no surprises.</p>
                 <div class="flex-1 rounded-xl overflow-hidden bg-[#e5e5e0]" style="min-height:110px">
-                    <img src="/images/works/3.png" alt="Free property inspection" class="w-full h-full object-cover" style="display:block">
+                    <img loading="lazy" decoding="async" src="/images/works/3.avif" alt="Free property inspection" class="w-full h-full object-cover" style="display:block">
                 </div>
             </div>
 
@@ -136,18 +136,10 @@
 
         {{-- Bottom CTA --}}
         <div class="text-center mt-16 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.3s">
-            <p class="text-white/40 text-[11px] font-bold uppercase tracking-widest mb-6">
+            <p class="text-white/60 text-[11px] font-bold uppercase tracking-widest mb-6">
                 Ready to get your space spotlessly clean?
             </p>
-            <a href="{{ route('booking.show') }}"
-               class="inline-flex items-center gap-3 bg-[#f6e304] text-[#081d3a] font-bold px-8 py-4 rounded-full hover:bg-yellow-300 active:scale-95 transition-all shadow-lg text-[15px] tracking-tight">
-                Get My Instant Quote
-                <span class="w-7 h-7 bg-[#081d3a] rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg class="w-3.5 h-3.5 text-[#f6e304]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 17L17 7M17 7H7M17 7v10"/>
-                    </svg>
-                </span>
-            </a>
+            <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
         </div>
 
     </div>

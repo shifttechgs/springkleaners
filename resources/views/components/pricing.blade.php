@@ -27,18 +27,16 @@
                     </div>
                     <div>
                         <h3 class="text-[#081d3a] text-[15px] font-bold tracking-tight">Deep Cleaning</h3>
-                        <p class="text-[#647082] text-[11px]">Full deep clean for homes & offices</p>
+                        <p class="text-[#5b6779] text-[11px]">Full deep clean for homes & offices</p>
                     </div>
                 </div>
                 {{-- Bottom Card: Pricing --}}
                 <div class="bg-white rounded-xl p-5 flex flex-col flex-1">
                     <div class="mb-4">
-                        <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1200</span>
-                        <span class="text-[#647082] text-[12px] ml-1">/ visit</span>
+                        <span class="text-[#5b6779] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1200</span>
+                        <span class="text-[#5b6779] text-[12px] ml-1">/ visit</span>
                     </div>
-                    <a href="{{ route('booking.show', ['service' => 'deep-cleaning']) }}" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
-                        Book Now
-                    </a>
+                    <x-arrow-button block href="{{ route('booking.show', ['service' => 'deep-cleaning']) }}">Book Now</x-arrow-button>
                     <ul class="space-y-1.5">
                         <li class="flex items-center gap-2 text-[11px] text-[#081d3a]/65">
                             <span class="w-1 h-1 rounded-full bg-[#f6e304] flex-shrink-0"></span>
@@ -71,18 +69,16 @@
                     </div>
                     <div>
                         <h3 class="text-[#081d3a] text-[15px] font-bold tracking-tight">End-of-Tenancy</h3>
-                        <p class="text-[#647082] text-[11px]">Move-in/out to landlord standard</p>
+                        <p class="text-[#5b6779] text-[11px]">Move-in/out to landlord standard</p>
                     </div>
                 </div>
                 {{-- Bottom Card: Pricing --}}
                 <div class="bg-white rounded-xl p-5 flex flex-col flex-1">
                     <div class="mb-4">
-                        <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1,200</span>
-                        <span class="text-[#647082] text-[12px] ml-1">/ property</span>
+                        <span class="text-[#5b6779] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1,200</span>
+                        <span class="text-[#5b6779] text-[12px] ml-1">/ property</span>
                     </div>
-                    <a href="{{ route('booking.show', ['service' => 'end-of-tenancy']) }}" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
-                        Book Now
-                    </a>
+                    <x-arrow-button block href="{{ route('booking.show', ['service' => 'end-of-tenancy']) }}">Book Now</x-arrow-button>
                     <ul class="space-y-1.5">
                         <li class="flex items-center gap-2 text-[11px] text-[#081d3a]/65">
                             <span class="w-1 h-1 rounded-full bg-[#f6e304] flex-shrink-0"></span>
@@ -119,18 +115,16 @@
                     </div>
                     <div>
                         <h3 class="text-[#081d3a] text-[15px] font-bold tracking-tight">Post Construction</h3>
-                        <p class="text-[#647082] text-[11px]">Builder's clean for new builds & renos</p>
+                        <p class="text-[#5b6779] text-[11px]">Builder's clean for new builds & renos</p>
                     </div>
                 </div>
                 {{-- Bottom Card: Pricing --}}
                 <div class="bg-white rounded-xl p-5 flex flex-col flex-1">
                     <div class="mb-4">
-                        <span class="text-[#647082] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1,800</span>
-                        <span class="text-[#647082] text-[12px] ml-1">/ project</span>
+                        <span class="text-[#5b6779] text-[12px] font-medium">From</span><br><span class="text-[#081d3a] text-[34px] font-extrabold tracking-tighter leading-none">R 1,800</span>
+                        <span class="text-[#5b6779] text-[12px] ml-1">/ project</span>
                     </div>
-                    <a href="{{ route('booking.show', ['service' => 'post-construction']) }}" class="w-full text-center bg-[#f6e304] text-[#081d3a] font-bold py-2.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[12px] tracking-tight mb-4">
-                        Book Now
-                    </a>
+                    <x-arrow-button block href="{{ route('booking.show', ['service' => 'post-construction']) }}">Book Now</x-arrow-button>
                     <ul class="space-y-1.5">
                         <li class="flex items-center gap-2 text-[11px] text-[#081d3a]/65">
                             <span class="w-1 h-1 rounded-full bg-[#f6e304] flex-shrink-0"></span>
@@ -158,15 +152,9 @@
         <div class="mt-10 bg-white border border-gray-100 rounded-2xl p-6 lg:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.3s">
             <div>
                 <p class="text-[#081d3a] font-bold text-[17px] tracking-tight">Not seeing exactly what you need?</p>
-                <p class="text-[#647082] text-[13px] mt-1">Let's build a cleaning plan that works for you.</p>
+                <p class="text-[#5b6779] text-[13px] mt-1">Let's build a cleaning plan that works for you.</p>
             </div>
-            <a href="{{ route('booking.show') }}"
-               class="inline-flex items-center gap-2.5 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3 rounded-full hover:bg-yellow-300 active:scale-95 transition-all shadow-sm text-[13px] tracking-tight flex-shrink-0">
-                Get My Instant Quote
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 17L17 7M17 7H7M17 7v10"/>
-                </svg>
-            </a>
+            <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
         </div>
 
     </div>

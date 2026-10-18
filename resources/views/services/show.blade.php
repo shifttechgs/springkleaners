@@ -63,7 +63,7 @@
     <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10">
-            <div class="flex items-center gap-2 text-white/40 text-[12px] font-medium mb-6">
+            <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                 <span>/</span>
                 <a href="/#services" class="hover:text-[#f6e304] transition-colors">Services</a>
@@ -80,21 +80,11 @@
                     </p>
                     <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
                         @if ($isQuoteMode)
-                        <a href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="btn-gold">
-                            {{ $content['cta_label'] ?? 'Request a Quote' }}
-                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                        </a>
-                        <a href="mailto:bookings@springkleaners.co.za" class="btn-outline">
-                            Email Us
-                        </a>
+                        <x-arrow-button href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">{{ $content['cta_label'] ?? 'Request a Quote' }}</x-arrow-button>
+                        <x-arrow-button variant="outline" href="mailto:bookings@springkleaners.co.za" class="flex-shrink-0">Email Us</x-arrow-button>
                         @else
-                        <a href="{{ route('booking.show', ['service' => $slug]) }}" class="btn-gold">
-                            Book This Service
-                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                        </a>
-                        <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="btn-outline">
-                            WhatsApp Us
-                        </a>
+                        <x-arrow-button href="{{ route('booking.show', ['service' => $slug]) }}" class="flex-shrink-0">Book This Service</x-arrow-button>
+                        <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
                         @endif
                     </div>
                     <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
@@ -126,7 +116,7 @@
                         </li>
                         @endforeach
                     </ul>
-                    <p class="text-[#647082] text-[14px] leading-relaxed max-w-lg">
+                    <p class="text-[#5b6779] text-[14px] leading-relaxed max-w-lg">
                         <span class="font-semibold text-[#081d3a]">Ideal for:</span> {{ $content['ideal_for'] }}
                     </p>
                 </div>
@@ -146,10 +136,8 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
-                            {{ $content['cta_label'] ?? 'Get a Custom Quote' }}
-                        </a>
-                        <p class="text-center text-white/40 text-[11px] mt-3">Free walkthrough · Fixed quote before we start</p>
+                        <x-arrow-button block href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer">{{ $content['cta_label'] ?? 'Get a Custom Quote' }}</x-arrow-button>
+                        <p class="text-center text-white/60 text-[11px] mt-3">Free walkthrough · Fixed quote before we start</p>
                         @elseif ($isQuoteMode)
                         <span class="text-white/50 text-[12px] font-medium">From</span>
                         <div class="flex items-baseline gap-2 mt-1 mb-5">
@@ -164,10 +152,8 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
-                            {{ $content['cta_label'] ?? 'Request a Quote' }}
-                        </a>
-                        <p class="text-center text-white/40 text-[11px] mt-3">Free walkthrough · Fixed quote before we start</p>
+                        <x-arrow-button block href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer">{{ $content['cta_label'] ?? 'Request a Quote' }}</x-arrow-button>
+                        <p class="text-center text-white/60 text-[11px] mt-3">Free walkthrough · Fixed quote before we start</p>
                         @else
                         <span class="text-white/50 text-[12px] font-medium">From</span>
                         <div class="flex items-baseline gap-2 mt-1 mb-5">
@@ -192,10 +178,8 @@
                                 <span class="text-white font-semibold">+R{{ $service['bathroom_price'] }}</span>
                             </li>
                         </ul>
-                        <a href="{{ route('booking.show', ['service' => $slug]) }}" class="w-full flex items-center justify-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
-                            Book This Service
-                        </a>
-                        <p class="text-center text-white/40 text-[11px] mt-3">Free inspection · Confirmed quote before we start</p>
+                        <x-arrow-button block href="{{ route('booking.show', ['service' => $slug]) }}">Book This Service</x-arrow-button>
+                        <p class="text-center text-white/60 text-[11px] mt-3">Free inspection · Confirmed quote before we start</p>
                         @endif
                     </div>
                 </div>
@@ -228,7 +212,7 @@
                         </span>
                     </button>
                     <div x-show="active === {{ $i }}" x-transition class="px-5 pb-4" style="display:none;">
-                        <p class="text-[#647082] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
+                        <p class="text-[#5b6779] text-[13px] leading-relaxed">{{ $faq['a'] }}</p>
                     </div>
                 </div>
                 @endforeach
@@ -270,7 +254,7 @@
                     <a href="{{ route('services.show', $otherSlug) }}" class="group flex items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-6 hover:border-[#f6e304] hover:shadow-lg transition-all">
                         <div>
                             <p class="text-[#081d3a] font-bold text-[16px] tracking-tight">{{ $other['name'] }}</p>
-                            <p class="text-[#647082] text-[13px] mt-1">{{ $other['tagline'] }}</p>
+                            <p class="text-[#5b6779] text-[13px] mt-1">{{ $other['tagline'] }}</p>
                         </div>
                         <span class="w-9 h-9 rounded-full border border-[#081d3a]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#081d3a] group-hover:border-[#081d3a] transition-all">
                             <svg class="w-3.5 h-3.5 text-[#081d3a] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>

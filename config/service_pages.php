@@ -205,7 +205,7 @@ return [
         ],
         'ideal_for' => 'Family homes with everyday sofa wear, pet owners, and landlords refreshing furnished rental units between tenants.',
         'blog_categories' => ['Tips'],
-        'hero_image' => '/images/works/3.png',
+        'hero_image' => '/images/works/3.avif',
         'pricing_mode' => 'quote',
         'pricing_headline' => 'R150',
         'pricing_unit' => 'per seat (fabric)',
@@ -334,7 +334,7 @@ return [
         ],
         'ideal_for' => 'Homes with a build-up of baked-on grease, and anyone whose oven hasn\'t had a proper interior clean in longer than they can remember.',
         'blog_categories' => ['Tips'],
-        'hero_image' => '/images/works/1.png',
+        'hero_image' => '/images/works/1.avif',
         'pricing_mode' => 'custom',
         'pricing_notes' => [
             'Priced by oven type — built-in single, double, or freestanding',

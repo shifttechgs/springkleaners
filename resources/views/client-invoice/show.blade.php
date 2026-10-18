@@ -10,7 +10,7 @@
     <section class="bg-[#081d3a] pt-36 pb-14 lg:pt-44 lg:pb-16 relative overflow-hidden">
         <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 max-w-2xl mx-auto text-center">
-            <p class="text-white/40 text-[11px] font-semibold uppercase tracking-[0.22em] mb-4">Your Invoice</p>
+            <p class="text-white/60 text-[11px] font-semibold uppercase tracking-[0.22em] mb-4">Your Invoice</p>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight mb-3">
                 Hi {{ $booking->name }}, here's your invoice
             </h1>
@@ -35,7 +35,7 @@
 
                 <div class="pt-4 mt-4 border-t border-gray-100 space-y-1.5 text-[13px]">
                     @if ($depositPaid > 0)
-                        <div class="flex justify-between text-[#647082]">
+                        <div class="flex justify-between text-[#5b6779]">
                             <span>Less: Deposit Paid</span>
                             <span>&minus;R{{ number_format($depositPaid, 2) }}</span>
                         </div>
@@ -60,12 +60,12 @@
                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </div>
                     <h2 class="text-[#081d3a] font-bold text-[18px] mb-2">Paid in full</h2>
-                    <p class="text-[#647082] text-[14px]">Received {{ $booking->paid_at->format('d M Y') }}. Thank you for choosing {{ \App\Support\Company::name() }}!</p>
+                    <p class="text-[#5b6779] text-[14px]">Received {{ $booking->paid_at->format('d M Y') }}. Thank you for choosing {{ \App\Support\Company::name() }}!</p>
                 </div>
             @else
                 <div class="mt-8 bg-white rounded-2xl border border-gray-100 p-6 sm:p-8">
                     <h2 class="text-[#081d3a] font-bold text-[16px] mb-3">Payment Details</h2>
-                    <p class="text-[#647082] text-[14px] leading-relaxed">
+                    <p class="text-[#5b6779] text-[14px] leading-relaxed">
                         {{ \App\Support\Company::bankName() }} &middot; Branch Code {{ \App\Support\Company::branchCode() }} &middot; Account No {{ \App\Support\Company::accountNo() }}<br>
                         {{ \App\Support\Company::referenceNote() }}<br>
                         Or pay cash on the day.

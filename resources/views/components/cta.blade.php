@@ -100,7 +100,7 @@
                             </div>
                         </div>
                         <div class="mb-6">
-                            <label class="block text-white/60 text-xs uppercase tracking-wider mb-1.5 font-medium">Message / Notes <span class="normal-case text-white/30">(optional)</span></label>
+                            <label class="block text-white/60 text-xs uppercase tracking-wider mb-1.5 font-medium">Message / Notes <span class="normal-case text-white/60">(optional)</span></label>
                             <textarea name="message" rows="3" placeholder="Any additional details about your property or requirements..."
                                       class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 text-[14px] focus:outline-none focus:border-[#f6e304] transition-colors resize-none"></textarea>
                         </div>
@@ -108,7 +108,7 @@
                                 class="w-full bg-[#f6e304] text-[#081d3a] font-bold py-4 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[15px] shadow-lg">
                             Get My Instant Quote
                         </button>
-                        <p class="text-white/40 text-[12px] text-center mt-3">🔒 Free inspection · No commitment · Instant estimate</p>
+                        <p class="text-white/60 text-[12px] text-center mt-3">🔒 Free inspection · No commitment · Instant estimate</p>
                     </form>
                 </div>
             </div>

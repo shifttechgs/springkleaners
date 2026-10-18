@@ -9,14 +9,26 @@
 
     $isDark = $theme === 'dark';
 @endphp
+@if ($theme === 'ledger')
+{{-- Quiet fact ledger for dark heroes: hairline-separated columns instead of pill badges --}}
+<dl {{ $attributes->merge(['class' => 'grid grid-cols-2 gap-y-4 xl:grid-cols-[repeat(4,max-content)] xl:justify-between border-t border-white/20']) }}>
+    @foreach ($badges as $badge)
+    <div class="pt-4 pb-1 pr-3 xl:[&:not(:first-child)]:pl-4 xl:[&:not(:first-child)]:border-l xl:[&:not(:first-child)]:border-white/15">
+        <dt class="text-white text-[13.5px] font-semibold leading-snug whitespace-nowrap">{{ $badge['label'] }}</dt>
+        <dd class="text-white/65 text-[12.5px] leading-snug mt-1 max-w-[10rem]">{{ $badge['sub'] }}</dd>
+    </div>
+    @endforeach
+</dl>
+@else
 <div {{ $attributes->merge(['class' => 'flex flex-wrap gap-3']) }}>
     @foreach ($badges as $badge)
     <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl border {{ $isDark ? 'border-white/15 bg-white/5' : 'border-gray-200 bg-[#f8f9fc]' }}">
         <svg class="w-4 h-4 flex-shrink-0 {{ $isDark ? 'text-[#f6e304]' : 'text-[#081d3a]' }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $badge['icon'] }}"/></svg>
         <div class="leading-tight">
             <p class="{{ $isDark ? 'text-white' : 'text-[#081d3a]' }} text-[12px] font-semibold">{{ $badge['label'] }}</p>
-            <p class="{{ $isDark ? 'text-white/40' : 'text-[#647082]' }} text-[10px]">{{ $badge['sub'] }}</p>
+            <p class="{{ $isDark ? 'text-white/60' : 'text-[#5b6779]' }} text-[10px]">{{ $badge['sub'] }}</p>
         </div>
     </div>
     @endforeach
 </div>
+@endif

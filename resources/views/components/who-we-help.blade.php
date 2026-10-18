@@ -9,20 +9,12 @@
                 <h2 class="text-[38px] sm:text-[48px] lg:text-[56px] font-semibold text-[#081d3a] leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
                     Spaces we<br>specialize in
                 </h2>
-                <p class="text-[#647082] text-[15px] leading-relaxed max-w-sm font-normal">
+                <p class="text-[#5b6779] text-[15px] leading-relaxed max-w-sm font-normal">
                     We work with busy homeowners, growing businesses, and property owners who need a space that's consistently clean and well cared for.
                 </p>
             </div>
             <div class="flex-shrink-0">
-                <a href="{{ route('booking.show') }}"
-                   class="inline-flex items-center gap-3 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[14px] tracking-tight">
-                    Get My Instant Quote
-                    <span class="w-7 h-7 bg-[#081d3a] rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-3.5 h-3.5 text-[#f6e304]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 17L17 7M17 7H7M17 7v10"/>
-                        </svg>
-                    </span>
-                </a>
+                <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
             </div>
         </div>
 
@@ -39,7 +31,7 @@
                     </svg>
                 </div>
                 <p class="text-[#081d3a] font-bold uppercase tracking-wider text-[13px] mb-3">Home</p>
-                <p class="text-[#647082] text-[13px] leading-relaxed">
+                <p class="text-[#5b6779] text-[13px] leading-relaxed">
                     Apartments, houses &amp; townhouses — busy homeowners who want their space consistently fresh and spotless.
                 </p>
             </div>
@@ -58,7 +50,7 @@
                     </svg>
                 </div>
                 <p class="text-[#081d3a] font-bold uppercase tracking-wider text-[13px] mb-3">Workspace</p>
-                <p class="text-[#647082] text-[13px] leading-relaxed">
+                <p class="text-[#5b6779] text-[13px] leading-relaxed">
                     Offices, clinics &amp; commercial spaces — maintain a clean, professional environment that supports your team and impresses clients.
                 </p>
             </div>
@@ -75,7 +67,7 @@
                     </svg>
                 </div>
                 <p class="text-[#081d3a] font-bold uppercase tracking-wider text-[13px] mb-3">Property</p>
-                <p class="text-[#647082] text-[13px] leading-relaxed">
+                <p class="text-[#5b6779] text-[13px] leading-relaxed">
                     New builds, rental turnovers &amp; post-renovation handovers — move-in ready from day one, every time.
                 </p>
             </div>

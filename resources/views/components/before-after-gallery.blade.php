@@ -23,15 +23,15 @@
             <div class="rounded-2xl overflow-hidden border border-gray-100 bg-white">
                 <div class="grid grid-cols-2">
                     <div class="relative aspect-square">
-                        <img src="{{ $entry['before'] }}" alt="Before — {{ $entry['caption'] }}" class="w-full h-full object-cover">
+                        <img loading="lazy" decoding="async" src="{{ $entry['before'] }}" alt="Before — {{ $entry['caption'] }}" class="w-full h-full object-cover">
                         <span class="absolute top-2 left-2 bg-[#081d3a]/80 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Before</span>
                     </div>
                     <div class="relative aspect-square">
-                        <img src="{{ $entry['after'] }}" alt="After — {{ $entry['caption'] }}" class="w-full h-full object-cover">
+                        <img loading="lazy" decoding="async" src="{{ $entry['after'] }}" alt="After — {{ $entry['caption'] }}" class="w-full h-full object-cover">
                         <span class="absolute top-2 right-2 bg-[#f6e304] text-[#081d3a] text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">After</span>
                     </div>
                 </div>
-                <p class="text-[#647082] text-[13px] p-4">{{ $entry['caption'] }}</p>
+                <p class="text-[#5b6779] text-[13px] p-4">{{ $entry['caption'] }}</p>
             </div>
             @endforeach
         </div>

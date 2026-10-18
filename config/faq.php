@@ -5,7 +5,7 @@ return [
     'pricing' => [
         'label' => 'Pricing & Process',
         'icon' => 'pricing',
-        'image' => '/images/works/2.png',
+        'image' => '/images/works/2.avif',
         'blurb' => 'What things cost, how quotes work, and when you pay.',
         'faqs' => [
             ['q' => 'How much does a deep clean cost in Cape Town?', 'a' => 'From R1,200 for 2 bedrooms and 1 bathroom, plus R100 per extra bedroom or bathroom — confirmed with a free inspection before we start.', 'link' => ['route' => 'services.show', 'param' => 'deep-cleaning', 'label' => 'Deep Cleaning']],
@@ -24,7 +24,7 @@ return [
     'trust' => [
         'label' => 'Trust, Insurance & Safety',
         'icon' => 'trust',
-        'image' => '/images/works/1.png',
+        'image' => '/images/works/1.avif',
         'blurb' => 'Insurance, vetting, guarantees — what protects you.',
         'faqs' => [
             ['q' => 'Are your cleaners background-checked?', 'a' => 'Yes — every team member is background-checked before joining us.'],
@@ -97,7 +97,7 @@ return [
     'comparison' => [
         'label' => 'Comparisons',
         'icon' => 'comparison',
-        'image' => '/images/works/3.png',
+        'image' => '/images/works/3.avif',
         'blurb' => 'Which service actually fits your situation.',
         'faqs' => [
             ['q' => 'What\'s the difference between a regular clean and a deep clean?', 'a' => 'A Deep Clean resets a home from scratch — inside appliances, cupboard interiors, built-up grime. Our Recurring House Cleaning service maintains that standard week to week at a lighter, lower-cost scope. Most clients use both.'],

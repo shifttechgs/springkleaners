@@ -41,7 +41,7 @@
         color: #adb5c4;
     }
     .type-btn {
-        flex: 1; padding: 11px 12px; border-radius: 10px;
+        flex: 1; padding: 11px 12px; border-radius: 9999px;
         font-size: 13px; font-weight: 600; cursor: pointer;
         transition: all 0.18s; border: 1.5px solid #e8eaf0;
         text-align: center;
@@ -61,7 +61,7 @@
 
     .pill-btn {
         padding: 9px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
-        border: 1.5px solid #e8eaf0; cursor: pointer; transition: all 0.18s; color: #647082; background: #fff;
+        border: 1.5px solid #e8eaf0; cursor: pointer; transition: all 0.18s; color: #5b6779; background: #fff;
         white-space: nowrap;
     }
     .pill-active { background: #081d3a; color: #fff; border-color: #081d3a; }
@@ -372,7 +372,7 @@
         @include('components.navbar')
 
         <div class="relative z-10 section-wrap pt-10 pb-2 text-center">
-            <p class="text-white/40 text-[11px] font-semibold uppercase tracking-[0.22em] mb-3">Book Online</p>
+            <p class="text-white/60 text-[11px] font-semibold uppercase tracking-[0.22em] mb-3">Book Online</p>
             <h1 class="text-white text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-8" x-text="service.name"></h1>
         </div>
     </div>
@@ -392,7 +392,7 @@
                                     <svg x-show="step > idx + 1" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                     <span x-show="step <= idx + 1" x-text="idx + 1"></span>
                                 </div>
-                                <span class="text-[11px] font-semibold" :class="step >= idx + 1 ? 'text-white/80' : 'text-white/30'" x-text="label"></span>
+                                <span class="text-[11px] font-semibold" :class="step >= idx + 1 ? 'text-white/80' : 'text-white/60'" x-text="label"></span>
                             </div>
                             <div class="step-line" :class="step > idx + 1 ? 'step-line-done' : ''" x-show="idx < 2"></div>
                         </div>
@@ -649,12 +649,12 @@
                     </p>
 
                     <div class="flex items-center justify-between gap-4">
-                        <a href="/#services" class="inline-flex items-center gap-2 text-[#647082] text-[13.5px] font-semibold hover:text-[#081d3a] transition-colors">
+                        <a href="/#services" class="inline-flex items-center gap-2 text-[#5b6779] text-[13.5px] font-semibold hover:text-[#081d3a] transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                             Back to services
                         </a>
                         <button type="button" @click="if (validateStep1()) goStep(2)"
-                                class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
+                                class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
                             Continue
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </button>
@@ -672,7 +672,7 @@
                             <p class="text-[#081d3a] text-[13px] font-bold">Next available date</p>
                             <p class="text-[#8a94a6] text-[12px]" x-text="nextAvailableLabel"></p>
                         </div>
-                        <button type="button" @click="goToNextAvailable()" class="flex-shrink-0 bg-[#081d3a] text-white text-[12.5px] font-bold px-4 py-2 rounded-lg hover:bg-[#0d2a4a] transition-colors">
+                        <button type="button" @click="goToNextAvailable()" class="flex-shrink-0 bg-[#081d3a] text-white text-[12.5px] font-bold px-4 py-2 rounded-full hover:bg-[#0d2a4a] transition-colors">
                             Select this date
                         </button>
                     </div>
@@ -694,11 +694,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div class="border rounded-2xl p-4" :class="errors.dateTime ? 'fi-error' : 'border-[#edf0f5]'">
                             <div class="flex items-center justify-between mb-4">
-                                <button type="button" @click="prevMonth()" class="w-8 h-8 rounded-lg hover:bg-[#f4f6fb] flex items-center justify-center text-[#647082]">
+                                <button type="button" @click="prevMonth()" class="w-8 h-8 rounded-lg hover:bg-[#f4f6fb] flex items-center justify-center text-[#5b6779]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                                 </button>
                                 <span class="text-[#081d3a] font-bold text-[13.5px]" x-text="calMonthLabel"></span>
-                                <button type="button" @click="nextMonth()" class="w-8 h-8 rounded-lg hover:bg-[#f4f6fb] flex items-center justify-center text-[#647082]">
+                                <button type="button" @click="nextMonth()" class="w-8 h-8 rounded-lg hover:bg-[#f4f6fb] flex items-center justify-center text-[#5b6779]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </button>
                             </div>
@@ -751,12 +751,12 @@
                     </p>
 
                     <div class="flex items-center justify-between gap-4 mt-8">
-                        <button type="button" @click="goStep(1)" class="inline-flex items-center gap-2 text-[#647082] text-[13.5px] font-semibold hover:text-[#081d3a] transition-colors">
+                        <button type="button" @click="goStep(1)" class="inline-flex items-center gap-2 text-[#5b6779] text-[13.5px] font-semibold hover:text-[#081d3a] transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                             Back
                         </button>
                         <button type="button" @click="if (validateStep2()) goStep(3)"
-                                class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
+                                class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
                             Continue
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </button>
@@ -821,12 +821,12 @@
                     </div>
 
                     <div class="flex items-center justify-between gap-4">
-                        <button type="button" @click="goStep(2)" class="inline-flex items-center gap-2 text-[#647082] text-[13.5px] font-semibold hover:text-[#081d3a] transition-colors">
+                        <button type="button" @click="goStep(2)" class="inline-flex items-center gap-2 text-[#5b6779] text-[13.5px] font-semibold hover:text-[#081d3a] transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                             Back
                         </button>
                         <button type="button" @click="submitForm()" :disabled="checkingDate"
-                                class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px] shadow-lg disabled:opacity-60 disabled:cursor-wait">
+                                class="inline-flex items-center gap-2 bg-[#f6e304] text-[#081d3a] font-bold px-6 py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[14px] shadow-lg disabled:opacity-60 disabled:cursor-wait">
                             <svg x-show="!checkingDate" class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h4m3 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <span x-text="checkingDate ? 'Checking availability…' : 'Get My Instant Quote'"></span>
                         </button>
@@ -854,7 +854,7 @@
 
                     <div x-show="step >= 1 && form.address" x-cloak class="summary-row">
                         <div class="summary-icon">
-                            <svg class="w-4 h-4 text-[#647082]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <svg class="w-4 h-4 text-[#5b6779]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
                         <div class="min-w-0">
                             <p class="fs-label mb-1">Location</p>
@@ -865,7 +865,7 @@
 
                     <div x-show="selectedDate" x-cloak class="summary-row">
                         <div class="summary-icon">
-                            <svg class="w-4 h-4 text-[#647082]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <svg class="w-4 h-4 text-[#5b6779]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
                         <div class="min-w-0">
                             <p class="fs-label mb-1">Date &amp; time</p>
@@ -878,29 +878,29 @@
                         <p class="fs-label mb-3">Price breakdown</p>
                         <div class="space-y-2 text-[13.5px]">
                             <div class="flex items-center justify-between">
-                                <span class="text-[#647082]" x-text="service.name + ' (base)'"></span>
+                                <span class="text-[#5b6779]" x-text="service.name + ' (base)'"></span>
                                 <span class="text-[#081d3a] font-semibold" x-text="'R' + service.base_price.toLocaleString()"></span>
                             </div>
                             <div class="flex items-center justify-between" x-show="extraBedroomCost > 0" x-cloak>
-                                <span class="text-[#647082]" x-text="bedroomCount + ' bedrooms'"></span>
+                                <span class="text-[#5b6779]" x-text="bedroomCount + ' bedrooms'"></span>
                                 <span class="text-[#081d3a] font-semibold" x-text="'R' + extraBedroomCost.toLocaleString()"></span>
                             </div>
                             <div class="flex items-center justify-between" x-show="extraBathroomCost > 0" x-cloak>
-                                <span class="text-[#647082]" x-text="bathroomCount + ' bathrooms'"></span>
+                                <span class="text-[#5b6779]" x-text="bathroomCount + ' bathrooms'"></span>
                                 <span class="text-[#081d3a] font-semibold" x-text="'R' + extraBathroomCost.toLocaleString()"></span>
                             </div>
                             <div class="flex items-center justify-between" x-show="extraRoomsCost > 0" x-cloak>
-                                <span class="text-[#647082]" x-text="extraRoomsCount + ' extra room(s)'"></span>
+                                <span class="text-[#5b6779]" x-text="extraRoomsCount + ' extra room(s)'"></span>
                                 <span class="text-[#081d3a] font-semibold" x-text="'R' + extraRoomsCost.toLocaleString()"></span>
                             </div>
                             <template x-for="key in selectedAddons" :key="key">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-[#647082]" x-text="addonsList.find(a => a.key === key)?.label"></span>
+                                    <span class="text-[#5b6779]" x-text="addonsList.find(a => a.key === key)?.label"></span>
                                     <span class="text-[#081d3a] font-semibold" x-text="'R' + addonsList.find(a => a.key === key)?.price"></span>
                                 </div>
                             </template>
                             <div class="flex items-center justify-between">
-                                <span class="text-[#647082]">Service fee</span>
+                                <span class="text-[#5b6779]">Service fee</span>
                                 <span class="text-[#081d3a] font-semibold" x-text="'R' + service.service_fee"></span>
                             </div>
                         </div>

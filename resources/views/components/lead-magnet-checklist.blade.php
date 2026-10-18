@@ -20,10 +20,10 @@
                     @error('email')
                     <p class="text-rose-500 text-[12px]">{{ $message }}</p>
                     @enderror
-                    <button type="submit" class="w-full bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-xl hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
+                    <button type="submit" class="w-full bg-[#f6e304] text-[#081d3a] font-bold py-3.5 rounded-full hover:bg-yellow-300 active:scale-95 transition-all text-[14px]">
                         Get the Free Checklist
                     </button>
-                    <p class="text-center text-[#647082] text-[11px]">Your download starts immediately — we'll email you a copy too. No spam, unsubscribe anytime.</p>
+                    <p class="text-center text-[#5b6779] text-[11px]">Your download starts immediately — we'll email you a copy too. No spam, unsubscribe anytime.</p>
                 </form>
             </div>
         </div>

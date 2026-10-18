@@ -21,7 +21,7 @@
     <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="absolute inset-0 hero-pattern"></div>
         <div class="section-wrap relative z-10 max-w-3xl">
-            <div class="flex items-center gap-2 text-white/40 text-[12px] font-medium mb-6">
+            <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                 <span>/</span>
                 <span class="text-white/60">About</span>
@@ -33,13 +33,8 @@
                 SpringKleaners is a registered South African company (reg. {{ \App\Support\Company::regNo() }}) operating across Cape Town's Northern Suburbs. We built this business around one idea: quote honestly, show up on time, and clean like it's our own home.
             </p>
             <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
-                <a href="{{ route('booking.show') }}" class="btn-gold">
-                    Get My Free Estimate
-                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                </a>
-                <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="btn-outline">
-                    WhatsApp Us
-                </a>
+                <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
+                <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
         </div>
     </section>
@@ -50,19 +45,19 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 wow fadeInUp" data-wow-duration="0.7s">
                 <div class="text-center lg:text-left">
                     <p class="text-[#081d3a] font-extrabold tracking-tight" style="font-size:clamp(36px,4vw,52px)">500+</p>
-                    <p class="text-[#647082] text-[13px] mt-1">Cleans completed</p>
+                    <p class="text-[#5b6779] text-[13px] mt-1">Cleans completed</p>
                 </div>
                 <div class="text-center lg:text-left">
                     <p class="text-[#081d3a] font-extrabold tracking-tight" style="font-size:clamp(36px,4vw,52px)">3+</p>
-                    <p class="text-[#647082] text-[13px] mt-1">Years in operation</p>
+                    <p class="text-[#5b6779] text-[13px] mt-1">Years in operation</p>
                 </div>
                 <div class="text-center lg:text-left">
                     <p class="text-[#081d3a] font-extrabold tracking-tight" style="font-size:clamp(36px,4vw,52px)">98%</p>
-                    <p class="text-[#647082] text-[13px] mt-1">Rate their clean 5 stars</p>
+                    <p class="text-[#5b6779] text-[13px] mt-1">Rate their clean 5 stars</p>
                 </div>
                 <div class="text-center lg:text-left">
                     <p class="text-[#081d3a] font-extrabold tracking-tight" style="font-size:clamp(36px,4vw,52px)">4.9</p>
-                    <p class="text-[#647082] text-[13px] mt-1">Average Google rating</p>
+                    <p class="text-[#5b6779] text-[13px] mt-1">Average Google rating</p>
                 </div>
             </div>
         </div>
@@ -81,15 +76,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
                 <div class="bg-white rounded-2xl p-6 border border-gray-100">
                     <p class="text-[#081d3a] font-bold text-[15px] mb-2">We quote after we see it</p>
-                    <p class="text-[#647082] text-[13px] leading-relaxed">Every price on this site is an estimate. We confirm a final, itemised quote after a free inspection — you approve it before we start, never after.</p>
+                    <p class="text-[#5b6779] text-[13px] leading-relaxed">Every price on this site is an estimate. We confirm a final, itemised quote after a free inspection — you approve it before we start, never after.</p>
                 </div>
                 <div class="bg-white rounded-2xl p-6 border border-gray-100">
                     <p class="text-[#081d3a] font-bold text-[15px] mb-2">Our teams are vetted, not temp</p>
-                    <p class="text-[#647082] text-[13px] leading-relaxed">Every cleaner is background-checked before joining us, and SpringKleaners carries public liability insurance on every job.</p>
+                    <p class="text-[#5b6779] text-[13px] leading-relaxed">Every cleaner is background-checked before joining us, and SpringKleaners carries public liability insurance on every job.</p>
                 </div>
                 <div class="bg-white rounded-2xl p-6 border border-gray-100">
                     <p class="text-[#081d3a] font-bold text-[15px] mb-2">If it's not right, we come back</p>
-                    <p class="text-[#647082] text-[13px] leading-relaxed">Let us know within 24 hours of a clean and we'll return to fix it — no additional charge, no argument.</p>
+                    <p class="text-[#5b6779] text-[13px] leading-relaxed">Let us know within 24 hours of a clean and we'll return to fix it — no additional charge, no argument.</p>
                 </div>
             </div>
         </div>
@@ -131,7 +126,7 @@
                     </a>
                 </div>
                 <div class="rounded-2xl overflow-hidden aspect-[4/3] wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
-                    <img src="/images/works/1.png" alt="SpringKleaners team at work" class="w-full h-full object-cover">
+                    <img src="/images/works/1.avif" alt="SpringKleaners team at work" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -145,7 +140,7 @@
                 <a href="{{ route('services.show', 'deep-cleaning') }}" class="group flex items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-6 hover:border-[#f6e304] hover:shadow-lg transition-all">
                     <div>
                         <p class="text-[#081d3a] font-bold text-[16px] tracking-tight">Deep Cleaning</p>
-                        <p class="text-[#647082] text-[13px] mt-1">A thorough, top-to-bottom reset.</p>
+                        <p class="text-[#5b6779] text-[13px] mt-1">A thorough, top-to-bottom reset.</p>
                     </div>
                     <span class="w-9 h-9 rounded-full border border-[#081d3a]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#081d3a] group-hover:border-[#081d3a] transition-all">
                         <svg class="w-3.5 h-3.5 text-[#081d3a] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -154,7 +149,7 @@
                 <a href="{{ route('services.show', 'end-of-tenancy') }}" class="group flex items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-6 hover:border-[#f6e304] hover:shadow-lg transition-all">
                     <div>
                         <p class="text-[#081d3a] font-bold text-[16px] tracking-tight">End-of-Tenancy Cleaning</p>
-                        <p class="text-[#647082] text-[13px] mt-1">Move-in and move-out, deposit-ready.</p>
+                        <p class="text-[#5b6779] text-[13px] mt-1">Move-in and move-out, deposit-ready.</p>
                     </div>
                     <span class="w-9 h-9 rounded-full border border-[#081d3a]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#081d3a] group-hover:border-[#081d3a] transition-all">
                         <svg class="w-3.5 h-3.5 text-[#081d3a] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -163,7 +158,7 @@
                 <a href="{{ route('services.show', 'post-construction') }}" class="group flex items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-6 hover:border-[#f6e304] hover:shadow-lg transition-all">
                     <div>
                         <p class="text-[#081d3a] font-bold text-[16px] tracking-tight">Post-Construction Cleaning</p>
-                        <p class="text-[#647082] text-[13px] mt-1">Builders' dust and debris, gone.</p>
+                        <p class="text-[#5b6779] text-[13px] mt-1">Builders' dust and debris, gone.</p>
                     </div>
                     <span class="w-9 h-9 rounded-full border border-[#081d3a]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#081d3a] group-hover:border-[#081d3a] transition-all">
                         <svg class="w-3.5 h-3.5 text-[#081d3a] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
