@@ -177,6 +177,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/invoices/{booking}/pdf/preview', [InvoicePdfController::class, 'preview'])->name('invoices.pdf.preview');
 
     Route::get('/clients', [AdminClientController::class, 'index'])->name('clients.index');
+    Route::get('/clients/search', [AdminClientController::class, 'search'])->name('clients.search');
     Route::get('/clients/{client}', [AdminClientController::class, 'show'])->name('clients.show');
 
     Route::get('/expenses', [AdminExpenseController::class, 'index'])->name('expenses.index');

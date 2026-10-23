@@ -76,7 +76,7 @@ test.describe('Booking to accepted quote', () => {
         await expect(page.getByText('Interior windows')).toBeVisible();
 
         // ── Admin: send a quote ──
-        const quotedPriceInput = page.locator('form[action*="send-quote"] input[type="number"][name="quoted_price"]');
+        const quotedPriceInput = page.locator('form[action*="send-quote"] input[type="number"][name="quoted_price"]').locator('visible=true');
         await quotedPriceInput.fill('1850');
         await page.getByRole('button', { name: 'Set Price & Send Quote' }).click();
         await expect(page.getByText('Quote generated')).toBeVisible();

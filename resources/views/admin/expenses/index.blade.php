@@ -1,5 +1,8 @@
 @extends('admin.layout')
 @section('title', 'Expenses')
+@section('navAction')
+    <a href="{{ route('admin.expenses.create') }}" class="ios-nav-btn" aria-label="Add expense"><svg class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></a>
+@endsection
 @section('content')
 
     <div class="flex items-start justify-between mb-8 flex-wrap gap-4">
@@ -7,7 +10,7 @@
             <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">Money Out</p>
             <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Expenses</h1>
         </div>
-        <a href="{{ route('admin.expenses.create') }}" class="btn-primary">
+        <a href="{{ route('admin.expenses.create') }}" class="btn-primary max-lg:hidden!">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             Add Expense
         </a>
@@ -25,9 +28,9 @@
         </div>
     @endif
 
-    <form method="GET" class="flex flex-wrap gap-2.5 mb-6">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search description or payee..."
-               class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink placeholder-label focus:border-navy focus:outline-none transition-colors w-64">
+    <form method="GET" class="filter-bar flex flex-wrap gap-2.5 mb-6">
+        <input type="text" name="search" enterkeyhint="search" value="{{ request('search') }}" placeholder="Search description or payee..."
+               class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink placeholder-label focus:border-navy focus:outline-none transition-colors w-full sm:w-64">
         <select name="category" class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
             <option value="">All categories</option>
             @foreach ($categories as $category)
@@ -42,7 +45,7 @@
         @endif
     </form>
 
-    <div class="card p-5 mb-6 flex items-center justify-between">
+    <div class="card p-5 mb-6 flex items-center justify-between gap-4">
         <p class="text-label text-[11px] uppercase tracking-wider font-semibold">Total for this filter</p>
         <p class="font-extrabold text-[22px] tracking-tight text-ink">R{{ number_format($totalForFilter, 2) }}</p>
     </div>
@@ -53,6 +56,7 @@
                 <p class="text-muted text-[13px]">No expenses match those filters.</p>
             </div>
         @else
+            <div class="table-scroll">
             <table class="w-full data-table">
                 <thead>
                     <tr>
@@ -67,27 +71,27 @@
                 <tbody class="divide-y divide-line">
                     @foreach ($expenses as $expense)
                         <tr x-data="{ confirmOpen: false }">
-                            <td class="px-6 py-3.5 text-muted">{{ $expense->date->format('d M Y') }}</td>
-                            <td class="px-6 py-3.5">
+                            <td class="px-6 py-3.5 text-muted" data-label="Date">{{ $expense->date->format('d M Y') }}</td>
+                            <td class="px-6 py-3.5 td-corner">
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11.5px] font-semibold {{ $expense->category->badgeColor() }}">
                                     {{ $expense->category->label() }}
                                 </span>
                             </td>
-                            <td class="px-6 py-3.5">
+                            <td class="px-6 py-3.5 td-title">
                                 <p class="font-semibold leading-tight">{{ $expense->description }}</p>
                                 @if ($expense->payee)
                                     <p class="text-label text-[12px] leading-tight mt-0.5">{{ $expense->payee }}</p>
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 text-muted">
+                            <td class="px-6 py-3.5 text-muted" data-label="Job">
                                 @if ($expense->booking)
                                     <a href="{{ route('admin.bookings.show', $expense->booking) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">{{ $expense->booking->name }}</a>
                                 @else
                                     &mdash;
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 font-semibold text-ink">R{{ number_format((float) $expense->amount, 2) }}</td>
-                            <td class="px-6 py-3.5 text-right">
+                            <td class="px-6 py-3.5 font-semibold text-ink" data-label="Amount">R{{ number_format((float) $expense->amount, 2) }}</td>
+                            <td class="px-6 py-3.5 text-right td-actions">
                                 <div class="flex items-center justify-end gap-4">
                                     <a href="{{ route('admin.expenses.edit', $expense) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">Edit</a>
                                     <button type="button" @click="confirmOpen = true" class="text-rose-500 font-semibold hover:opacity-70 transition-opacity">Delete</button>
@@ -96,10 +100,10 @@
 
                             <template x-teleport="body">
                                 <div x-show="confirmOpen" x-cloak
-                                     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                                     class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4"
                                      style="background:rgba(8,29,58,0.45);"
                                      @click.self="confirmOpen = false">
-                                    <div class="bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
+                                    <div class="ios-sheet-panel bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
                                         <h3 class="font-bold text-[16px] text-ink mb-2">Remove this expense?</h3>
                                         <p class="text-muted text-[13px] mb-5">{{ $expense->description }} — R{{ number_format((float) $expense->amount, 2) }}. This can't be undone.</p>
                                         <div class="flex items-center gap-3">
@@ -121,9 +125,12 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
+            @if ($expenses->hasPages())
             <div class="px-6 py-4 border-t border-line">
                 {{ $expenses->links() }}
             </div>
+            @endif
         @endif
     </div>
 

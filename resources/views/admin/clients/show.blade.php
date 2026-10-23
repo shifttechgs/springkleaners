@@ -1,8 +1,11 @@
 @extends('admin.layout')
 @section('title', $client->name.' — Client')
+@section('navTitle', $client->name)
+@section('back', route('admin.clients.index'))
+@section('backLabel', 'Clients')
 @section('content')
 
-    <div class="flex items-center gap-2 text-label text-[12px] font-medium mb-6">
+    <div class="hidden lg:flex items-center gap-2 text-label text-[12px] font-medium mb-6">
         <a href="{{ route('admin.clients.index') }}" class="hover:text-navy transition-colors">Clients</a>
         <span>/</span>
         <span class="text-ink">{{ $client->name }}</span>
@@ -29,6 +32,7 @@
                 <p class="text-muted text-[13px]">No bookings yet.</p>
             </div>
         @else
+            <div class="table-scroll">
             <table class="w-full data-table">
                 <thead>
                     <tr>
@@ -43,16 +47,17 @@
                     @foreach ($bookings as $booking)
                         <tr>
                             <td class="px-6 py-3.5 font-medium">{{ \App\Support\Services::find($booking->service)['name'] ?? $booking->service }}</td>
-                            <td class="px-6 py-3.5 text-muted">{{ $booking->date->format('d M Y') }}</td>
-                            <td class="px-6 py-3.5 text-muted">R{{ number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 2) }}</td>
-                            <td class="px-6 py-3.5"><x-admin.status-badge :status="$booking->status" /></td>
-                            <td class="px-6 py-3.5 text-right">
-                                <a href="{{ route('admin.bookings.show', $booking) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">View</a>
+                            <td class="px-6 py-3.5 text-muted" data-label="Date">{{ $booking->date->format('d M Y') }}</td>
+                            <td class="px-6 py-3.5 text-muted" data-label="Total">R{{ number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 2) }}</td>
+                            <td class="px-6 py-3.5 td-corner"><x-admin.status-badge :status="$booking->status" /></td>
+                            <td class="px-6 py-3.5 text-right td-link">
+                                <a href="{{ route('admin.bookings.show', $booking) }}" class="row-link text-navy font-semibold hover:opacity-70 transition-opacity">View</a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
     </div>
 

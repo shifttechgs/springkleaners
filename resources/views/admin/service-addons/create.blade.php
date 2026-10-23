@@ -1,8 +1,10 @@
 @extends('admin.layout')
 @section('title', 'Add Add-on')
+@section('back', route('admin.services.index'))
+@section('backLabel', 'Services')
 @section('content')
 
-    <div class="flex items-center gap-2 text-label text-[12px] font-medium mb-6">
+    <div class="hidden lg:flex items-center gap-2 text-label text-[12px] font-medium mb-6">
         <a href="{{ route('admin.services.index') }}" class="hover:text-navy transition-colors">Services</a>
         <span>/</span>
         <span class="text-ink">Add Add-on</span>

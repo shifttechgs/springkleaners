@@ -1,8 +1,10 @@
 @extends('admin.layout')
 @section('title', 'Edit Expense')
+@section('back', route('admin.expenses.index'))
+@section('backLabel', 'Expenses')
 @section('content')
 
-    <div class="flex items-center gap-2 text-label text-[12px] font-medium mb-6">
+    <div class="hidden lg:flex items-center gap-2 text-label text-[12px] font-medium mb-6">
         <a href="{{ route('admin.expenses.index') }}" class="hover:text-navy transition-colors">Expenses</a>
         <span>/</span>
         <span class="text-ink">{{ $expense->description }}</span>

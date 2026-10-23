@@ -15,9 +15,9 @@
         </div>
     @endif
 
-    <form method="GET" class="flex flex-wrap gap-2.5 mb-6">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search client or invoice #..."
-               class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink placeholder-label focus:border-navy focus:outline-none transition-colors w-64">
+    <form method="GET" class="filter-bar flex flex-wrap gap-2.5 mb-6">
+        <input type="text" name="search" enterkeyhint="search" value="{{ request('search') }}" placeholder="Search client or invoice #..."
+               class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink placeholder-label focus:border-navy focus:outline-none transition-colors w-full sm:w-64">
         <select name="payment_status" class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
             <option value="">All statuses</option>
             @foreach ($paymentStatuses as $status)
@@ -32,7 +32,7 @@
         @endif
     </form>
 
-    <div class="card p-5 mb-6 flex items-center justify-between">
+    <div class="card p-5 mb-6 flex items-center justify-between gap-4">
         <p class="text-label text-[11px] uppercase tracking-wider font-semibold">Outstanding for this filter</p>
         <p class="font-extrabold text-[22px] tracking-tight text-ink">R{{ number_format($outstanding, 2) }}</p>
     </div>
@@ -43,6 +43,7 @@
                 <p class="text-muted text-[13px]">No invoices match those filters.</p>
             </div>
         @else
+            <div class="table-scroll">
             <table class="w-full data-table">
                 <thead>
                     <tr>
@@ -64,23 +65,26 @@
                         @endphp
                         <tr>
                             <td class="px-6 py-3.5 font-semibold text-ink">{{ $booking->invoice_number }}</td>
-                            <td class="px-6 py-3.5">{{ $booking->name }}</td>
-                            <td class="px-6 py-3.5 text-muted">{{ $booking->date->format('d M Y') }}</td>
-                            <td class="px-6 py-3.5 text-muted">R{{ number_format($amount, 2) }}</td>
-                            <td class="px-6 py-3.5 font-semibold text-ink">R{{ number_format($balanceDue, 2) }}</td>
-                            <td class="px-6 py-3.5">
+                            <td class="px-6 py-3.5" data-label="Client">{{ $booking->name }}</td>
+                            <td class="px-6 py-3.5 text-muted" data-label="Job date">{{ $booking->date->format('d M Y') }}</td>
+                            <td class="px-6 py-3.5 text-muted" data-label="Amount">R{{ number_format($amount, 2) }}</td>
+                            <td class="px-6 py-3.5 font-semibold text-ink" data-label="Balance due">R{{ number_format($balanceDue, 2) }}</td>
+                            <td class="px-6 py-3.5 td-corner">
                                 <x-admin.status-badge :status="$booking->payment_status" />
                             </td>
-                            <td class="px-6 py-3.5 text-right">
-                                <a href="{{ route('admin.invoices.show', $booking) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">View &rarr;</a>
+                            <td class="px-6 py-3.5 text-right td-link">
+                                <a href="{{ route('admin.invoices.show', $booking) }}" class="row-link text-navy font-semibold hover:opacity-70 transition-opacity">View &rarr;</a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            </div>
+            @if ($invoices->hasPages())
             <div class="px-6 py-4 border-t border-line">
                 {{ $invoices->links() }}
             </div>
+            @endif
         @endif
     </div>
 

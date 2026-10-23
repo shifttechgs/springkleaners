@@ -2,33 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f6f7fa">
+    {{-- "Add to Home Screen" opens the admin full-screen, like an installed app --}}
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SK Admin">
+    <link rel="apple-touch-icon" href="/images/fav-180.png">
+    <link rel="manifest" href="/admin.webmanifest">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
     <title>@yield('title', 'Admin') | SpringKleaners</title>
     <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/admin.css'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @stack('styles')
 </head>
-<body class="bg-canvas text-[#0f2038] antialiased text-[13px] h-screen overflow-hidden" x-data="{ nav: false }" x-on:keydown.escape.window="nav = false">
+{{-- Phones/tablets: the page itself scrolls (address bar collapses, momentum scrolling works) under an iOS-style
+     navigation bar and tab bar. lg+: fixed app shell with the sidebar and its own content scroller. --}}
+<body class="bg-canvas text-[#0f2038] antialiased text-[13px] min-h-dvh lg:h-screen lg:overflow-hidden"
+      x-data="{ more: false, scrolled: false, largeTitle: false }"
+      x-init="largeTitle = !!document.querySelector('#admin-content h1'); scrolled = window.scrollY > 36"
+      x-on:scroll.window.passive="scrolled = window.scrollY > 36"
+      x-on:keydown.escape.window="more = false" :class="more && 'overflow-hidden'">
 
-    <div class="flex h-screen">
-        {{-- Phones/tablets: the sidebar slides in over the page; the backdrop closes it --}}
-        <div x-show="nav" x-cloak x-on:click="nav = false" x-transition.opacity class="fixed inset-0 z-30 bg-[#081d3a]/50 lg:hidden" aria-hidden="true"></div>
-
+    <div class="flex min-h-dvh lg:h-screen">
         {{-- Sidebar --}}
-        <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-[260px] -translate-x-full transition-transform duration-200 ease-out lg:static lg:z-auto lg:w-[236px] lg:translate-x-0 flex-shrink-0 bg-[#081d3a] flex flex-col overflow-y-auto" :class="nav ? 'translate-x-0' : ''">
+        <aside id="admin-sidebar" class="hidden lg:flex w-[236px] flex-shrink-0 bg-[#081d3a] flex-col overflow-y-auto">
             <div class="flex items-center justify-between px-6 py-5">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center">
                     <img src="/images/logo-light.png" alt="SpringKleaners" width="275" height="200" class="h-14 w-auto">
                 </a>
-                <button type="button" class="lg:hidden grid h-9 w-9 place-items-center rounded-lg text-white/70 hover:bg-white/[0.06] hover:text-white" x-on:click="nav = false" aria-label="Close menu">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
             </div>
 
             <nav class="flex-1 px-6 py-3 space-y-0.5">
@@ -101,13 +109,32 @@
         </aside>
 
         {{-- Main --}}
-        <main class="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
-            {{-- Topbar --}}
-            <header class="flex-shrink-0 z-10 bg-white border-b border-line px-4 sm:px-6 lg:px-10 py-3 lg:py-3.5 flex items-center justify-between gap-3">
+        <main class="flex-1 min-w-0 flex flex-col lg:h-screen lg:overflow-hidden">
+            {{-- Phones/tablets: iOS navigation bar — back chevron, compact title once the large title scrolls away, page action --}}
+            <header id="admin-navbar" class="ios-bar lg:hidden" :class="scrolled && 'is-scrolled'">
+                <div class="relative flex h-11 items-center justify-between px-1">
+                    <div class="flex min-w-[64px] items-center">
+                        @hasSection('back')
+                            <a href="@yield('back')" class="ios-back">
+                                <svg viewBox="0 0 12 21" aria-hidden="true"><path d="M10.5 1.5l-9 9 9 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span>@yield('backLabel', 'Back')</span>
+                            </a>
+                        @endif
+                    </div>
+                    <p class="ios-bar-title" :class="(scrolled || !largeTitle) && 'is-visible'">
+                        @hasSection('navTitle')
+                            @yield('navTitle')
+                        @else
+                            @yield('title', 'Dashboard')
+                        @endif
+                    </p>
+                    <div class="flex min-w-[64px] items-center justify-end">@yield('navAction')</div>
+                </div>
+            </header>
+
+            {{-- Desktop topbar --}}
+            <header class="hidden lg:flex flex-shrink-0 z-20 bg-white border-b border-line px-10 py-3.5 items-center justify-between gap-3">
                 <div class="flex items-center gap-3 min-w-0">
-                    <button type="button" class="lg:hidden -ml-1 grid h-9 w-9 flex-shrink-0 place-items-center rounded-lg text-ink hover:bg-canvas" x-on:click="nav = true" aria-controls="admin-sidebar" :aria-expanded="nav" aria-label="Open menu">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                    </button>
                     <h2 class="font-bold text-[14px] tracking-tight text-ink truncate">@yield('title', 'Dashboard')</h2>
                 </div>
                 <div class="flex items-center gap-3">
@@ -119,7 +146,7 @@
                 </div>
             </header>
 
-            <div class="flex-1 min-h-0 overflow-y-auto @yield('contentPadding', 'px-4 py-5 sm:px-6 sm:py-7 lg:px-10 lg:py-9')">
+            <div id="admin-content" class="flex-1 lg:min-h-0 lg:overflow-y-auto overscroll-contain @yield('contentPadding', 'px-4 py-5 sm:px-6 sm:py-7 lg:px-10 lg:py-9')">
                 <div class="w-full h-full flex flex-col">
                     @if (session('status'))
                         <div class="mb-6 px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-700 text-[13px] font-medium flex items-center gap-2 flex-shrink-0">
@@ -134,6 +161,113 @@
         </main>
     </div>
 
+    @hasSection('hideTabbar')
+    @else
+        @include('admin._mobile-tabbar')
+    @endif
+
+    {{-- Pull-to-refresh spinner for the installed home-screen app (browsers already have their own) --}}
+    <div id="admin-ptr" class="ios-ptr lg:hidden" aria-hidden="true">
+        <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+    </div>
+
+    <script>
+        // Pull-to-refresh when installed to the home screen: drag down from the top, release past the threshold.
+        (() => {
+            const standalone = navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+            if (!standalone || window.matchMedia('(min-width: 1024px)').matches) return;
+            const ptr = document.getElementById('admin-ptr');
+            const threshold = 64;
+            let startY = null, pull = 0;
+            const show = (px) => {
+                ptr.classList.toggle('is-pulling', px > 4);
+                ptr.classList.toggle('is-armed', px >= threshold);
+                ptr.style.setProperty('--pull', px + 'px');
+                ptr.style.setProperty('--spin', (px * 4) + 'deg');
+            };
+            window.addEventListener('touchstart', (e) => {
+                startY = window.scrollY <= 0 && !document.body.classList.contains('overflow-hidden') ? e.touches[0].clientY : null;
+            }, { passive: true });
+            window.addEventListener('touchmove', (e) => {
+                if (startY === null) return;
+                pull = Math.min(Math.max(0, e.touches[0].clientY - startY) * 0.5, 96);
+                show(pull);
+            }, { passive: true });
+            window.addEventListener('touchend', () => {
+                if (startY === null) return;
+                startY = null;
+                if (pull >= threshold) { ptr.classList.add('is-loading'); window.location.reload(); } else { show(0); }
+                pull = 0;
+            });
+        })();
+
+        // Phones: swipe a list row left to reveal its actions (call / WhatsApp); tap anywhere to close.
+        (() => {
+            if (!window.matchMedia('(max-width: 639.98px)').matches) return;
+            const reveal = 152;
+            let row = null, open = null, wasOpen = false, startX = 0, startY = 0, x = 0, axis = null;
+            const swallowClick = (tr) => {
+                const swallow = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+                tr.addEventListener('click', swallow, { capture: true, once: true });
+                setTimeout(() => tr.removeEventListener('click', swallow, { capture: true }), 350);
+            };
+            const place = (tr, px) => tr.style.setProperty('--swipe-x', px + 'px');
+            const close = (tr) => {
+                if (!tr) return;
+                place(tr, 0);
+                tr.classList.remove('is-swiped');
+                if (open === tr) open = null;
+            };
+            document.addEventListener('touchstart', (e) => {
+                const tr = e.target.closest('tr[data-swipe]');
+                if (open && open !== tr) close(open);
+                row = tr && !e.target.closest('.td-swipe') ? tr : null;
+                if (!row) return;
+                wasOpen = row === open;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                x = row.classList.contains('is-swiped') ? -reveal : 0;
+                axis = null;
+            }, { passive: true });
+            document.addEventListener('touchmove', (e) => {
+                if (!row) return;
+                const dx = e.touches[0].clientX - startX, dy = e.touches[0].clientY - startY;
+                if (!axis) {
+                    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+                    axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+                    if (axis === 'x') row.classList.add('is-dragging');
+                }
+                if (axis !== 'x') return;
+                x = Math.min(0, Math.max(-reveal - 40, (row.classList.contains('is-swiped') ? -reveal : 0) + dx));
+                place(row, x);
+            }, { passive: true });
+            document.addEventListener('touchend', () => {
+                if (!row) return;
+                const tr = row;
+                row = null;
+                if (axis !== 'x') {
+                    // A plain tap on an open row closes it rather than opening the booking.
+                    if (!axis && wasOpen) { close(tr); swallowClick(tr); }
+                    return;
+                }
+                tr.classList.remove('is-dragging');
+                if (x < -reveal / 2) { place(tr, -reveal); tr.classList.add('is-swiped'); open = tr; } else { close(tr); }
+                swallowClick(tr); // a swipe is not a tap
+            });
+            // While a row is open, a tap closes it rather than opening the booking.
+            document.addEventListener('click', (e) => {
+                if (!open || e.target.closest('.td-swipe')) return;
+                if (e.target.closest('tr') === open) e.preventDefault();
+                close(open);
+            }, true);
+        })();
+
+        // Filter bars apply as soon as a dropdown or date changes — no separate Filter tap needed.
+        document.addEventListener('change', (e) => {
+            const form = e.target.closest('form.filter-bar');
+            if (form && e.target.matches('select, input[type=date]')) form.requestSubmit();
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

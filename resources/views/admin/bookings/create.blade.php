@@ -1,5 +1,8 @@
 @extends('admin.layout')
 @section('title', 'New Booking')
+@section('back', route('admin.bookings.index'))
+@section('backLabel', 'Bookings')
+@section('hideTabbar', true)
 
 @push('styles')
 <style>
@@ -36,8 +39,8 @@
 @section('content')
 <div x-data="{
         step: 1,
-        totalSteps: 6,
-        stepLabels: ['Service & Property', 'Client & Location', 'Add-ons', 'Notes', 'Schedule', 'Review'],
+        totalSteps: 5,
+        stepLabels: ['Service & Property', 'Client & Location', 'Extras & Notes', 'Schedule', 'Review'],
 
         services: {{ Illuminate\Support\Js::from($services) }},
         selectedService: {{ Illuminate\Support\Js::from(old('service', array_key_first($services))) }},
@@ -49,6 +52,13 @@
         phone: {{ Illuminate\Support\Js::from(old('phone', '')) }},
         address: {{ Illuminate\Support\Js::from(old('address', '')) }},
         suburb: {{ Illuminate\Support\Js::from(old('suburb', '')) }},
+        accessInstructions: {{ Illuminate\Support\Js::from(old('access_instructions', '')) }},
+        parking: {{ Illuminate\Support\Js::from(old('parking', '')) }},
+        clientQuery: '',
+        clientResults: [],
+        clientPickerOpen: false,
+        clientSearchSeq: 0,
+        pickedClient: '',
         propertyType: {{ Illuminate\Support\Js::from(old('property_type', 'House')) }},
         bedrooms: {{ Illuminate\Support\Js::from(old('bedrooms', '2')) }},
         bathrooms: {{ Illuminate\Support\Js::from(old('bathrooms', '1')) }},
@@ -134,6 +144,30 @@
         },
 
         errors: { name: false, phone: false, dateTime: false },
+        // Returning clients: search by name or phone (recent clients when empty), fill from their last booking.
+        async findClients() {
+            const seq = ++this.clientSearchSeq;
+            try {
+                const res = await fetch({{ Illuminate\Support\Js::from(route('admin.clients.search')) }} + '?q=' + encodeURIComponent(this.clientQuery.trim()), { headers: { Accept: 'application/json' } });
+                const results = res.ok ? await res.json() : [];
+                if (seq === this.clientSearchSeq) this.clientResults = results;
+            } catch (e) {
+                if (seq === this.clientSearchSeq) this.clientResults = [];
+            }
+        },
+        pickClient(c) {
+            this.name = c.name;
+            this.phone = c.phone;
+            this.address = c.address || this.address;
+            this.suburb = c.suburb || this.suburb;
+            this.accessInstructions = c.access_instructions || '';
+            this.parking = c.parking || '';
+            this.pickedClient = c.name;
+            this.errors.name = false;
+            this.errors.phone = false;
+            this.clientQuery = '';
+            this.clientPickerOpen = false;
+        },
         validateClientStep() {
             this.errors.name = !this.name.trim();
             this.errors.phone = !this.phone.trim();
@@ -143,10 +177,21 @@
             this.errors.dateTime = !this.selectedDate || !this.selectedTime;
             return !this.errors.dateTime;
         },
-        goStep(n) { this.step = n; window.scrollTo({ top: 0, behavior: 'smooth' }); },
+        next() {
+            if (this.step === 2 && !this.validateClientStep()) return;
+            if (this.step === 4 && !this.validateScheduleStep()) return;
+            if (this.step === this.totalSteps) { this.$refs.form.requestSubmit(); return; }
+            this.goStep(this.step + 1);
+        },
+        goStep(n) {
+            this.step = n;
+            // Phones scroll the page; lg+ scrolls the admin content pane.
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('admin-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+        },
      }">
 
-    <div class="flex items-center gap-2 text-label text-[12px] font-medium mb-6">
+    <div class="hidden lg:flex items-center gap-2 text-label text-[12px] font-medium mb-6">
         <a href="{{ route('admin.bookings.index') }}" class="hover:text-navy transition-colors">Bookings</a>
         <span>/</span>
         <span class="text-ink">New Booking</span>
@@ -155,7 +200,7 @@
     <div class="mb-6">
         <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">Pipeline</p>
         <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Record a Booking</h1>
-        <p class="text-muted text-[13px] mt-1.5">For leads that came in by phone, WhatsApp, or in person — same fields and pricing as the website, same {{ \App\Models\Booking::DAILY_CAPACITY }}-per-day capacity.</p>
+        <p class="max-lg:hidden text-muted text-[13px] mt-1.5">For leads that came in by phone, WhatsApp, or in person — same fields and pricing as the website, same {{ \App\Models\Booking::DAILY_CAPACITY }}-per-day capacity.</p>
     </div>
 
     @if ($errors->any())
@@ -168,14 +213,16 @@
     <div class="mb-6 max-w-2xl">
         <div class="flex items-center justify-between mb-2">
             <span class="text-ink text-[13px] font-bold" x-text="'Step ' + step + ' of ' + totalSteps + ': ' + stepLabels[step - 1]"></span>
-            <button type="button" x-show="step > 1" x-cloak @click="goStep(step - 1)" class="text-muted text-[12px] font-semibold hover:text-navy transition-colors">&larr; Back</button>
+            <div class="flex items-center gap-3">
+                <button type="button" x-show="step > 1" x-cloak @click="goStep(step - 1)" class="text-muted text-[12px] font-semibold hover:text-navy transition-colors">&larr; Back</button>
+            </div>
         </div>
         <div class="w-full h-1.5 bg-line rounded-full overflow-hidden">
             <div class="h-full bg-navy rounded-full transition-all duration-300" :style="'width:' + (step / totalSteps * 100) + '%'"></div>
         </div>
     </div>
 
-    <form method="POST" action="{{ route('admin.bookings.store') }}">
+    <form method="POST" action="{{ route('admin.bookings.store') }}" x-ref="form">
         @csrf
 
         <input type="hidden" name="service" :value="selectedService">
@@ -203,9 +250,9 @@
 
                 {{-- ── STEP 1: SERVICE & PROPERTY ── --}}
                 <div x-show="step === 1" x-cloak class="space-y-6">
-                    <div class="card p-6">
+                    <div class="card p-4 sm:p-6">
                         <h2 class="font-bold text-[14px] tracking-tight mb-4">Service</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-5">
                             <template x-for="(svc, slug) in services" :key="slug">
                                 <button type="button" @click="selectedService = slug"
                                         class="type-btn" :class="selectedService === slug ? 'type-active' : 'type-inactive'"
@@ -214,13 +261,13 @@
                         </div>
 
                         <label class="fl">Property type</label>
-                        <div class="flex gap-2 mb-5">
+                        <div class="grid grid-cols-3 sm:flex gap-2 mb-5">
                             <button type="button" @click="propertyType = 'House'" :class="propertyType === 'House' ? 'type-active' : 'type-inactive'" class="type-btn">House</button>
                             <button type="button" @click="propertyType = 'Apartment / Flat'" :class="propertyType === 'Apartment / Flat' ? 'type-active' : 'type-inactive'" class="type-btn">Apartment / Flat</button>
                             <button type="button" @click="propertyType = 'Townhouse'" :class="propertyType === 'Townhouse' ? 'type-active' : 'type-inactive'" class="type-btn">Townhouse</button>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-3 mb-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                             <div>
                                 <label class="fl">Bedrooms</label>
                                 <select x-model="bedrooms" class="fi cursor-pointer">
@@ -278,8 +325,8 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end">
-                        <button type="button" @click="goStep(2)" class="btn-primary px-6 py-3">
+                    <div class="hidden lg:flex justify-end">
+                        <button type="button" @click="goStep(2)" class="btn-primary px-6 py-3 w-full sm:w-auto justify-center">
                             Continue
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
                         </button>
@@ -288,8 +335,34 @@
 
                 {{-- ── STEP 2: CLIENT & LOCATION ── --}}
                 <div x-show="step === 2" x-cloak class="space-y-6">
-                    <div class="card p-6">
+                    <div class="card p-4 sm:p-6">
                         <h2 class="font-bold text-[14px] tracking-tight mb-4">Client &amp; Location</h2>
+
+                        <div class="mb-5" x-on:click.outside="clientPickerOpen = false">
+                            <label class="fl" for="client-search">Returning client?</label>
+                            <div class="relative">
+                                <svg class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-label" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path stroke-linecap="round" d="M15.5 15.5L20 20"/></svg>
+                                <input id="client-search" type="search" x-model="clientQuery" autocomplete="off" enterkeyhint="search"
+                                       x-on:focus="clientPickerOpen = true; findClients()" x-on:input.debounce.200ms="clientPickerOpen = true; findClients()"
+                                       x-on:keydown.enter.prevent="if (clientResults.length) pickClient(clientResults[0])"
+                                       placeholder="Search name or phone" class="fi" style="padding-left: 40px;">
+                            </div>
+                            <div x-show="clientPickerOpen && clientResults.length" x-cloak class="mt-2 overflow-hidden rounded-xl border border-line bg-white" role="listbox" aria-label="Matching clients">
+                                <p class="px-4 pt-2.5 pb-1 text-label text-[11px] font-bold uppercase tracking-wider" x-text="clientQuery.trim() ? 'Matches' : 'Recent clients'"></p>
+                                <template x-for="c in clientResults" :key="c.id">
+                                    <button type="button" role="option" x-on:click="pickClient(c)" class="flex w-full items-center gap-3 border-t border-line px-4 py-3 text-left transition-colors hover:bg-canvas active:bg-canvas first-of-type:border-t-0">
+                                        <span class="avatar" x-text="c.name.charAt(0).toUpperCase()"></span>
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-[14px] font-semibold text-ink" x-text="c.name"></span>
+                                            <span class="block truncate text-[12.5px] text-muted" x-text="[c.phone, c.suburb, c.last_booking ? 'last booked ' + c.last_booking : null].filter(Boolean).join(' · ')"></span>
+                                        </span>
+                                    </button>
+                                </template>
+                            </div>
+                            <p x-show="pickedClient" x-cloak class="mt-2 text-[12.5px] font-semibold text-emerald-700">
+                                Filled in from <span x-text="pickedClient"></span>'s last booking — check the details below.
+                            </p>
+                        </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="fl">Name</label>
@@ -320,26 +393,26 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="fl">Access instructions</label>
-                                <input type="text" name="access_instructions" value="{{ old('access_instructions') }}" class="fi">
+                                <input type="text" name="access_instructions" x-model="accessInstructions" class="fi">
                             </div>
                             <div>
                                 <label class="fl">Parking</label>
-                                <input type="text" name="parking" value="{{ old('parking') }}" class="fi">
+                                <input type="text" name="parking" x-model="parking" class="fi">
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex justify-end">
-                        <button type="button" @click="if (validateClientStep()) goStep(3)" class="btn-primary px-6 py-3">
+                    <div class="hidden lg:flex justify-end">
+                        <button type="button" @click="if (validateClientStep()) goStep(3)" class="btn-primary px-6 py-3 w-full sm:w-auto justify-center">
                             Continue
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
                         </button>
                     </div>
                 </div>
 
-                {{-- ── STEP 3: ADD-ONS ── --}}
+                {{-- ── STEP 3: EXTRAS & NOTES ── --}}
                 <div x-show="step === 3" x-cloak class="space-y-6">
-                    <div class="card p-6">
+                    <div class="card p-4 sm:p-6">
                         <h2 class="font-bold text-[14px] tracking-tight mb-1">Add-on extras</h2>
                         <p class="text-label text-[12.5px] mb-4">Optional — added to the estimate.</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -362,17 +435,7 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end">
-                        <button type="button" @click="goStep(4)" class="btn-primary px-6 py-3">
-                            Continue
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                {{-- ── STEP 4: NOTES ── --}}
-                <div x-show="step === 4" x-cloak class="space-y-6">
-                    <div class="card p-6">
+                    <div class="card p-4 sm:p-6">
                         <h2 class="font-bold text-[14px] tracking-tight mb-4">Notes</h2>
                         <div class="space-y-4">
                             <div>
@@ -386,17 +449,17 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end">
-                        <button type="button" @click="goStep(5)" class="btn-primary px-6 py-3">
+                    <div class="hidden lg:flex justify-end">
+                        <button type="button" @click="goStep(4)" class="btn-primary px-6 py-3 w-full sm:w-auto justify-center">
                             Continue
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
                         </button>
                     </div>
                 </div>
 
-                {{-- ── STEP 5: SCHEDULE ── --}}
-                <div x-show="step === 5" x-cloak class="space-y-6">
-                    <div class="card p-6">
+                {{-- ── STEP 4: SCHEDULE ── --}}
+                <div x-show="step === 4" x-cloak class="space-y-6">
+                    <div class="card p-4 sm:p-6">
                         <h2 class="font-bold text-[14px] tracking-tight mb-4">Schedule</h2>
 
                         <div class="mb-5">
@@ -405,7 +468,7 @@
                                 <button type="button" @click="bookingType = 'once-off'" :class="bookingType === 'once-off' ? 'type-active' : 'type-inactive'" class="type-btn">Once-off</button>
                                 <button type="button" @click="bookingType = 'recurring'" :class="bookingType === 'recurring' ? 'type-active' : 'type-inactive'" class="type-btn">Recurring</button>
                             </div>
-                            <div x-show="bookingType === 'recurring'" x-cloak class="flex gap-2 mt-3">
+                            <div x-show="bookingType === 'recurring'" x-cloak class="flex flex-wrap gap-2 mt-3">
                                 <template x-for="freq in ['Weekly','Bi-weekly','Monthly']" :key="freq">
                                     <button type="button" @click="frequency = freq" :class="frequency === freq ? 'pill-active' : ''" class="pill-btn" x-text="freq"></button>
                                 </template>
@@ -462,17 +525,17 @@
                         <p class="text-label text-[11.5px] mt-4">{{ \App\Models\Booking::DAILY_CAPACITY }} slots/day — same rule as the website.</p>
                     </div>
 
-                    <div class="flex justify-end">
-                        <button type="button" @click="if (validateScheduleStep()) goStep(6)" class="btn-primary px-6 py-3">
+                    <div class="hidden lg:flex justify-end">
+                        <button type="button" @click="if (validateScheduleStep()) goStep(5)" class="btn-primary px-6 py-3 w-full sm:w-auto justify-center">
                             Continue
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
                         </button>
                     </div>
                 </div>
 
-                {{-- ── STEP 6: REVIEW ── --}}
-                <div x-show="step === 6" x-cloak class="space-y-6">
-                    <div class="card p-6">
+                {{-- ── STEP 5: REVIEW ── --}}
+                <div x-show="step === 5" x-cloak class="space-y-6">
+                    <div class="card p-4 sm:p-6">
                         <h2 class="font-bold text-[14px] tracking-tight mb-4">Review</h2>
 
                         <div class="space-y-3">
@@ -509,7 +572,7 @@
                             <div class="border border-line rounded-xl p-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <span class="fl mb-0">Schedule</span>
-                                    <button type="button" @click="goStep(5)" class="text-navy text-[12px] font-bold hover:opacity-70 transition-opacity">Edit</button>
+                                    <button type="button" @click="goStep(4)" class="text-navy text-[12px] font-bold hover:opacity-70 transition-opacity">Edit</button>
                                 </div>
                                 <p class="text-ink font-semibold text-[13.5px]" x-text="selectedDateLabel"></p>
                                 <p class="text-muted text-[12.5px]" x-text="selectedTime + ' · ' + (bookingType === 'recurring' ? ('Recurring — ' + frequency) : 'Once-off')"></p>
@@ -517,8 +580,8 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end">
-                        <button type="submit" class="btn-primary px-6 py-3">Add Booking</button>
+                    <div class="hidden lg:flex justify-end">
+                        <button type="submit" class="btn-primary px-6 py-3 w-full sm:w-auto justify-center">Add Booking</button>
                     </div>
                 </div>
 
@@ -526,7 +589,7 @@
 
             {{-- RIGHT: sticky summary --}}
             <div class="lg:col-span-5">
-                <div class="lg:sticky lg:top-24 card p-6">
+                <div class="lg:sticky lg:top-0 card p-4 sm:p-6">
                     <div class="flex items-center gap-3 pb-4 border-b border-line">
                         <div class="w-10 h-10 rounded-xl bg-navy flex items-center justify-center flex-shrink-0">
                             <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -592,6 +655,18 @@
 
         </div>
     </form>
+
+    {{-- Phones: pinned bar with the live total and the next step, always in thumb reach --}}
+    <div class="ios-actionbar lg:hidden">
+        <div class="min-w-0">
+            <p class="text-label text-[12px] leading-tight" x-text="'Estimate'"></p>
+            <p class="text-ink text-[22px] font-bold tracking-tight leading-tight" x-text="'R' + total.toLocaleString()"></p>
+        </div>
+        <button type="button" class="btn-primary ml-auto px-6" @click="next()">
+            <span x-text="step === totalSteps ? 'Add Booking' : 'Continue'"></span>
+            <svg x-show="step < totalSteps" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
+        </button>
+    </div>
 
 </div>
 @endsection

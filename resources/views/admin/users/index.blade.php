@@ -1,11 +1,14 @@
 @extends('admin.layout')
 @section('title', 'Users')
+@section('navAction')
+    <a href="{{ route('admin.users.create') }}" class="ios-nav-btn" aria-label="Invite user"><svg class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></a>
+@endsection
 @section('content')
 
     @include('admin.settings._tabs')
 
     <div class="flex items-center justify-end mb-4">
-        <a href="{{ route('admin.users.create') }}" class="btn-primary">
+        <a href="{{ route('admin.users.create') }}" class="btn-primary max-lg:hidden!">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             Invite User
         </a>
@@ -18,6 +21,7 @@
     @endif
 
     <div class="card overflow-hidden">
+        <div class="table-scroll">
         <table class="w-full data-table">
             <thead>
                 <tr>
@@ -40,13 +44,13 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-3.5 text-muted">{{ $user->email }}</td>
-                        <td class="px-6 py-3.5">
+                        <td class="px-6 py-3.5 text-muted break-all" data-label="Email">{{ $user->email }}</td>
+                        <td class="px-6 py-3.5 td-corner">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11.5px] font-semibold {{ $user->role->badgeColor() }}">
                                 {{ $user->role->label() }}
                             </span>
                         </td>
-                        <td class="px-6 py-3.5">
+                        <td class="px-6 py-3.5" data-label="Status">
                             @if ($user->isPending())
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-amber-100 text-amber-700">
                                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
@@ -59,7 +63,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-3.5 text-right">
+                        <td class="px-6 py-3.5 text-right td-actions">
                             <div class="flex items-center justify-end gap-4">
                                 @if ($user->isPending())
                                     <form method="POST" action="{{ route('admin.users.resend-invite', $user) }}">
@@ -79,10 +83,10 @@
                         @unless ($user->is(auth()->user()))
                             <template x-teleport="body">
                                 <div x-show="confirmOpen" x-cloak
-                                     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                                     class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4"
                                      style="background:rgba(8,29,58,0.45);"
                                      @click.self="confirmOpen = false">
-                                    <div class="bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
+                                    <div class="ios-sheet-panel bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
                                         <h3 class="font-bold text-[16px] text-ink mb-2">
                                             {{ $user->isPending() ? 'Cancel this invite?' : 'Delete this user?' }}
                                         </h3>
@@ -113,6 +117,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 
 @endsection

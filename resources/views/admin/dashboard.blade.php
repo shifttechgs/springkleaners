@@ -1,17 +1,25 @@
 @extends('admin.layout')
 @section('title', 'Dashboard')
 @section('contentPadding', 'px-4 py-5 sm:px-6 lg:px-8')
+@section('navAction')
+    <button type="button" class="ios-nav-btn" aria-label="Refresh" x-data="{ spin: false }" x-on:click="spin = true; location.reload()">
+        <svg class="h-[22px] w-[22px]" :class="spin && 'animate-spin'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+    </button>
+@endsection
 @section('content')
+
+    {{-- Phones get a trimmed, re-ordered dashboard (CSS order): greeting, two revenue cards, pipeline counts,
+         needs attention, calendar, upcoming jobs. Avg job value, win rate, the profit strip and the client count stay desktop-only. --}}
 
     {{-- Greeting header --}}
     <div class="flex items-center justify-between mb-3 flex-shrink-0 flex-wrap gap-2">
-        <div class="flex items-baseline gap-2">
+        <div class="flex items-baseline gap-x-2 gap-y-1 flex-wrap">
             <h1 class="text-[19px] font-extrabold tracking-tight leading-none">
                 Good {{ now()->hour < 12 ? 'morning' : (now()->hour < 17 ? 'afternoon' : 'evening') }}, {{ explode(' ', auth()->user()->name)[0] }}
             </h1>
-            <span class="text-muted text-[12px]">&middot; {{ now()->format('l, d F Y') }}</span>
+            <span class="text-muted text-[12px]"><span class="max-lg:hidden">&middot; </span>{{ now()->format('l, d F Y') }}<span class="lg:hidden"> &middot; Updated {{ now()->format('H:i') }}</span></span>
         </div>
-        <a href="{{ route('admin.bookings.index') }}" class="btn-primary !py-2 !px-3.5 !text-[12.5px]">
+        <a href="{{ route('admin.bookings.index') }}" class="btn-primary !py-2 !px-3.5 !text-[12.5px] max-lg:hidden!">
             View all bookings
             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4-4m4 4H3"/></svg>
         </a>
@@ -37,7 +45,7 @@
         $sparkEnd = $sparkPoints->last();
     @endphp
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3 flex-shrink-0">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3 flex-shrink-0 max-lg:order-1">
 
         <div class="card card-interactive animate-in delay-1 p-3">
             <p class="text-label text-[10px] uppercase tracking-wider font-semibold mb-1">Revenue This Month</p>
@@ -74,13 +82,13 @@
             <p class="text-label text-[11px] mt-1">Confirmed, not completed</p>
         </div>
 
-        <div class="card card-interactive animate-in delay-3 p-3">
+        <div class="card card-interactive animate-in delay-3 p-3 max-lg:hidden">
             <p class="text-label text-[10px] uppercase tracking-wider font-semibold mb-1">Avg Job Value</p>
             <p class="font-extrabold text-[19px] tracking-tight leading-none">R{{ number_format($avgJobValue, 0) }}</p>
             <p class="text-label text-[11px] mt-1">Completed this month</p>
         </div>
 
-        <div class="card card-interactive animate-in delay-4 p-3">
+        <div class="card card-interactive animate-in delay-4 p-3 max-lg:hidden">
             <p class="text-label text-[10px] uppercase tracking-wider font-semibold mb-1">Win Rate</p>
             <p class="font-extrabold text-[19px] tracking-tight leading-none">{{ is_null($winRate) ? '—' : $winRate.'%' }}</p>
             <p class="text-label text-[11px] mt-1">Quotes &rarr; accepted</p>
@@ -127,12 +135,12 @@
     @endphp
 
     @if ($attentionItems->isNotEmpty())
-        <div class="card animate-in p-3 mb-3 flex-shrink-0">
-            <h2 class="font-bold text-[12px] tracking-tight mb-1.5">Needs Attention</h2>
-            <div class="space-y-1 max-h-24 overflow-y-auto">
+        <div class="card animate-in p-3 mb-3 flex-shrink-0 max-lg:order-3">
+            <h2 class="font-bold text-[12px] max-lg:text-[15px] tracking-tight mb-1.5">Needs Attention</h2>
+            <div class="space-y-1 lg:max-h-24 lg:overflow-y-auto">
                 @foreach ($attentionItems as $item)
                     <a href="{{ $item['href'] }}"
-                       class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-150 hover:opacity-80 hover:translate-x-0.5"
+                       class="flex items-center gap-2.5 px-3 py-1.5 max-lg:py-3 rounded-lg text-[12px] max-lg:text-[15px] font-medium transition-all duration-150 hover:opacity-80 hover:translate-x-0.5"
                        style="background:{{ $toneStyles[$item['tone']]['bg'] }}; color:#0f2038;">
                         <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" style="background:{{ $toneStyles[$item['tone']]['icon'] }};"></span>
                         <span>{{ $item['text'] }}</span>
@@ -144,7 +152,7 @@
     @endif
 
     {{-- Pipeline snapshot — single slim strip --}}
-    <div class="card p-0 mb-3 flex-shrink-0 grid grid-cols-2 lg:grid-cols-4 divide-x divide-y-0 divide-line">
+    <div class="card p-0 mb-3 flex-shrink-0 grid grid-cols-3 lg:grid-cols-4 divide-x divide-y-0 divide-line max-lg:order-2">
         <a href="{{ route('admin.bookings.index', ['status' => 'pending']) }}" class="px-4 py-2.5 hover:bg-canvas transition-colors flex items-center justify-between gap-2">
             <span class="text-label text-[11px] font-semibold uppercase tracking-wider">Pending</span>
             <span class="font-extrabold text-[15px] text-ink">{{ $pendingCount }}</span>
@@ -157,14 +165,14 @@
             <span class="text-label text-[11px] font-semibold uppercase tracking-wider">Accepted</span>
             <span class="font-extrabold text-[15px] text-ink">{{ $acceptedCount }}</span>
         </a>
-        <a href="{{ route('admin.clients.index') }}" class="px-4 py-2.5 hover:bg-canvas transition-colors flex items-center justify-between gap-2">
+        <a href="{{ route('admin.clients.index') }}" class="max-lg:hidden px-4 py-2.5 hover:bg-canvas transition-colors flex items-center justify-between gap-2">
             <span class="text-label text-[11px] font-semibold uppercase tracking-wider">Clients</span>
             <span class="font-extrabold text-[15px] text-ink">{{ $clientCount }}</span>
         </a>
     </div>
 
     {{-- Expenses / profit snapshot — single slim strip --}}
-    <div class="card p-0 mb-3 flex-shrink-0 grid grid-cols-3 divide-x divide-y-0 divide-line">
+    <div class="card p-0 mb-3 flex-shrink-0 grid grid-cols-3 divide-x divide-y-0 divide-line max-lg:hidden">
         <a href="{{ route('admin.expenses.index', ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->endOfMonth()->toDateString()]) }}" class="px-4 py-2.5 hover:bg-canvas transition-colors flex items-center justify-between gap-2">
             <span class="text-label text-[11px] font-semibold uppercase tracking-wider">Expenses This Month</span>
             <span class="font-extrabold text-[15px] text-ink">R{{ number_format($monthExpenses, 0) }}</span>
@@ -180,7 +188,7 @@
     </div>
 
     {{-- Bottom row: fills remaining height --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:flex-1 lg:min-h-0">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:flex-1 lg:min-h-0 max-lg:order-4 max-lg:mb-3">
 
         {{-- Upcoming Jobs Schedule --}}
         <div class="lg:col-span-2 card overflow-hidden flex flex-col lg:min-h-0">
@@ -206,19 +214,20 @@
                         </thead>
                         <tbody class="divide-y divide-line">
                             @foreach ($upcomingJobs as $booking)
-                                <tr>
+                                <tr data-swipe>
                                     <td class="px-5 py-2">
                                         <div class="flex items-center gap-2.5">
                                             <div class="avatar" style="width:26px;height:26px;border-radius:8px;font-size:11px;">{{ strtoupper(substr($booking->name, 0, 1)) }}</div>
                                             <span class="font-semibold text-[13px]">{{ $booking->name }}</span>
                                         </div>
                                     </td>
-                                    <td class="px-5 py-2 text-muted text-[13px]">{{ \App\Support\Services::find($booking->service)['name'] ?? $booking->service }}</td>
-                                    <td class="px-5 py-2 text-muted text-[13px]">{{ $booking->date->format('d M') }} &middot; {{ $booking->time }}</td>
-                                    <td class="px-5 py-2 text-muted text-[13px]">R{{ number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 0) }}</td>
-                                    <td class="px-5 py-2 text-right">
-                                        <a href="{{ route('admin.bookings.show', $booking) }}" class="text-navy font-semibold text-[13px] hover:opacity-70 transition-opacity">View</a>
+                                    <td class="px-5 py-2 text-muted text-[13px]" data-label="Service">{{ \App\Support\Services::find($booking->service)['name'] ?? $booking->service }}</td>
+                                    <td class="px-5 py-2 text-muted text-[13px]" data-label="Date">{{ $booking->date->format('d M') }} &middot; {{ $booking->time }}</td>
+                                    <td class="px-5 py-2 text-muted text-[13px] td-corner">R{{ number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 0) }}</td>
+                                    <td class="px-5 py-2 text-right td-link">
+                                        <a href="{{ route('admin.bookings.show', $booking) }}" class="row-link text-navy font-semibold text-[13px] hover:opacity-70 transition-opacity">View</a>
                                     </td>
+                                    @include('admin._swipe-actions', ['phone' => $booking->phone, 'name' => $booking->name])
                                 </tr>
                             @endforeach
                         </tbody>
@@ -228,7 +237,7 @@
         </div>
 
         {{-- Calendar --}}
-        <div class="card p-4 flex flex-col lg:min-h-0">
+        <div class="card p-4 flex flex-col lg:min-h-0 max-lg:order-first">
             @php
                 $prevMonth = $calendarMonth->copy()->subMonthNoOverflow();
                 $nextMonth = $calendarMonth->copy()->addMonthNoOverflow();
@@ -238,12 +247,12 @@
             @endphp
 
             <div class="flex items-center justify-between mb-2 flex-shrink-0">
-                <h2 class="font-bold text-[13px] tracking-tight">{{ $calendarMonth->format('F Y') }}</h2>
+                <h2 class="font-bold text-[13px] max-lg:text-[15px] tracking-tight">{{ $calendarMonth->format('F Y') }}</h2>
                 <div class="flex items-center gap-1">
-                    <a href="{{ route('admin.dashboard', ['month' => $prevMonth->format('Y-m')]) }}" class="w-6 h-6 flex items-center justify-center rounded-lg border border-line hover:border-navy transition-colors">
+                    <a href="{{ route('admin.dashboard', ['month' => $prevMonth->format('Y-m')]) }}" class="w-9 h-9 lg:w-6 lg:h-6 flex items-center justify-center rounded-lg border border-line hover:border-navy transition-colors">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
                     </a>
-                    <a href="{{ route('admin.dashboard', ['month' => $nextMonth->format('Y-m')]) }}" class="w-6 h-6 flex items-center justify-center rounded-lg border border-line hover:border-navy transition-colors">
+                    <a href="{{ route('admin.dashboard', ['month' => $nextMonth->format('Y-m')]) }}" class="w-9 h-9 lg:w-6 lg:h-6 flex items-center justify-center rounded-lg border border-line hover:border-navy transition-colors">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
                     </a>
                 </div>
@@ -251,11 +260,11 @@
 
             <div class="grid grid-cols-7 gap-0.5 mb-1 flex-shrink-0">
                 @foreach (['S', 'M', 'T', 'W', 'T', 'F', 'S'] as $i => $label)
-                    <div class="text-center text-label text-[9.5px] font-semibold uppercase" style="{{ $i === 0 || $i === 6 ? 'color:#081d3a;' : '' }}">{{ $label }}</div>
+                    <div class="text-center text-label text-[9.5px] max-lg:text-[11px] font-semibold uppercase" style="{{ $i === 0 || $i === 6 ? 'color:#081d3a;' : '' }}">{{ $label }}</div>
                 @endforeach
             </div>
 
-            <div class="grid grid-cols-7 gap-0.5 lg:flex-1 lg:min-h-0 auto-rows-[2.25rem] lg:auto-rows-fr">
+            <div class="grid grid-cols-7 gap-0.5 lg:flex-1 lg:min-h-0 auto-rows-[2.75rem] lg:auto-rows-fr">
                 @for ($i = 0; $i < $firstWeekday; $i++)
                     <div></div>
                 @endfor
@@ -273,7 +282,7 @@
                         <a href="{{ route('admin.bookings.index', ['date' => $dateStr]) }}"
                            class="rounded-md flex flex-col items-center justify-center relative hover:ring-2 transition-all"
                            style="{{ $isToday ? 'background:#081d3a; color:#fff;' : ($isWeekend ? 'background:rgba(246,227,4,0.12);' : 'background:#f6f7fa;') }} {{ $isToday ? '' : 'ring-color:#081d3a;' }}">
-                            <span class="text-[11px] font-semibold {{ $isToday ? 'text-white' : 'text-ink' }}">{{ $day }}</span>
+                            <span class="text-[11px] max-lg:text-[14px] font-semibold {{ $isToday ? 'text-white' : 'text-ink' }}">{{ $day }}</span>
                             <span class="flex gap-0.5">
                                 @if ($dayData['accepted'] > 0)
                                     <span class="w-1 h-1 rounded-full" style="background:{{ $isToday ? '#f6e304' : '#12b76a' }};"></span>
@@ -286,7 +295,7 @@
                     @else
                         <div class="rounded-md flex items-center justify-center"
                              style="{{ $isToday ? 'background:#081d3a;' : ($isWeekend ? 'background:rgba(246,227,4,0.06);' : '') }}">
-                            <span class="text-[11px] {{ $isToday ? 'text-white font-semibold' : ($isWeekend ? 'text-ink' : 'text-label') }}">{{ $day }}</span>
+                            <span class="text-[11px] max-lg:text-[14px] {{ $isToday ? 'text-white font-semibold' : ($isWeekend ? 'text-ink' : 'text-label') }}">{{ $day }}</span>
                         </div>
                     @endif
                 @endfor

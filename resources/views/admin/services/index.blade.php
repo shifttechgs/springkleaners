@@ -1,5 +1,8 @@
 @extends('admin.layout')
 @section('title', 'Services')
+@section('navAction')
+    <a href="{{ route('admin.services.create') }}" class="ios-nav-btn" aria-label="Add service"><svg class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></a>
+@endsection
 @section('content')
 
     <div class="flex items-start justify-between mb-8 flex-wrap gap-4">
@@ -7,7 +10,7 @@
             <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">Pricing</p>
             <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Services</h1>
         </div>
-        <a href="{{ route('admin.services.create') }}" class="btn-primary">
+        <a href="{{ route('admin.services.create') }}" class="btn-primary max-lg:hidden!">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             Add Service
         </a>
@@ -31,6 +34,7 @@
                 <p class="text-muted text-[13px]">No services yet.</p>
             </div>
         @else
+            <div class="table-scroll">
             <table class="w-full data-table">
                 <thead>
                     <tr>
@@ -54,11 +58,11 @@
                                 </div>
                                 <p class="text-label text-[12px] leading-tight mt-0.5">{{ $service->slug }}</p>
                             </td>
-                            <td class="px-6 py-3.5 text-ink font-semibold">R{{ number_format((float) $service->base_price, 2) }}</td>
-                            <td class="px-6 py-3.5 text-muted">{{ $service->included_bedrooms }} bed / {{ $service->included_bathrooms }} bath</td>
-                            <td class="px-6 py-3.5 text-muted">R{{ number_format((float) $service->bedroom_price, 0) }} / R{{ number_format((float) $service->bathroom_price, 0) }} / R{{ number_format((float) $service->extra_room_price, 0) }}</td>
-                            <td class="px-6 py-3.5 text-muted">R{{ number_format((float) $service->service_fee, 2) }}</td>
-                            <td class="px-6 py-3.5 text-right">
+                            <td class="px-6 py-3.5 text-ink font-semibold" data-label="Base price">R{{ number_format((float) $service->base_price, 2) }}</td>
+                            <td class="px-6 py-3.5 text-muted" data-label="Included">{{ $service->included_bedrooms }} bed / {{ $service->included_bathrooms }} bath</td>
+                            <td class="px-6 py-3.5 text-muted" data-label="Extras bed/bath/room">R{{ number_format((float) $service->bedroom_price, 0) }} / R{{ number_format((float) $service->bathroom_price, 0) }} / R{{ number_format((float) $service->extra_room_price, 0) }}</td>
+                            <td class="px-6 py-3.5 text-muted" data-label="Service fee">R{{ number_format((float) $service->service_fee, 2) }}</td>
+                            <td class="px-6 py-3.5 text-right td-actions">
                                 <div class="flex items-center justify-end gap-4">
                                     <a href="{{ route('admin.services.edit', $service) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">Edit</a>
                                     <button type="button" @click="confirmOpen = true" class="text-rose-500 font-semibold hover:opacity-70 transition-opacity">Delete</button>
@@ -67,10 +71,10 @@
 
                             <template x-teleport="body">
                                 <div x-show="confirmOpen" x-cloak
-                                     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                                     class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4"
                                      style="background:rgba(8,29,58,0.45);"
                                      @click.self="confirmOpen = false">
-                                    <div class="bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
+                                    <div class="ios-sheet-panel bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
                                         <h3 class="font-bold text-[16px] text-ink mb-2">Remove this service?</h3>
                                         <p class="text-muted text-[13px] mb-5">{{ $service->name }}. Existing bookings keep their recorded price — this only affects future quotes.</p>
                                         <div class="flex items-center gap-3">
@@ -92,6 +96,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
     </div>
 
@@ -109,6 +114,7 @@
                 <p class="text-muted text-[13px]">No add-ons yet.</p>
             </div>
         @else
+            <div class="table-scroll">
             <table class="w-full data-table">
                 <thead>
                     <tr>
@@ -126,8 +132,8 @@
                                     <p class="text-label text-[12px] leading-tight mt-0.5">{{ $addon->description }}</p>
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 text-ink font-semibold">R{{ number_format((float) $addon->price, 2) }}</td>
-                            <td class="px-6 py-3.5 text-right">
+                            <td class="px-6 py-3.5 text-ink font-semibold" data-label="Price">R{{ number_format((float) $addon->price, 2) }}</td>
+                            <td class="px-6 py-3.5 text-right td-actions">
                                 <div class="flex items-center justify-end gap-4">
                                     <a href="{{ route('admin.service-addons.edit', $addon) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">Edit</a>
                                     <button type="button" @click="confirmOpen = true" class="text-rose-500 font-semibold hover:opacity-70 transition-opacity">Delete</button>
@@ -136,10 +142,10 @@
 
                             <template x-teleport="body">
                                 <div x-show="confirmOpen" x-cloak
-                                     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                                     class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4"
                                      style="background:rgba(8,29,58,0.45);"
                                      @click.self="confirmOpen = false">
-                                    <div class="bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
+                                    <div class="ios-sheet-panel bg-white rounded-2xl p-6 w-full max-w-sm" style="box-shadow:0 20px 50px -12px rgba(0,0,0,0.4);">
                                         <h3 class="font-bold text-[16px] text-ink mb-2">Remove this add-on?</h3>
                                         <p class="text-muted text-[13px] mb-5">{{ $addon->label }}. This can't be undone.</p>
                                         <div class="flex items-center gap-3">
@@ -161,6 +167,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
     </div>
 

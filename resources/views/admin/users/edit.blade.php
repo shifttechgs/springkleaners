@@ -1,5 +1,7 @@
 @extends('admin.layout')
 @section('title', 'Edit User')
+@section('back', route('admin.users.index'))
+@section('backLabel', 'Users')
 @section('content')
 
     @include('admin.settings._tabs')
