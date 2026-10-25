@@ -14,7 +14,7 @@
     {{-- Greeting header --}}
     <div class="flex items-center justify-between mb-3 flex-shrink-0 flex-wrap gap-2">
         <div class="flex items-baseline gap-x-2 gap-y-1 flex-wrap">
-            <h1 class="text-[19px] font-extrabold tracking-tight leading-none">
+            <h1 class="dash-greeting text-[19px] font-extrabold tracking-tight leading-none">
                 Good {{ now()->hour < 12 ? 'morning' : (now()->hour < 17 ? 'afternoon' : 'evening') }}, {{ explode(' ', auth()->user()->name)[0] }}
             </h1>
             <span class="text-muted text-[12px]"><span class="max-lg:hidden">&middot; </span>{{ now()->format('l, d F Y') }}<span class="lg:hidden"> &middot; Updated {{ now()->format('H:i') }}</span></span>

@@ -143,7 +143,15 @@ table.data-table td.td-swipe { display: none; }
     }
     .ios-back svg { width: 12px; height: 21px; flex-shrink: 0; }
     .ios-back span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-    .ios-back:active, .ios-nav-btn:active, .ios-text-btn:active { opacity: 0.4; }
+    /* Top-level pages: app icon + name in the left slot; the name fades out when the centred title appears */
+    .ios-brand { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 10px; }
+    .ios-brand img { width: 30px; height: 30px; border-radius: 7px; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
+    .ios-brand span {
+        font-size: 15px; font-weight: 700; letter-spacing: -0.02em; color: #081d3a;
+        transition: opacity .2s ease;
+    }
+    .ios-brand span.is-hidden { opacity: 0; }
+    .ios-back:active, .ios-brand:active, .ios-nav-btn:active, .ios-text-btn:active { opacity: 0.4; }
     .ios-nav-btn { display: grid; place-items: center; width: 44px; height: 44px; color: #081d3a; }
     .ios-text-btn { color: #081d3a; font-size: 17px; min-height: 44px; padding: 0 4px; }
 
@@ -151,6 +159,7 @@ table.data-table td.td-swipe { display: none; }
        #646d7e is ~5.2:1 on white and ~4.9:1 on the canvas (the desktop label grey is ~3:1). */
     :root { --color-label: #646d7e; }
     #admin-content h1 { font-size: 30px; font-weight: 700; line-height: 1.12; letter-spacing: -0.025em; }
+    #admin-content h1.dash-greeting { font-size: 22px; letter-spacing: -0.02em; } /* greeting, not a page title */
     #admin-content p:has(+ h1) { display: none; } /* eyebrow labels ("Pipeline") above titles */
     #admin-content .uppercase { text-transform: none; letter-spacing: -0.01em; }
     #admin-content .uppercase.text-\[10px\], #admin-content .uppercase.text-\[11px\], #admin-content .uppercase.text-\[9\.5px\] { font-size: 13px; }

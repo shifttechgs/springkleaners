@@ -119,6 +119,11 @@
                                 <svg viewBox="0 0 12 21" aria-hidden="true"><path d="M10.5 1.5l-9 9 9 9" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 <span>@yield('backLabel', 'Back')</span>
                             </a>
+                        @else
+                            <a href="{{ route('admin.dashboard') }}" class="ios-brand" aria-label="SpringKleaners admin home">
+                                <img src="/images/fav-180.png" alt="" width="30" height="30">
+                                <span :class="(scrolled || !largeTitle) && 'is-hidden'">SpringKleaners</span>
+                            </a>
                         @endif
                     </div>
                     <p class="ios-bar-title" :class="(scrolled || !largeTitle) && 'is-visible'">
