@@ -1,20 +1,36 @@
 @extends('admin.layout')
 @section('title', 'Services')
 @section('navAction')
-    <a href="{{ route('admin.services.create') }}" class="ios-nav-btn" aria-label="Add service"><svg class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></a>
+    @if ($tab === 'addons')
+        <a href="{{ route('admin.service-addons.create') }}" class="ios-nav-btn" aria-label="Add add-on"><svg class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></a>
+    @else
+        <a href="{{ route('admin.services.create') }}" class="ios-nav-btn" aria-label="Add service"><svg class="h-[22px] w-[22px]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></a>
+    @endif
 @endsection
 @section('content')
 
-    <div class="flex items-start justify-between mb-8 flex-wrap gap-4">
+    <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
         <div>
             <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">Pricing</p>
             <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Services</h1>
         </div>
-        <a href="{{ route('admin.services.create') }}" class="btn-primary max-lg:hidden!">
+        <a href="{{ $tab === 'addons' ? route('admin.service-addons.create') : route('admin.services.create') }}" class="btn-primary max-lg:hidden!">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-            Add Service
+            {{ $tab === 'addons' ? 'Add Add-on' : 'Add Service' }}
         </a>
     </div>
+
+    {{-- Two tabs so the page stays short: main services, and the add-on extras. --}}
+    <nav class="flex gap-1 p-1 mb-6 bg-white border border-line rounded-xl w-full sm:w-fit" aria-label="Services sections">
+        @foreach (['services' => ['Main services', $services->total()], 'addons' => ['Add-ons', $addons->total()]] as $key => [$label, $count])
+            <a href="{{ route('admin.services.index', $key === 'services' ? [] : ['tab' => $key]) }}"
+               @if ($tab === $key) aria-current="page" @endif
+               class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold transition-colors {{ $tab === $key ? 'bg-navy text-white' : 'text-muted hover:text-ink hover:bg-canvas' }}">
+                {{ $label }}
+                <span class="text-[11.5px] font-bold px-1.5 py-0.5 rounded-md {{ $tab === $key ? 'bg-white/15 text-white' : 'bg-canvas text-label' }}">{{ $count }}</span>
+            </a>
+        @endforeach
+    </nav>
 
     @if (session('status'))
         <div class="mb-6 px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-700 text-[13px] font-medium">
@@ -28,7 +44,8 @@
         </div>
     @endif
 
-    <div class="card overflow-hidden mb-8">
+    @if ($tab === 'services')
+    <div class="card overflow-hidden">
         @if ($services->isEmpty())
             <div class="px-6 py-14 text-center">
                 <p class="text-muted text-[13px]">No services yet.</p>
@@ -105,14 +122,8 @@
         @endif
     </div>
 
-    <div id="addons" class="scroll-mt-6 flex items-start justify-between mb-4 flex-wrap gap-4">
-        <h2 class="font-bold text-[16px] tracking-tight">Add-ons</h2>
-        <a href="{{ route('admin.service-addons.create') }}" class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-            Add Add-on
-        </a>
-    </div>
-
+    @else
+    <p class="text-label text-[12.5px] mb-4">Optional extras customers can add when they book. Fill in "Priced per" (e.g. window) to let them choose how many.</p>
     <div class="card overflow-hidden">
         @if ($addons->isEmpty())
             <div class="px-6 py-14 text-center">
@@ -180,5 +191,6 @@
             @endif
         @endif
     </div>
+    @endif
 
 @endsection

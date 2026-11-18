@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Support\AdminPagination;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ClientController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $clients = Client::query()
             ->withCount('bookings')
@@ -19,8 +21,12 @@ class ClientController extends Controller
                 $q->where(fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('phone_raw', 'like', "%{$search}%"));
             })
             ->orderByDesc('created_at')
-            ->paginate(20)
+            ->paginate(AdminPagination::PER_PAGE)
             ->withQueryString();
+
+        if ($redirect = AdminPagination::pastEnd($request, $clients)) {
+            return $redirect;
+        }
 
         return view('admin.clients.index', [
             'clients' => $clients,
@@ -66,9 +72,13 @@ class ClientController extends Controller
         })->values());
     }
 
-    public function show(Client $client): View
+    public function show(Request $request, Client $client): View|RedirectResponse
     {
-        $bookings = $client->bookings()->orderByDesc('date')->get();
+        $bookings = $client->bookings()->orderByDesc('date')->orderByDesc('id')->paginate(AdminPagination::PER_PAGE)->withQueryString();
+
+        if ($redirect = AdminPagination::pastEnd($request, $bookings)) {
+            return $redirect;
+        }
 
         return view('admin.clients.show', [
             'client' => $client,

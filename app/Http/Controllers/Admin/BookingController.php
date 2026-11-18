@@ -8,6 +8,7 @@ use App\Mail\BookingConfirmationMail;
 use App\Mail\ThankYouMail;
 use App\Models\Booking;
 use App\Models\Client;
+use App\Support\AdminPagination;
 use App\Support\QuoteExpiry;
 use App\Support\Services;
 use App\Support\ServiceSnapshot;
@@ -22,7 +23,7 @@ use Illuminate\View\View;
 
 class BookingController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         QuoteExpiry::sweep();
 
@@ -36,8 +37,12 @@ class BookingController extends Controller
             })
             ->orderByDesc('date')
             ->orderByDesc('id')
-            ->paginate(20)
+            ->paginate(AdminPagination::PER_PAGE)
             ->withQueryString();
+
+        if ($redirect = AdminPagination::pastEnd($request, $bookings)) {
+            return $redirect;
+        }
 
         return view('admin.bookings.index', [
             'bookings' => $bookings,

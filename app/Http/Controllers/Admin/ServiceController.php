@@ -5,33 +5,28 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\ServiceAddon;
+use App\Support\AdminPagination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
-    public const PER_PAGE = 10;
+    public const PER_PAGE = AdminPagination::PER_PAGE;
 
     public function index(Request $request): View|RedirectResponse
     {
-        // Two lists on one screen, so each pages on its own query key and keeps the other's page in the links.
+        // Two tabs: main services and add-ons. Each list pages on its own query key; links keep the tab.
+        $tab = $request->query('tab') === 'addons' ? 'addons' : 'services';
+
         $services = Service::orderBy('sort_order')->orderBy('id')->paginate(self::PER_PAGE, ['*'], 'services_page')->withQueryString();
-        $addons = ServiceAddon::orderBy('sort_order')->orderBy('id')->paginate(self::PER_PAGE, ['*'], 'addons_page')->withQueryString()->fragment('addons');
+        $addons = ServiceAddon::orderBy('sort_order')->orderBy('id')->paginate(self::PER_PAGE, ['*'], 'addons_page')->withQueryString();
 
-        // Past the last page (e.g. after deleting its only item): go to the last page that has rows.
-        $fixes = [];
-        if ($services->isEmpty() && $services->currentPage() > 1) {
-            $fixes['services_page'] = max(1, $services->lastPage());
-        }
-        if ($addons->isEmpty() && $addons->currentPage() > 1) {
-            $fixes['addons_page'] = max(1, $addons->lastPage());
-        }
-        if ($fixes) {
-            return redirect()->route('admin.services.index', [...$request->query(), ...$fixes]);
+        if ($redirect = AdminPagination::pastEnd($request, $services, $addons)) {
+            return $redirect;
         }
 
-        return view('admin.services.index', ['services' => $services, 'addons' => $addons]);
+        return view('admin.services.index', ['services' => $services, 'addons' => $addons, 'tab' => $tab]);
     }
 
     public function create(): View

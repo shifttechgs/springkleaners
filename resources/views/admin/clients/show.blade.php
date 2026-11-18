@@ -58,6 +58,11 @@
                 </tbody>
             </table>
             </div>
+            @if ($bookings->hasPages())
+            <div class="px-6 py-4 border-t border-line">
+                {{ $bookings->links() }}
+            </div>
+            @endif
         @endif
     </div>
 

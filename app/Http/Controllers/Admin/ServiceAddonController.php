@@ -19,7 +19,7 @@ class ServiceAddonController extends Controller
     {
         ServiceAddon::create($this->validated($request));
 
-        return redirect()->route('admin.services.index')->with('status', 'Add-on added.');
+        return redirect()->route('admin.services.index', ['tab' => 'addons'])->with('status', 'Add-on added.');
     }
 
     public function edit(ServiceAddon $serviceAddon): View
@@ -31,7 +31,7 @@ class ServiceAddonController extends Controller
     {
         $serviceAddon->update($this->validated($request, $serviceAddon));
 
-        return redirect()->route('admin.services.index')->with('status', 'Add-on updated.');
+        return redirect()->route('admin.services.index', ['tab' => 'addons'])->with('status', 'Add-on updated.');
     }
 
     public function destroy(ServiceAddon $serviceAddon): RedirectResponse

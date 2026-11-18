@@ -7,6 +7,7 @@ use App\Enums\ExpenseCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Expense;
+use App\Support\AdminPagination;
 use App\Support\Distance;
 use App\Support\Setting;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +17,7 @@ use Illuminate\View\View;
 
 class ExpenseController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $filtered = fn () => Expense::query()
             ->when($request->filled('category'), fn ($q) => $q->where('category', $request->query('category')))
@@ -31,10 +32,14 @@ class ExpenseController extends Controller
             ->with('booking')
             ->orderByDesc('date')
             ->orderByDesc('id')
-            ->paginate(20)
+            ->paginate(AdminPagination::PER_PAGE)
             ->withQueryString();
 
         $totalForFilter = $filtered()->sum('amount');
+
+        if ($redirect = AdminPagination::pastEnd($request, $expenses)) {
+            return $redirect;
+        }
 
         return view('admin.expenses.index', [
             'expenses' => $expenses,

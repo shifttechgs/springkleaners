@@ -6,6 +6,7 @@ use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceMail;
 use App\Models\Booking;
+use App\Support\AdminPagination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -58,7 +59,7 @@ class InvoiceController extends Controller
         return back()->with('status', 'Invoice emailed to '.$booking->client->email.'.');
     }
 
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $filtered = fn () => Booking::query()
             ->whereNotNull('invoice_number')
@@ -72,13 +73,17 @@ class InvoiceController extends Controller
 
         $invoices = $filtered()
             ->orderByDesc('invoiced_at')
-            ->paginate(20)
+            ->paginate(AdminPagination::PER_PAGE)
             ->withQueryString();
 
         $outstanding = $filtered()
             ->where('payment_status', PaymentStatus::Unpaid)
             ->get()
             ->sum(fn (Booking $b) => (float) ($b->quoted_price ?? $b->total ?? 0) - ($b->deposit_paid_at ? (float) ($b->deposit_amount ?? 0) : 0));
+
+        if ($redirect = AdminPagination::pastEnd($request, $invoices)) {
+            return $redirect;
+        }
 
         return view('admin.invoices.index', [
             'invoices' => $invoices,

@@ -40,10 +40,37 @@ class ServicesScreenTest extends TestCase
         $this->assertCount(Service::count() - ServiceController::PER_PAGE, $services->items());
         $this->assertCount(ServiceAddon::count() - ServiceController::PER_PAGE, $addons->items());
 
-        // Each list's links keep the other list's page, and add-on links jump back to the add-ons table.
+        // Each list's links keep the other list's page.
         $this->assertStringContainsString('addons_page=2', $services->url(1));
         $this->assertStringContainsString('services_page=2', $addons->url(1));
-        $this->assertStringEndsWith('#addons', $addons->url(1));
+    }
+
+    public function test_services_and_addons_are_on_separate_tabs(): void
+    {
+        $admin = $this->admin();
+
+        $main = $this->actingAs($admin)->get('/admin/services')->assertOk();
+        $main->assertSee('Deep Cleaning')->assertDontSee('Windows (inside &amp; out)', false)->assertSee('Add Service');
+        $this->assertSame('services', $main->viewData('tab'));
+
+        $extras = $this->actingAs($admin)->get('/admin/services?tab=addons')->assertOk();
+        $extras->assertSee('Windows (inside &amp; out)', false)->assertDontSee('deep-cleaning')->assertSee('Add Add-on');
+        $this->assertSame('addons', $extras->viewData('tab'));
+
+        // Paging inside the add-ons tab stays on the add-ons tab.
+        $this->addAddons(ServiceController::PER_PAGE);
+        $this->assertStringContainsString('tab=addons', $this->actingAs($admin)->get('/admin/services?tab=addons')->viewData('addons')->url(2));
+    }
+
+    public function test_saving_an_addon_returns_to_the_addons_tab(): void
+    {
+        $addon = ServiceAddon::where('key', 'balcony')->sole();
+
+        $this->actingAs($this->admin())
+            ->put(route('admin.service-addons.update', $addon), ['key' => 'balcony', 'label' => 'Balcony / patio', 'price' => 175, 'sort_order' => $addon->sort_order])
+            ->assertRedirect(route('admin.services.index', ['tab' => 'addons']));
+
+        $this->assertEquals(175, $addon->fresh()->price);
     }
 
     public function test_every_row_is_rendered_across_the_pages(): void

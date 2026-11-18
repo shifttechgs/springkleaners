@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Mail\UserInvitationMail;
 use App\Models\User;
+use App\Support\AdminPagination;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,11 +18,15 @@ use Throwable;
 
 class UserController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View|RedirectResponse
     {
-        return view('admin.users.index', [
-            'users' => User::query()->orderBy('name')->get(),
-        ]);
+        $users = User::query()->orderBy('name')->orderBy('id')->paginate(AdminPagination::PER_PAGE)->withQueryString();
+
+        if ($redirect = AdminPagination::pastEnd($request, $users)) {
+            return $redirect;
+        }
+
+        return view('admin.users.index', ['users' => $users]);
     }
 
     public function create(): View
