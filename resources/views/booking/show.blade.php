@@ -225,7 +225,9 @@
         dateKey(d) { return this.dateISO(new Date(this.calYear, this.calMonth, d)); },
         bookedCount(d) { return this.availability[this.dateKey(d)] || 0; },
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
-        isSelectable(d) { return !!d && !this.isPast(d) && !this.isFull(d); },
+        bookableDays: @json(\App\Models\Booking::BOOKABLE_DAYS),
+        isClosedDay(d) { return !!d && !this.bookableDays.includes(new Date(this.calYear, this.calMonth, d).getDay()); },
+        isSelectable(d) { return !!d && !this.isPast(d) && !this.isClosedDay(d) && !this.isFull(d); },
         isTimeTaken(t) {
             if (!this.selectedDate) return false;
             return (this.bookedTimes[this.dateISO(this.selectedDate)] || []).includes(t);
@@ -238,6 +240,10 @@
         nextMonth() { this.calMonth++; if (this.calMonth > 11) { this.calMonth = 0; this.calYear++; } this.fetchAvailability(); },
         pickDate(d) {
             if (!d || this.isPast(d)) return;
+            if (this.isClosedDay(d)) {
+                this.dateError = 'We only take bookings on Saturdays and Sundays — please choose a weekend date.';
+                return;
+            }
             if (this.isFull(d)) {
                 this.dateError = 'That date already has ' + this.bookedCount(d) + '/' + this.capacity + ' clients booked — please choose another date.';
                 return;
@@ -345,7 +351,11 @@
             .then(({ ok, json }) => {
                 this.checkingDate = false;
                 if (!ok || json.status !== 'ok') {
-                    if (json.status === 'time_taken') {
+                    if (json.status === 'invalid_day') {
+                        this.dateError = 'We only take bookings on Saturdays and Sundays — please choose a weekend date.';
+                        this.selectedDate = null;
+                        this.selectedTime = null;
+                    } else if (json.status === 'time_taken') {
                         this.dateError = 'That time slot was just taken — please pick another.';
                         this.selectedTime = null;
                     } else {
@@ -663,7 +673,7 @@
                 {{-- ── STEP 2: SCHEDULE ── --}}
                 <div x-show="step === 2" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Choose your date &amp; time</h2>
-                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We clean every day of the week, with {{ \App\Models\Booking::DAILY_CAPACITY }} client slots per day — pick a date below.</p>
+                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We currently take bookings on Saturdays and Sundays, with {{ \App\Models\Booking::DAILY_CAPACITY }} client slots per day — pick a weekend date below.</p>
 
                     <div x-show="nextAvailable && !isNextAvailableAlreadySelected" x-cloak
                          class="flex items-center justify-between gap-3 bg-[#f8f9fc] border border-[#e8eaf0] rounded-xl px-4 py-3 mb-6">
@@ -715,7 +725,7 @@
                                                 'cal-full': d && !isPast(d) && isFull(d),
                                                 'cal-selected': isSelected(d)
                                              }"
-                                             :title="d && !isPast(d) && isFull(d) ? 'Fully booked' : ''"
+                                             :title="d && !isPast(d) && isClosedDay(d) ? 'Weekends only' : (d && !isPast(d) && isFull(d) ? 'Fully booked' : '')"
                                              x-text="d"></div>
                                     </div>
                                 </template>

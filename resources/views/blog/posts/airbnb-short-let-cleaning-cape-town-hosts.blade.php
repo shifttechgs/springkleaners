@@ -14,7 +14,7 @@
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">Scheduling around guest changeovers</h2>
 <p class="text-muted text-[15.5px] leading-[1.85] mb-5">
-    We schedule turnovers every day of the week, so whether your guests follow the classic Friday-in/Sunday-out pattern common to weekend-getaway short-lets along the Blaauwberg coast (Big Bay, Blouberg and Bloubergstrand especially) or check in and out mid-week, we can match your booking calendar.
+    We currently schedule turnovers on Saturdays and Sundays, which fits the classic Friday-in/Sunday-out pattern common to weekend-getaway short-lets along the Blaauwberg coast (Big Bay, Blouberg and Bloubergstrand especially).
 </p>
 
 <x-blog.callout label="What to check before you book a cleaner for your listing">
@@ -29,7 +29,7 @@
 <x-blog.cta heading="From R900 per turnover" text="2 bed/1 bath included, +R100 per extra bedroom. Book online." />
 
 <x-blog.faq :items="[
-    ['q' => 'Can you turn a property around the same day a guest checks out?', 'a' => 'Yes — we schedule turnovers every day of the week, so same-day changeovers work whether your guests follow the classic Friday-in/Sunday-out weekend pattern or check in and out mid-week.'],
+    ['q' => 'Can you turn a property around the same day a guest checks out?', 'a' => 'Yes, on weekends — we currently schedule turnovers on Saturdays and Sundays, so same-day changeovers work well for the classic Friday-in/Sunday-out weekend pattern.'],
     ['q' => 'What if something is damaged or missing after a guest checks out?', 'a' => 'We do a quick check during every turnover and report anything damaged, missing, or left behind, so you can follow up with the guest or platform before the next booking arrives.'],
 ]" />
 

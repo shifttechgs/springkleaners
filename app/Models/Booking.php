@@ -12,6 +12,17 @@ class Booking extends Model
 {
     public const DAILY_CAPACITY = 2;
 
+    /**
+     * Days of the week we take bookings on (Carbon dayOfWeek: 0 = Sunday … 6 = Saturday).
+     * Currently weekends only. Add 1–5 back to reopen weekdays.
+     */
+    public const BOOKABLE_DAYS = [6, 0];
+
+    public static function isBookableDay(\DateTimeInterface $date): bool
+    {
+        return in_array((int) $date->format('w'), self::BOOKABLE_DAYS, true);
+    }
+
     protected $fillable = [
         'client_id', 'service', 'date', 'time', 'name', 'phone', 'address', 'suburb',
         'property_type', 'bedrooms', 'bathrooms', 'extra_rooms', 'last_cleaned',

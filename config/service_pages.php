@@ -272,7 +272,7 @@ return [
         'label' => 'Airbnb & Short-Let Turnover Cleaning',
         'h1_line1' => 'Airbnb & Short-Let',
         'h1_line2' => 'Turnover Cleaning',
-        'intro' => 'A faster, tighter-scope clean built for the gap between one guest leaving and the next arriving — beds stripped and remade, bathrooms reset, kitchen cleared, and the space left photo-ready for your listing. We schedule turnovers every day of the week, so whether your guests follow the classic Friday-in/Sunday-out weekend-getaway pattern or check in and out mid-week, we can match your calendar in Big Bay, Blouberg and Bloubergstrand.',
+        'intro' => 'A faster, tighter-scope clean built for the gap between one guest leaving and the next arriving — beds stripped and remade, bathrooms reset, kitchen cleared, and the space left photo-ready for your listing. We currently schedule turnovers on Saturdays and Sundays, which suits the classic Friday-in/Sunday-out weekend-getaway pattern in Big Bay, Blouberg and Bloubergstrand.',
         'included' => [
             'Beds stripped, linen changed & remade',
             'Bathrooms fully reset & restocked',
@@ -286,7 +286,7 @@ return [
         'hero_image' => '/images/works/service-pages/airbnb-turnover-cleaning.avif',
         'hero_alt' => 'SpringKleaners team member wiping down kitchen cabinets',
         'faqs' => [
-            ['q' => 'Can you turn a property around the same day a guest checks out?', 'a' => 'Yes — we schedule turnovers every day of the week, so same-day changeovers work whether your guests follow the classic Friday-in/Sunday-out weekend pattern or check in and out mid-week.'],
+            ['q' => 'Can you turn a property around the same day a guest checks out?', 'a' => 'Yes, on weekends — we currently schedule turnovers on Saturdays and Sundays, so same-day changeovers work well for the classic Friday-in/Sunday-out weekend pattern.'],
             ['q' => 'What if something is damaged or missing after a guest checks out?', 'a' => 'We do a quick check during every turnover and report anything damaged, missing, or left behind, so you can follow up with the guest or platform before the next booking arrives.'],
             ['q' => 'Do you supply fresh linen, or do we?', 'a' => 'We strip, launder-ready and remake with whatever linen and towels you supply on-site. If you\'d like us to help coordinate a linen rotation, ask us when booking.'],
             ['q' => 'What\'s the price based on?', 'a' => 'From R900 per turnover for a studio or 1-bedroom unit, plus R100 for each additional bedroom. Larger short-lets are quoted the same way as our other bedroom-based services.'],

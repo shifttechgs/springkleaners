@@ -56,6 +56,7 @@ class BookingController extends Controller
             'counts' => $counts,
             'times' => $times,
             'capacity' => Booking::DAILY_CAPACITY,
+            'bookable_days' => Booking::BOOKABLE_DAYS,
             'next_available' => $this->nextAvailableDate(),
         ]);
     }
@@ -94,7 +95,7 @@ class BookingController extends Controller
 
         $date = Carbon::parse($data['date']);
 
-        if ($date->startOfDay()->lt(now()->startOfDay())) {
+        if ($date->startOfDay()->lt(now()->startOfDay()) || ! Booking::isBookableDay($date)) {
             return response()->json(['status' => 'invalid_day'], 422);
         }
 
@@ -181,6 +182,12 @@ class BookingController extends Controller
         $date = now()->startOfDay();
 
         for ($i = 0; $i < 120; $i++) {
+            if (! Booking::isBookableDay($date)) {
+                $date->addDay();
+
+                continue;
+            }
+
             $count = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->count();
             if ($count < Booking::DAILY_CAPACITY) {
                 return $date->toDateString();

@@ -22,7 +22,7 @@
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">Scheduling around a working office</h2>
 <p class="text-muted text-[15.5px] leading-[1.85] mb-5">
-    Most office contracts are scheduled over weekends or before/after business hours, so cleaning never overlaps with a working day. We schedule every day of the week, so if your business needs a different weekday slot, just message us and we'll fit it in.
+    Most office contracts are scheduled over weekends or before/after business hours, so cleaning never overlaps with a working day. We currently take bookings on Saturdays and Sundays, which keeps cleaning clear of your working week.
 </p>
 
 <x-blog.cta heading="Get a custom office cleaning quote" text="Free walkthrough, fixed quote before we start." />

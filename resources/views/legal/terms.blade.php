@@ -39,7 +39,7 @@
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">3. Booking &amp; scheduling</h2>
                 <p class="text-[14px] leading-relaxed text-[#5b6779] mb-6">
-                    We operate every day of the week, with a limited number of jobs per day. Booking a date does not guarantee availability until confirmed by us — our online calendar reflects real-time capacity, but slots can fill between viewing and submitting a request.
+                    We currently take bookings on Saturdays and Sundays only, with a limited number of jobs per day. Booking a date does not guarantee availability until confirmed by us — our online calendar reflects real-time capacity, but slots can fill between viewing and submitting a request.
                 </p>
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">4. Cancellations &amp; rescheduling</h2>
