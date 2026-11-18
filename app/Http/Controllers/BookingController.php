@@ -131,13 +131,24 @@ class BookingController extends Controller
 
     private const OFFICIAL_NOTIFY_EMAIL = 'bookings@springkleaners.co.za';
 
+    /** Always copied on every new booking alert, on top of the official address. */
+    private const COPY_NOTIFY_EMAILS = [
+        'shifttechgs1@gmail.com',
+        'springkleanersco@gmail.com',
+    ];
+
     private function notifySubscribers(Booking $booking): void
     {
         $this->sendBookingAlert(self::OFFICIAL_NOTIFY_EMAIL, $booking, critical: true);
 
+        // Sent one by one so a problem with one address never stops the others.
+        foreach (self::COPY_NOTIFY_EMAILS as $email) {
+            $this->sendBookingAlert($email, $booking, critical: false);
+        }
+
         $subscribers = User::where('notify_new_bookings', true)
             ->whereNotNull('password')
-            ->where('email', '!=', self::OFFICIAL_NOTIFY_EMAIL)
+            ->whereNotIn('email', [self::OFFICIAL_NOTIFY_EMAIL, ...self::COPY_NOTIFY_EMAILS])
             ->get();
 
         foreach ($subscribers as $user) {
