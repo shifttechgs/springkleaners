@@ -53,8 +53,9 @@ class UpcomingJobsTest extends TestCase
         );
         $this->assertSame(4, $res->viewData('upcomingCount'));
 
+        // Past and completed jobs can still appear in the calendar's day tooltips; declined/expired never do.
         $res->assertSee('Pending Future')->assertSee('Today')
-            ->assertDontSee('Accepted Past')->assertDontSee('Completed Future')->assertDontSee('Declined Future')
+            ->assertDontSee('Declined Future')->assertDontSee('Expired Future')
             ->assertDontSee('No upcoming jobs on the schedule');
     }
 
@@ -63,6 +64,37 @@ class UpcomingJobsTest extends TestCase
         $this->booking('Accepted Past', now()->subDays(2)->toDateString(), BookingStatus::Accepted);
 
         $this->actingAs($this->admin)->get(route('admin.dashboard'))->assertOk()->assertSee('No upcoming jobs on the schedule');
+    }
+
+    public function test_calendar_marks_upcoming_jobs_by_slot_with_details(): void
+    {
+        $this->travelTo(now()->startOfMonth()->addDays(1)); // keep $day inside the month being viewed
+        $day = now()->addDays(3)->toDateString();
+
+        $this->booking('Morning Client', $day, BookingStatus::Accepted, Booking::MORNING_SLOT);
+        $this->booking('Afternoon Client', $day, BookingStatus::Pending, Booking::AFTERNOON_SLOT);
+        $this->booking('Gone Client', $day, BookingStatus::Declined, Booking::AFTERNOON_SLOT);
+
+        $res = $this->actingAs($this->admin)->get(route('admin.dashboard'))->assertOk();
+        $cell = $res->viewData('calendarDays')[$day];
+
+        $this->assertTrue($cell['upcoming']);
+        $this->assertFalse($cell['allConfirmed'], 'One job is still awaiting');
+        $this->assertSame(['confirmed', 'waiting'], [$cell['slots']['am']['tone'], $cell['slots']['pm']['tone']]);
+        $this->assertSame(['Morning Client', 'Afternoon Client'], array_column($cell['jobs'], 'name'), 'Declined bookings are left off');
+
+        $res->assertSee('Morning Client · Accepted', false)->assertSee('Next job:');
+    }
+
+    public function test_calendar_month_switching_is_safe(): void
+    {
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-01-31 10:00'));
+
+        // On the 31st, asking for February must show February (not overflow into March).
+        $this->actingAs($this->admin)->get(route('admin.dashboard', ['month' => '2026-02']))->assertOk()->assertSee('February 2026');
+
+        // Bad input falls back to the current month instead of an error.
+        $this->actingAs($this->admin)->get(route('admin.dashboard', ['month' => 'nonsense']))->assertOk()->assertSee('January 2026');
     }
 
     public function test_view_all_lists_upcoming_jobs_in_date_order(): void

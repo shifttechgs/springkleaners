@@ -100,15 +100,13 @@ class DashboardController extends Controller
             })
             ->values();
 
-        $calendarMonth = $request->filled('month')
-            ? Carbon::createFromFormat('Y-m', $request->query('month'))->startOfMonth()
-            : now()->startOfMonth();
-
+        $calendarMonth = $this->calendarMonth($request->query('month'));
         $calendarDays = $this->calendarDays($calendarMonth);
 
         return view('admin.dashboard', [
             'calendarMonth' => $calendarMonth,
             'calendarDays' => $calendarDays,
+            'nextJob' => $upcomingJobs->first(),
             'monthRevenue' => $monthRevenue,
             'revenueTrend' => $revenueTrend,
             'revenueHistory' => $revenueHistory,
@@ -149,29 +147,57 @@ class DashboardController extends Controller
     }
 
     /**
-     * @return array<string, array{accepted: int, other: int}>
+     * The month shown on the dashboard calendar (?month=YYYY-MM). "!" pins the day to the 1st — without it,
+     * on the 29th–31st a short month like February overflows into March. Bad input falls back to this month.
+     */
+    private function calendarMonth(?string $month): Carbon
+    {
+        if (is_string($month) && preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+            return Carbon::createFromFormat('!Y-m', $month)->startOfMonth();
+        }
+
+        return now()->startOfMonth();
+    }
+
+    /**
+     * Jobs per day for the dashboard calendar, split into the two slots so each day can show which are taken.
+     * Declined and expired bookings don't hold a slot, so they're left off.
+     *
+     * @return array<string, array{upcoming: bool, allConfirmed: bool, slots: array{am: ?array, pm: ?array}, jobs: array<int, array{name: string, time: string, status: string, tone: string}>}>
      */
     private function calendarDays(Carbon $month): array
     {
         $bookings = Booking::whereBetween('date', [
             $month->copy()->startOfMonth()->toDateString(),
             $month->copy()->endOfMonth()->toDateString(),
-        ])->get(['date', 'status']);
+        ])
+            ->whereIn('status', BookingStatus::occupyingSlot())
+            ->orderByRaw("CASE WHEN time LIKE '%AM%' THEN 0 ELSE 1 END")
+            ->orderBy('time')
+            ->get(['id', 'date', 'time', 'status', 'name']);
 
+        $today = now()->toDateString();
         $days = [];
 
         foreach ($bookings as $booking) {
-            if ($booking->status === BookingStatus::Declined || $booking->status === BookingStatus::Expired) {
-                continue;
-            }
-
             $key = $booking->date->toDateString();
-            $days[$key] ??= ['accepted' => 0, 'other' => 0];
+            $days[$key] ??= ['upcoming' => $key >= $today, 'allConfirmed' => true, 'slots' => ['am' => null, 'pm' => null], 'jobs' => []];
 
-            if ($booking->status === BookingStatus::Accepted || $booking->status === BookingStatus::Completed) {
-                $days[$key]['accepted']++;
-            } else {
-                $days[$key]['other']++;
+            // green = confirmed, amber = waiting on a quote or the client, grey = done
+            $tone = match ($booking->status) {
+                BookingStatus::Accepted => 'confirmed',
+                BookingStatus::Completed => 'done',
+                default => 'waiting',
+            };
+
+            $job = ['name' => $booking->name, 'time' => $booking->time, 'status' => $booking->status->label(), 'tone' => $tone];
+            $days[$key]['jobs'][] = $job;
+
+            $slot = Booking::slotFor($booking->time) === Booking::MORNING_SLOT ? 'am' : 'pm';
+            $days[$key]['slots'][$slot] ??= $job;
+
+            if ($tone === 'waiting') {
+                $days[$key]['allConfirmed'] = false;
             }
         }
 

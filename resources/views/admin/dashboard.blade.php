@@ -270,6 +270,23 @@
                 </div>
             </div>
 
+            {{-- The next job on the schedule, even when it's in another month. --}}
+            <div class="mb-2 flex-shrink-0 text-[11.5px] max-lg:text-[13px] truncate">
+                @if ($nextJob)
+                    @php
+                        $nextInView = $nextJob->date->format('Y-m') === $calendarMonth->format('Y-m');
+                    @endphp
+                    <span class="text-label">Next job:</span>
+                    <a href="{{ $nextInView ? route('admin.bookings.show', $nextJob) : route('admin.dashboard', ['month' => $nextJob->date->format('Y-m')]) }}"
+                       class="font-semibold text-navy hover:opacity-70 transition-opacity">
+                        {{ $nextJob->date->isToday() ? 'Today' : ($nextJob->date->isTomorrow() ? 'Tomorrow' : $nextJob->date->format('D j M')) }}
+                        &middot; {{ $nextJob->name }}@unless ($nextInView) &rarr;@endunless
+                    </a>
+                @else
+                    <span class="text-label">No upcoming jobs.</span>
+                @endif
+            </div>
+
             <div class="grid grid-cols-7 gap-0.5 mb-1 flex-shrink-0">
                 @foreach (['S', 'M', 'T', 'W', 'T', 'F', 'S'] as $i => $label)
                     <div class="text-center text-label text-[9.5px] max-lg:text-[11px] font-semibold uppercase" style="{{ $i === 0 || $i === 6 ? 'color:#081d3a;' : '' }}">{{ $label }}</div>
@@ -291,17 +308,26 @@
                     @endphp
 
                     @if ($dayData)
+                        @php
+                            $tones = ['confirmed' => '#12b76a', 'waiting' => '#f79009', 'done' => '#98a2b3'];
+                            $tip = $cellDate->format('D j M').":\n".collect($dayData['jobs'])->map(fn ($j) => $j['time'].' · '.$j['name'].' · '.$j['status'])->implode("\n");
+                            $cellBg = $isToday ? '#081d3a' : ($dayData['upcoming'] ? ($dayData['allConfirmed'] ? '#e7f8ef' : '#fff4e0') : '#f6f7fa');
+                            $cellRing = $isToday ? '' : ($dayData['upcoming'] ? ($dayData['allConfirmed'] ? 'box-shadow: inset 0 0 0 1px #a6e9c6;' : 'box-shadow: inset 0 0 0 1px #fbd38d;') : '');
+                        @endphp
                         <a href="{{ route('admin.bookings.index', ['date' => $dateStr]) }}"
-                           class="rounded-md flex flex-col items-center justify-center relative hover:ring-2 transition-all"
-                           style="{{ $isToday ? 'background:#081d3a; color:#fff;' : ($isWeekend ? 'background:rgba(246,227,4,0.12);' : 'background:#f6f7fa;') }} {{ $isToday ? '' : 'ring-color:#081d3a;' }}">
-                            <span class="text-[11px] max-lg:text-[14px] font-semibold {{ $isToday ? 'text-white' : 'text-ink' }}">{{ $day }}</span>
-                            <span class="flex gap-0.5">
-                                @if ($dayData['accepted'] > 0)
-                                    <span class="w-1 h-1 rounded-full" style="background:{{ $isToday ? '#f6e304' : '#12b76a' }};"></span>
-                                @endif
-                                @if ($dayData['other'] > 0)
-                                    <span class="w-1 h-1 rounded-full" style="background:{{ $isToday ? '#fff' : '#f79009' }};"></span>
-                                @endif
+                           title="{{ $tip }}" aria-label="{{ str_replace("\n", ', ', $tip) }}"
+                           class="rounded-md flex flex-col items-center justify-center gap-[3px] relative hover:ring-2 hover:ring-navy transition-all {{ $dayData['upcoming'] || $isToday ? '' : 'opacity-70' }}"
+                           style="background:{{ $cellBg }}; {{ $cellRing }}">
+                            <span class="text-[11px] max-lg:text-[14px] font-semibold leading-none {{ $isToday ? 'text-white' : 'text-ink' }}">{{ $day }}</span>
+                            {{-- Two bars: morning slot | afternoon slot. Empty = free. --}}
+                            <span class="flex gap-[2px]" aria-hidden="true">
+                                @foreach (['am', 'pm'] as $slotKey)
+                                    @php
+                                        $slotJob = $dayData['slots'][$slotKey];
+                                    @endphp
+                                    <span class="block h-[3px] max-lg:h-[4px] w-[9px] max-lg:w-[12px] rounded-full"
+                                          style="background:{{ $slotJob ? ($isToday ? ($slotJob['tone'] === 'confirmed' ? '#f6e304' : '#ffffff') : $tones[$slotJob['tone']]) : ($isToday ? 'rgba(255,255,255,0.25)' : '#e4e7ec') }};"></span>
+                                @endforeach
                             </span>
                         </a>
                     @else
@@ -313,15 +339,11 @@
                 @endfor
             </div>
 
-            <div class="flex items-center gap-3 mt-2 pt-2 border-t border-line flex-shrink-0">
-                <div class="flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    <span class="text-label text-[10.5px]">Confirmed</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    <span class="text-label text-[10.5px]">Pending/quoted</span>
-                </div>
+            <div class="flex items-center flex-wrap gap-x-3 gap-y-1 mt-2 pt-2 border-t border-line flex-shrink-0 text-label text-[10.5px] max-lg:text-[12px]">
+                <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#12b76a;"></span>Confirmed</span>
+                <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#f79009;"></span>Awaiting</span>
+                <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#98a2b3;"></span>Done</span>
+                <span class="ml-auto">Bars: AM | PM</span>
             </div>
         </div>
 
