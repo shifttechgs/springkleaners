@@ -152,7 +152,9 @@
             </header>
 
             <div id="admin-content" class="flex-1 lg:min-h-0 lg:overflow-y-auto overscroll-contain @yield('contentPadding', 'px-4 py-5 sm:px-6 sm:py-7 lg:px-10 lg:py-9')">
-                <div class="w-full h-full flex flex-col">
+                {{-- Pages grow with their content and the panel scrolls. A page that should fill exactly one screen
+                     (the dashboard) sets contentHeight to 'h-full'; with that, long pages would get squashed and cut off. --}}
+                <div class="w-full @yield('contentHeight', 'min-h-full') flex flex-col">
                     @if (session('status'))
                         <div class="mb-6 px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-700 text-[13px] font-medium flex items-center gap-2 flex-shrink-0">
                             <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>

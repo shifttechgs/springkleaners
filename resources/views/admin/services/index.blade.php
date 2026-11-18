@@ -97,10 +97,15 @@
                 </tbody>
             </table>
             </div>
+            @if ($services->hasPages())
+            <div class="px-6 py-4 border-t border-line">
+                {{ $services->links() }}
+            </div>
+            @endif
         @endif
     </div>
 
-    <div class="flex items-start justify-between mb-4 flex-wrap gap-4">
+    <div id="addons" class="scroll-mt-6 flex items-start justify-between mb-4 flex-wrap gap-4">
         <h2 class="font-bold text-[16px] tracking-tight">Add-ons</h2>
         <a href="{{ route('admin.service-addons.create') }}" class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
@@ -168,6 +173,11 @@
                 </tbody>
             </table>
             </div>
+            @if ($addons->hasPages())
+            <div class="px-6 py-4 border-t border-line">
+                {{ $addons->links() }}
+            </div>
+            @endif
         @endif
     </div>
 

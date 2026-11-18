@@ -11,12 +11,27 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
-    public function index(): View
+    public const PER_PAGE = 10;
+
+    public function index(Request $request): View|RedirectResponse
     {
-        return view('admin.services.index', [
-            'services' => Service::orderBy('sort_order')->get(),
-            'addons' => ServiceAddon::orderBy('sort_order')->get(),
-        ]);
+        // Two lists on one screen, so each pages on its own query key and keeps the other's page in the links.
+        $services = Service::orderBy('sort_order')->orderBy('id')->paginate(self::PER_PAGE, ['*'], 'services_page')->withQueryString();
+        $addons = ServiceAddon::orderBy('sort_order')->orderBy('id')->paginate(self::PER_PAGE, ['*'], 'addons_page')->withQueryString()->fragment('addons');
+
+        // Past the last page (e.g. after deleting its only item): go to the last page that has rows.
+        $fixes = [];
+        if ($services->isEmpty() && $services->currentPage() > 1) {
+            $fixes['services_page'] = max(1, $services->lastPage());
+        }
+        if ($addons->isEmpty() && $addons->currentPage() > 1) {
+            $fixes['addons_page'] = max(1, $addons->lastPage());
+        }
+        if ($fixes) {
+            return redirect()->route('admin.services.index', [...$request->query(), ...$fixes]);
+        }
+
+        return view('admin.services.index', ['services' => $services, 'addons' => $addons]);
     }
 
     public function create(): View
