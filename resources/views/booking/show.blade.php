@@ -82,6 +82,11 @@
     .cal-disabled { color: #d5d9e2; cursor: not-allowed; }
     .cal-disabled.cal-full { background: #fef2f2; color: #fca5a5; }
     .cal-selected { background: #081d3a; color: #fff; }
+    .cal-cell { flex-direction: column; gap: 2px; }
+    .cal-pill {
+        font-size: 7.5px; font-weight: 700; line-height: 1; letter-spacing: 0.02em; text-transform: uppercase;
+        padding: 2px 4px; border-radius: 999px; background: #f0f2f7; color: #8a94a6;
+    }
 
     .time-slot {
         padding: 11px 8px; border-radius: 10px; border: 1.5px solid #e8eaf0; text-align: center;
@@ -241,7 +246,7 @@
         pickDate(d) {
             if (!d || this.isPast(d)) return;
             if (this.isClosedDay(d)) {
-                this.dateError = 'We only take bookings on Saturdays and Sundays — please choose a weekend date.';
+                this.dateError = 'That date is booked — please choose a Saturday or Sunday.';
                 return;
             }
             if (this.isFull(d)) {
@@ -725,8 +730,10 @@
                                                 'cal-full': d && !isPast(d) && isFull(d),
                                                 'cal-selected': isSelected(d)
                                              }"
-                                             :title="d && !isPast(d) && isClosedDay(d) ? 'Weekends only' : (d && !isPast(d) && isFull(d) ? 'Fully booked' : '')"
-                                             x-text="d"></div>
+                                             :title="d && !isPast(d) && isClosedDay(d) ? 'Booked' : (d && !isPast(d) && isFull(d) ? 'Fully booked' : '')">
+                                            <span x-text="d"></span>
+                                            <span x-show="d && !isPast(d) && isClosedDay(d)" class="cal-pill">Booked</span>
+                                        </div>
                                     </div>
                                 </template>
                             </div>
