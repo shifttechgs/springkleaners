@@ -48,6 +48,13 @@
             </div>
 
             <div>
+                <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Priced per <span class="normal-case font-normal text-label">(optional)</span></label>
+                <input type="text" name="unit_label" value="{{ old('unit_label', $addon->unit_label) }}" placeholder="e.g. window, panel"
+                       class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                <p class="text-label text-[11.5px] mt-1.5">Leave empty for a one-off price. Fill in (e.g. "window") and customers choose how many, at this price each.</p>
+            </div>
+
+            <div>
                 <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Description <span class="normal-case font-normal text-label">(optional)</span></label>
                 <input type="text" name="description" value="{{ old('description', $addon->description) }}"
                        class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">

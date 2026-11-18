@@ -79,12 +79,14 @@ class QuotePricing
         }
 
         foreach ($snapshot['addons'] as $addon) {
+            $qty = max(1, (int) ($addon['qty'] ?? 1));
+
             $items[] = [
-                'description' => $addon['label'],
+                'description' => $addon['label'].(filled($addon['unit_label'] ?? null) ? ' (per '.$addon['unit_label'].')' : ''),
                 'note' => $addon['description'] ?? null,
-                'qty' => 1,
+                'qty' => $qty,
                 'unit_price' => (float) $addon['price'],
-                'total' => (float) $addon['price'],
+                'total' => $qty * (float) $addon['price'],
             ];
         }
 

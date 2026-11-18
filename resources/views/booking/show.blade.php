@@ -148,6 +148,20 @@
             else { this.form.floorTypes.push(type); }
         },
         selectedAddons: [],
+        addonQty: {},
+        addonOf(key) { return this.addonsList.find(a => a.key === key) },
+        isUnitAddon(key) { const a = this.addonOf(key); return !!(a && a.unit); },
+        qtyOf(key) { return this.addonQty[key] || 1 },
+        addonCost(key) { const a = this.addonOf(key); return a ? a.price * (a.unit ? this.qtyOf(key) : 1) : 0 },
+        addonLineLabel(key) { const a = this.addonOf(key); if (!a) return ''; return a.unit ? a.label + ' × ' + this.qtyOf(key) : a.label },
+        addonPriceLabel(a) { return '+R' + a.price + (a.unit ? ' / ' + a.unit : '') },
+        setQty(key, value) {
+            const q = Math.max(0, Math.min(200, parseInt(value, 10) || 0));
+            if (q < 1) { this.selectedAddons = this.selectedAddons.filter(k => k !== key); delete this.addonQty[key]; return; }
+            this.addonQty[key] = q;
+            if (!this.selectedAddons.includes(key)) this.selectedAddons.push(key);
+        },
+        get unitAddonQuantities() { const out = {}; this.selectedAddons.forEach(k => { if (this.isUnitAddon(k)) out[k] = this.qtyOf(k); }); return out },
         bookingType: 'once-off', frequency: 'Weekly',
         calMonth: (new Date()).getMonth(), calYear: (new Date()).getFullYear(),
         selectedDate: null, selectedTime: null,
@@ -188,13 +202,13 @@
         get extraBedroomCost() { return Math.max(0, this.bedroomCount - this.service.included_bedrooms) * this.service.bedroom_price },
         get extraBathroomCost() { return Math.max(0, this.bathroomCount - this.service.included_bathrooms) * this.service.bathroom_price },
         get extraRoomsCost() { return this.extraRoomsCount * this.service.extra_room_price },
-        get addonsCost() { return this.selectedAddons.reduce((sum, key) => { const a = this.addonsList.find(x => x.key === key); return sum + (a ? a.price : 0); }, 0) },
+        get addonsCost() { return this.selectedAddons.reduce((sum, key) => sum + this.addonCost(key), 0) },
         get subtotal() { return this.service.base_price + this.extraBedroomCost + this.extraBathroomCost + this.extraRoomsCost + this.addonsCost },
         get total() { return this.subtotal + this.service.service_fee },
 
         toggleAddon(key) {
             if (this.selectedAddons.includes(key)) { this.selectedAddons = this.selectedAddons.filter(k => k !== key); }
-            else { this.selectedAddons.push(key); }
+            else { this.selectedAddons.push(key); if (this.isUnitAddon(key)) this.addonQty[key] = this.addonQty[key] || 1; }
         },
 
         filterSuburbs() {
@@ -352,6 +366,7 @@
                     access_instructions: this.form.accessInstructions,
                     parking: this.form.parking,
                     addons: this.selectedAddons,
+                    addon_quantities: this.unitAddonQuantities,
                     booking_type: this.bookingType,
                     frequency: this.bookingType === 'recurring' ? this.frequency : null,
                     subtotal: this.subtotal,
@@ -653,9 +668,16 @@
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between gap-2">
                                             <span class="text-[#081d3a] font-bold text-[13.5px]" x-text="addon.label"></span>
-                                            <span class="text-[#081d3a] font-bold text-[13px] flex-shrink-0" x-text="'+R' + addon.price"></span>
+                                            <span class="text-[#081d3a] font-bold text-[13px] flex-shrink-0" x-text="addonPriceLabel(addon)"></span>
                                         </div>
                                         <p class="text-[#8a94a6] text-[12px] mt-0.5" x-text="addon.desc"></p>
+                                        <div x-show="addon.unit && selectedAddons.includes(addon.key)" x-cloak @click.stop class="flex items-center gap-2 mt-2.5">
+                                            <button type="button" @click="setQty(addon.key, qtyOf(addon.key) - 1)" class="w-8 h-8 rounded-lg border border-[#dbe0ea] bg-white text-[#081d3a] font-bold text-[16px] leading-none hover:border-[#081d3a]" :aria-label="'Fewer ' + addon.unit + 's'">−</button>
+                                            <input type="number" min="1" max="200" inputmode="numeric" :value="qtyOf(addon.key)" @change="setQty(addon.key, $event.target.value)"
+                                                   class="w-14 text-center border border-[#dbe0ea] rounded-lg py-1.5 text-[13px] font-bold text-[#081d3a] focus:outline-none focus:border-[#081d3a]" :aria-label="'Number of ' + addon.unit + 's'">
+                                            <button type="button" @click="setQty(addon.key, qtyOf(addon.key) + 1)" class="w-8 h-8 rounded-lg border border-[#dbe0ea] bg-white text-[#081d3a] font-bold text-[16px] leading-none hover:border-[#081d3a]" :aria-label="'More ' + addon.unit + 's'">+</button>
+                                            <span class="text-[12px] text-[#5b6779]" x-text="addon.unit + (qtyOf(addon.key) === 1 ? '' : 's') + ' = R' + addonCost(addon.key)"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -839,8 +861,8 @@
                             <ul x-show="selectedAddons.length > 0" class="space-y-1.5">
                                 <template x-for="key in selectedAddons" :key="key">
                                     <li class="flex items-center justify-between text-[13.5px]">
-                                        <span class="text-[#081d3a]" x-text="addonsList.find(a => a.key === key)?.label"></span>
-                                        <span class="text-[#081d3a] font-semibold" x-text="'+R' + addonsList.find(a => a.key === key)?.price"></span>
+                                        <span class="text-[#081d3a]" x-text="addonLineLabel(key)"></span>
+                                        <span class="text-[#081d3a] font-semibold" x-text="'+R' + addonCost(key)"></span>
                                     </li>
                                 </template>
                             </ul>
@@ -923,8 +945,8 @@
                             </div>
                             <template x-for="key in selectedAddons" :key="key">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-[#5b6779]" x-text="addonsList.find(a => a.key === key)?.label"></span>
-                                    <span class="text-[#081d3a] font-semibold" x-text="'R' + addonsList.find(a => a.key === key)?.price"></span>
+                                    <span class="text-[#5b6779]" x-text="addonLineLabel(key)"></span>
+                                    <span class="text-[#081d3a] font-semibold" x-text="'R' + addonCost(key)"></span>
                                 </div>
                             </template>
                             <div class="flex items-center justify-between">

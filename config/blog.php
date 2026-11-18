@@ -5,7 +5,7 @@ return [
         [
             'slug' => 'window-cleaning-cost-cape-town',
             'title' => 'How Much Does Window Cleaning Cost in Cape Town? Pricing & the Salt-Residue Problem',
-            'excerpt' => 'From R1,400 per property or R40 per pane — how window cleaning pricing works, and why coastal homes in Bloubergstrand, Big Bay and Table View need it far more often.',
+            'excerpt' => 'R50 per window and R80 per glass door panel — how window cleaning pricing works, and why coastal homes in Bloubergstrand, Big Bay and Table View need it far more often.',
             'category' => 'Tips',
             'cover' => '/images/works/blog/window-cleaning-cost-cape-town.avif',
             'cover_alt' => 'Sparkling balcony glass with a view of Table Mountain from an apartment we cleaned',

@@ -248,7 +248,7 @@ class StructuredDataTest extends TestCase
         return [
             'carpet-cleaning' => ['carpet-cleaning', 950],
             'upholstery-cleaning' => ['upholstery-cleaning', 800],
-            'window-cleaning' => ['window-cleaning', 1400],
+            'window-cleaning' => ['window-cleaning', 50],
         ];
     }
 

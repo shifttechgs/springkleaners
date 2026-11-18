@@ -232,7 +232,7 @@ return [
 
     'window-cleaning' => [
         'meta_title' => 'Window Cleaning Cape Town | Northern Suburbs | SpringKleaners',
-        'meta_description' => 'Interior & exterior window cleaning across Cape Town\'s Northern Suburbs. Streak-free glass, frames & tracks, from R1,400 per property or R40 per pane.',
+        'meta_description' => 'Interior & exterior window cleaning across Cape Town\'s Northern Suburbs. Streak-free glass, frames & tracks: R50 per window inside & out, R80 per glass door panel.',
         'label' => 'Window Cleaning',
         'h1_line1' => 'Window Cleaning',
         'h1_line2' => 'in Cape Town\'s Northern Suburbs',
@@ -250,16 +250,16 @@ return [
         'hero_image' => '/images/works/service-pages/window-cleaning.avif',
         'hero_alt' => 'SpringKleaners team member cleaning a large window',
         'pricing_mode' => 'quote',
-        'pricing_headline' => 'R1,400',
-        'pricing_unit' => 'per property (typical home)',
+        'pricing_headline' => 'R50',
+        'pricing_unit' => 'per window (inside & out)',
         'pricing_notes' => [
-            'From R1,400 for a typical full property clean',
-            'Smaller jobs: R40/pane ground floor, R75/pane upper floor',
-            'Custom quote for large or multi-storey properties',
+            'R50 per window, cleaned inside and out',
+            'R80 per panel for folding / stacking glass doors',
+            'R80 per panel for sliding glass doors',
         ],
         'cta_label' => 'Request a Quote',
         'faqs' => [
-            ['q' => 'How is window cleaning priced?', 'a' => 'A typical home runs from R1,400 for a full interior-and-exterior clean. For smaller jobs, we quote R40 per pane on the ground floor and R75 per pane upstairs. Large or multi-storey properties get a custom quote after a walkthrough.'],
+            ['q' => 'How is window cleaning priced?', 'a' => 'R50 per window, cleaned inside and out, and R80 per glass panel for folding/stacking doors and sliding doors. For example, 12 windows and a 4-panel sliding door comes to R920. Add them as extras when you book a clean online, or request a quote for a windows-only job.'],
             ['q' => 'Do you clean upper-floor windows safely?', 'a' => 'Yes, accessible upper floors are cleaned with an extension pole system from the ground or an internal-access point. For properties needing rope access or scaffolding, we\'ll quote that separately with the right safety equipment.'],
             ['q' => 'Can you get rid of salt residue and hard water marks?', 'a' => 'Yes — salt residue from sea air is one of the most common issues we treat in Bloubergstrand, Big Bay and Table View, along with hard water marks and built-up grime in window tracks.'],
             ['q' => 'Do you clean window frames and tracks too, or just the glass?', 'a' => 'Both. Tracks are cleared of sand and grit before we wash the glass, and frames and sills are wiped down as standard — a clean pane in a gritty track doesn\'t actually solve the problem.'],

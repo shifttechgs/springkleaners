@@ -90,11 +90,15 @@ class BookingController extends Controller
             'parking' => 'nullable|string|max:255',
             'addons' => 'nullable|array',
             'addons.*' => 'string|max:50',
+            'addon_quantities' => 'nullable|array',
+            'addon_quantities.*' => 'nullable|integer|min:0|max:200',
             'booking_type' => 'nullable|string|max:20',
             'frequency' => 'nullable|string|max:50',
             'subtotal' => 'nullable|numeric',
             'total' => 'nullable|numeric',
         ]);
+
+        $data = [...$data, ...Services::normaliseAddonSelection($data['addons'] ?? [], $data['addon_quantities'] ?? [])];
 
         $date = Carbon::parse($data['date']);
 

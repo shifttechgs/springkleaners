@@ -18,13 +18,18 @@ class ServiceSnapshot
         $service = Services::find($booking->service) ?? [];
         $addonsList = collect(Services::addons());
 
+        $quantities = $booking->addon_quantities ?? [];
+
         $addons = collect($booking->addons ?? [])
             ->map(fn ($key) => $addonsList->firstWhere('key', $key))
             ->filter()
             ->map(fn ($addon) => [
                 'key' => $addon['key'],
                 'label' => $addon['label'],
+                // Per-item add-ons keep the unit price here; qty says how many were booked.
                 'price' => (float) $addon['price'],
+                'unit_label' => $addon['unit'] ?? null,
+                'qty' => filled($addon['unit'] ?? null) ? max(1, (int) ($quantities[$addon['key']] ?? 1)) : 1,
                 'description' => $addon['desc'] ?? null,
             ])
             ->values()

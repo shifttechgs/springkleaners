@@ -132,7 +132,7 @@
                                     <p class="text-label text-[12px] leading-tight mt-0.5">{{ $addon->description }}</p>
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 text-ink font-semibold" data-label="Price">R{{ number_format((float) $addon->price, 2) }}</td>
+                            <td class="px-6 py-3.5 text-ink font-semibold" data-label="Price">R{{ number_format((float) $addon->price, 2) }}@if ($addon->unit_label) <span class="text-label font-normal">/ {{ $addon->unit_label }}</span>@endif</td>
                             <td class="px-6 py-3.5 text-right td-actions">
                                 <div class="flex items-center justify-end gap-4">
                                     <a href="{{ route('admin.service-addons.edit', $addon) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">Edit</a>

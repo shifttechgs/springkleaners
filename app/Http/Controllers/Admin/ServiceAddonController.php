@@ -47,6 +47,7 @@ class ServiceAddonController extends Controller
             'key' => 'required|alpha_dash|max:100|unique:service_addons,key'.($addon ? ','.$addon->id : ''),
             'label' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'unit_label' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
         ]);

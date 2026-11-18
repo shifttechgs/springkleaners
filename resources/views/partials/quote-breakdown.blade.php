@@ -86,7 +86,14 @@
                                 <span class="text-[#5b6779] text-[12px] block mt-0.5">{{ $addon['description'] }}</span>
                             @endif
                         </span>
-                        <span class="text-[#5b6779] whitespace-nowrap">+R{{ number_format($addon['price']) }}</span>
+                        @php($qty = max(1, (int) ($addon['qty'] ?? 1)))
+                        <span class="text-[#5b6779] whitespace-nowrap">
+                            @if (filled($addon['unit_label'] ?? null))
+                                {{ $qty }} × R{{ number_format($addon['price']) }} = +R{{ number_format($qty * $addon['price']) }}
+                            @else
+                                +R{{ number_format($addon['price']) }}
+                            @endif
+                        </span>
                     </li>
                 @endforeach
             </ul>
