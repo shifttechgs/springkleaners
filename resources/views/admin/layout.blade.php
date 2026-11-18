@@ -121,7 +121,7 @@
                             </a>
                         @else
                             <a href="{{ route('admin.dashboard') }}" class="ios-brand" aria-label="SpringKleaners admin home">
-                                <img src="/images/fav-180.png" alt="" width="30" height="30">
+                                <img src="/images/fav-180.png" alt="" width="36" height="36">
                                 <span :class="(scrolled || !largeTitle) && 'is-hidden'">SpringKleaners</span>
                             </a>
                         @endif

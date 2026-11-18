@@ -145,7 +145,7 @@ table.data-table td.td-swipe { display: none; }
     .ios-back span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     /* Top-level pages: app icon + name in the left slot; the name fades out when the centred title appears */
     .ios-brand { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 10px; }
-    .ios-brand img { width: 30px; height: 30px; border-radius: 7px; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
+    .ios-brand img { width: 36px; height: 36px; border-radius: 8px; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12); }
     .ios-brand span {
         font-size: 15px; font-weight: 700; letter-spacing: -0.02em; color: #081d3a;
         transition: opacity .2s ease;
