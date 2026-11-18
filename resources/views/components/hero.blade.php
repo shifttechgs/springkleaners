@@ -21,11 +21,13 @@
     }
     // Hero slides: background photos that change with a striped reveal (see the hero slider script at the end).
     // `dim` is how much of the photo shows through on desktop, `dimMobile` on phones (lower = darker, for text contrast).
-    $heroSlides = [
-        ['name' => 'slide-kitchen', 'label' => 'Deep Cleaning', 'alt' => 'A spotless, deep-cleaned kitchen with a navy island', 'w' => 2560, 'h' => 1706, 'pos' => '40% center', 'dim' => 0.44, 'dimMobile' => 0.42],
-        ['name' => 'slide-movein', 'label' => 'Move-in Ready', 'alt' => 'A bright, move-in ready kitchen with white cabinets and a grey island', 'w' => 2560, 'h' => 1707, 'pos' => '45% center', 'dim' => 0.4, 'dimMobile' => 0.38],
-        ['name' => 'slide-postcon', 'label' => 'Post Construction', 'alt' => 'A mop bucket, broom and ladder outside a newly built house, ready for the post-construction clean', 'w' => 2560, 'h' => 1707, 'pos' => '60% center', 'dim' => 0.36, 'dimMobile' => 0.34],
-    ];
+    // Set `enabled` to false to hide a slide. With one slide left, the counter, thumbnails and pause button are hidden too.
+    $heroSlides = array_values(array_filter([
+        ['enabled' => true, 'name' => 'slide-kitchen', 'label' => 'Deep Cleaning', 'alt' => 'A spotless, deep-cleaned kitchen with a navy island', 'w' => 2560, 'h' => 1706, 'pos' => '40% center', 'dim' => 0.44, 'dimMobile' => 0.42],
+        ['enabled' => false, 'name' => 'slide-movein', 'label' => 'Move-in Ready', 'alt' => 'A bright, move-in ready kitchen with white cabinets and a grey island', 'w' => 2560, 'h' => 1707, 'pos' => '45% center', 'dim' => 0.4, 'dimMobile' => 0.38],
+        ['enabled' => false, 'name' => 'slide-postcon', 'label' => 'Post Construction', 'alt' => 'A mop bucket, broom and ladder outside a newly built house, ready for the post-construction clean', 'w' => 2560, 'h' => 1707, 'pos' => '60% center', 'dim' => 0.36, 'dimMobile' => 0.34],
+    ], fn (array $slide) => $slide['enabled']));
+    $heroHasSlideshow = count($heroSlides) > 1;
 @endphp
 <section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-10">
 
@@ -312,6 +314,7 @@
             <span class="hidden min-[400px]:inline font-medium text-white">Cape Town</span>
             <span class="hidden min-[400px]:inline h-3.5 w-px bg-white/35" aria-hidden="true"></span>
             <span class="hero-roll" data-hero-label>{{ $heroSlides[0]['label'] }}</span>
+            @if ($heroHasSlideshow)
             <span class="ml-2 sm:ml-4 flex items-center gap-3 tabular-nums" aria-hidden="true">
                 <span data-hero-count>01</span>
                 <span class="relative h-px w-12 overflow-hidden bg-white/25"><span class="hero-progress" data-hero-progress></span></span>
@@ -328,6 +331,7 @@
                     <svg class="hero-pause__icon-play h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
                 </button>
             </span>
+            @endif
         </div>
     </div>
 </section>
