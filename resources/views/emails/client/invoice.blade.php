@@ -49,6 +49,8 @@
                 </tr>
             </table>
 
+            @include('partials.banking-details-email')
+
             <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                     <td style="border-radius:10px; background:#f6e304;">

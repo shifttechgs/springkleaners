@@ -19,6 +19,8 @@ class CompanySettingController extends Controller
             'regNo' => Company::regNo(),
             'cell' => Company::cell(),
             'email' => Company::email(),
+            'accountHolder' => Company::accountHolder(),
+            'accountType' => Company::accountType(),
             'bankName' => Company::bankName(),
             'branchCode' => Company::branchCode(),
             'accountNo' => Company::accountNo(),
@@ -35,6 +37,8 @@ class CompanySettingController extends Controller
             'reg_no' => 'nullable|string|max:100',
             'cell' => 'required|string|max:50',
             'email' => 'required|email|max:255',
+            'account_holder' => 'required|string|max:150',
+            'account_type' => 'nullable|string|max:50',
             'bank_name' => 'required|string|max:100',
             'branch_code' => 'required|string|max:20',
             'account_no' => 'required|string|max:50',
@@ -47,6 +51,8 @@ class CompanySettingController extends Controller
         Setting::set('company_reg_no', $data['reg_no'] ?? '');
         Setting::set('company_cell', $data['cell']);
         Setting::set('company_email', $data['email']);
+        Setting::set('banking_account_holder', $data['account_holder']);
+        Setting::set('banking_account_type', $data['account_type'] ?? '');
         Setting::set('banking_bank_name', $data['bank_name']);
         Setting::set('banking_branch_code', $data['branch_code']);
         Setting::set('banking_account_no', $data['account_no']);

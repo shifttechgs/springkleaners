@@ -81,7 +81,18 @@
         <div class="card overflow-hidden mb-6">
             <div class="px-6 py-4 border-b border-line bg-canvas">
                 <p class="font-bold text-ink text-[13.5px]">Banking Details</p>
-                <p class="text-muted text-[12px] mt-0.5">Shown on quotes (for deposits) and invoices (for EFT payment).</p>
+                <p class="text-muted text-[12px] mt-0.5">Printed on every quote and invoice — PDFs, the client's online quote and invoice, and the invoice email.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 px-6 py-5 border-b border-line">
+                <div class="lg:col-span-2">
+                    <p class="font-semibold text-ink text-[13.5px]">Account holder</p>
+                    <p class="text-muted text-[12.5px] mt-1 max-w-lg">The name the account is in — what clients enter as the beneficiary.</p>
+                </div>
+                <div class="lg:col-span-1">
+                    <input type="text" name="account_holder" value="{{ old('account_holder', $accountHolder) }}" required
+                           class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 px-6 py-5 border-b border-line">
@@ -110,6 +121,17 @@
                 </div>
                 <div class="lg:col-span-1">
                     <input type="text" name="account_no" value="{{ old('account_no', $accountNo) }}" required
+                           class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 px-6 py-5 border-b border-line">
+                <div class="lg:col-span-2">
+                    <p class="font-semibold text-ink text-[13.5px]">Account type</p>
+                    <p class="text-muted text-[12.5px] mt-1 max-w-lg">Optional, e.g. Business cheque. Left off the documents when empty.</p>
+                </div>
+                <div class="lg:col-span-1">
+                    <input type="text" name="account_type" value="{{ old('account_type', $accountType) }}" placeholder="Optional"
                            class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
                 </div>
             </div>

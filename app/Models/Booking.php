@@ -72,7 +72,7 @@ class Booking extends Model
         'floor_types', 'pets', 'notes', 'access_instructions', 'parking',
         'addons', 'addon_quantities', 'service_snapshot', 'booking_type', 'frequency', 'subtotal', 'total',
         'status', 'quoted_price', 'admin_notes', 'accepted_token',
-        'quote_sent_at', 'accepted_at',
+        'quote_sent_at', 'accepted_at', 'quote_items', 'quote_edited_at',
         'invoice_number', 'invoiced_at', 'payment_status', 'payment_method', 'paid_at',
         'deposit_amount', 'deposit_paid_at', 'confirmation_sent_at', 'thank_you_sent_at',
     ];
@@ -89,6 +89,8 @@ class Booking extends Model
         'quoted_price' => 'decimal:2',
         'status' => BookingStatus::class,
         'quote_sent_at' => 'datetime',
+        'quote_items' => 'array',
+        'quote_edited_at' => 'datetime',
         'accepted_at' => 'datetime',
         'invoiced_at' => 'datetime',
         'payment_status' => PaymentStatus::class,

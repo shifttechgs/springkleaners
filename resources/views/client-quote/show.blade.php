@@ -29,8 +29,25 @@
                 </div>
             @endif
 
+            {{-- The price up front, so the decision and how to pay come before the long breakdown. --}}
+            @php($quoteTotal = (float) ($booking->quoted_price ?? $booking->total ?? 0))
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-                @include('partials.quote-breakdown', ['booking' => $booking])
+                <div class="flex items-end justify-between gap-4 flex-wrap">
+                    <div>
+                        <p class="text-[#5b6779] text-[11px] uppercase tracking-wider font-semibold">{{ $booking->quoted_price ? 'Quoted price' : 'Estimated total' }}</p>
+                        <p class="text-[#081d3a] font-extrabold text-[32px] leading-none mt-1">R{{ number_format($quoteTotal, 2) }}</p>
+                    </div>
+                    @if ($booking->deposit_amount > 0)
+                        <div class="text-right">
+                            <p class="text-[#5b6779] text-[11px] uppercase tracking-wider font-semibold">Deposit to secure your date</p>
+                            <p class="text-[#081d3a] font-bold text-[18px] mt-1">
+                                R{{ number_format((float) $booking->deposit_amount, 2) }}
+                                @if ($booking->deposit_paid_at)<span class="text-emerald-600 text-[13px] font-semibold"> · received</span>@endif
+                            </p>
+                        </div>
+                    @endif
+                </div>
+                <a href="#breakdown" class="inline-block mt-4 text-[#081d3a] text-[13px] font-semibold underline decoration-[#081d3a]/30 underline-offset-4 hover:decoration-[#081d3a]">See the full breakdown</a>
             </div>
 
             @if ($booking->invoice_number)
@@ -91,6 +108,16 @@
                     <p class="text-[#5b6779] text-[14px]">This quote has already been actioned.</p>
                 </div>
             @endif
+
+            @unless (in_array($booking->status->value, ['declined', 'expired'], true))
+                @include('partials.banking-details', ['intro' => $booking->deposit_amount > 0 && ! $booking->deposit_paid_at
+                    ? 'A deposit of R'.number_format((float) $booking->deposit_amount, 2).' secures your date. Pay by EFT into the account below.'
+                    : 'For EFT payment. You can also pay cash on the day.'])
+            @endunless
+
+            <div id="breakdown" class="mt-8 scroll-mt-28 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+                @include('partials.quote-breakdown', ['booking' => $booking])
+            </div>
 
         </div>
     </section>

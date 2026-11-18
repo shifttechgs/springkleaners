@@ -3,6 +3,8 @@
     $scope = \App\Support\ServiceSnapshot::for($booking);
     $selectedAddons = collect($scope['addons']);
     $floorTypes = collect($booking->floor_types ?? []);
+    // An admin-edited quote is its own list of lines; show those instead of the add-ons and estimate rows.
+    $customLines = \App\Support\QuotePricing::isCustom($booking) ? \App\Support\QuotePricing::lineItems($booking) : null;
 @endphp
 
 <div class="space-y-5">
@@ -74,6 +76,26 @@
         </div>
     </div>
 
+    @if ($customLines)
+    <div>
+        <p class="text-[#5b6779] text-[11px] uppercase tracking-wider font-semibold mb-2">Price breakdown</p>
+        <ul class="space-y-2.5">
+            @foreach ($customLines as $line)
+                <li class="flex items-start justify-between gap-4 text-[13px]">
+                    <span>
+                        <span class="text-[#081d3a] block">{{ $line['description'] }}</span>
+                        @if (filled($line['note']))
+                            <span class="text-[#5b6779] text-[12px] block mt-0.5">{{ $line['note'] }}</span>
+                        @endif
+                    </span>
+                    <span class="whitespace-nowrap {{ $line['total'] < 0 ? 'text-emerald-700' : 'text-[#5b6779]' }}">
+                        @if ($line['qty'] > 1){{ $line['qty'] }} × R{{ number_format($line['unit_price'], 2) }} = @endif{{ $line['total'] < 0 ? '−' : '' }}R{{ number_format(abs($line['total']), 2) }}
+                    </span>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+    @else
     <div>
         <p class="text-[#5b6779] text-[11px] uppercase tracking-wider font-semibold mb-2">Add-ons</p>
         @if ($selectedAddons->isNotEmpty())
@@ -101,6 +123,7 @@
             <p class="text-[#5b6779] text-[13px]">None selected</p>
         @endif
     </div>
+    @endif
 
     @if ($booking->notes || $booking->access_instructions || $booking->parking)
         <div class="pt-4 border-t border-gray-100 space-y-3 text-[13px]">
@@ -126,6 +149,7 @@
     @endif
 
     <div class="pt-4 border-t border-gray-100 space-y-1.5 text-[13px]">
+        @unless ($customLines)
         <div class="flex justify-between text-[#5b6779]">
             <span>Subtotal</span>
             <span>R{{ number_format((float) ($booking->subtotal ?? 0), 2) }}</span>
@@ -134,6 +158,7 @@
             <span>Service fee</span>
             <span>R{{ number_format((float) ($service['service_fee'] ?? 0), 2) }}</span>
         </div>
+        @endunless
         <div class="flex justify-between text-[#081d3a] font-bold text-[15px] pt-1.5">
             <span>{{ $booking->quoted_price ? 'Quoted Price' : 'Estimated Total' }}</span>
             <span>R{{ number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 2) }}</span>

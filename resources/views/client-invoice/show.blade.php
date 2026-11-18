@@ -29,7 +29,20 @@
                 $isPaid = $booking->payment_status->value === 'paid';
             @endphp
 
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+            {{-- Paying is the point of this page: amount + banking details first, the itemised breakdown after. --}}
+            @if ($isPaid)
+                <div class="bg-white rounded-2xl border border-emerald-100 p-6 sm:p-8 text-center">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h2 class="text-[#081d3a] font-bold text-[18px] mb-2">Paid in full</h2>
+                    <p class="text-[#5b6779] text-[14px]">Received {{ $booking->paid_at->format('d M Y') }}. Thank you for choosing {{ \App\Support\Company::name() }}!</p>
+                </div>
+            @else
+                @include('partials.banking-details', ['spacing' => '', 'intro' => 'Balance due: R'.number_format($balanceDue, 2).'. Pay by EFT into the account below, or pay cash on the day.'])
+            @endif
+
+            <div class="mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
                 @include('partials.quote-breakdown', ['booking' => $booking])
 
                 <div class="pt-4 mt-4 border-t border-gray-100 space-y-1.5 text-[13px]">
@@ -54,22 +67,7 @@
             </div>
 
             @if ($isPaid)
-                <div class="mt-8 bg-white rounded-2xl border border-emerald-100 p-6 sm:p-8 text-center">
-                    <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    </div>
-                    <h2 class="text-[#081d3a] font-bold text-[18px] mb-2">Paid in full</h2>
-                    <p class="text-[#5b6779] text-[14px]">Received {{ $booking->paid_at->format('d M Y') }}. Thank you for choosing {{ \App\Support\Company::name() }}!</p>
-                </div>
-            @else
-                <div class="mt-8 bg-white rounded-2xl border border-gray-100 p-6 sm:p-8">
-                    <h2 class="text-[#081d3a] font-bold text-[16px] mb-3">Payment Details</h2>
-                    <p class="text-[#5b6779] text-[14px] leading-relaxed">
-                        {{ \App\Support\Company::bankName() }} &middot; Branch Code {{ \App\Support\Company::branchCode() }} &middot; Account No {{ \App\Support\Company::accountNo() }}<br>
-                        {{ \App\Support\Company::referenceNote() }}<br>
-                        Or pay cash on the day.
-                    </p>
-                </div>
+                @include('partials.banking-details', ['intro' => 'For your records.', 'class' => 'opacity-90'])
             @endif
 
         </div>

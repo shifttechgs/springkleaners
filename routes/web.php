@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\InvoicePdfController;
 use App\Http\Controllers\Admin\NotificationPreferenceController;
 use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\QuoteEditorController;
 use App\Http\Controllers\Admin\QuotePdfController;
 use App\Http\Controllers\Admin\ResetPasswordController;
 use App\Http\Controllers\Admin\ServiceAddonController as AdminServiceAddonController;
@@ -163,6 +164,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}', [AdminBookingController::class, 'update'])->name('bookings.update');
     Route::post('/bookings/{booking}/send-quote', [AdminBookingController::class, 'sendQuote'])->name('bookings.send-quote');
+    Route::get('/bookings/{booking}/quote/edit', [QuoteEditorController::class, 'edit'])->name('bookings.quote.edit');
+    Route::put('/bookings/{booking}/quote', [QuoteEditorController::class, 'update'])->name('bookings.quote.update');
+    Route::delete('/bookings/{booking}/quote', [QuoteEditorController::class, 'reset'])->name('bookings.quote.reset');
     Route::get('/bookings/{booking}/quote-pdf', [QuotePdfController::class, 'download'])->name('bookings.quote-pdf');
     Route::get('/bookings/{booking}/quote-pdf/preview', [QuotePdfController::class, 'preview'])->name('bookings.quote-pdf.preview');
     Route::post('/bookings/{booking}/send-confirmation-email', [AdminBookingController::class, 'sendConfirmationEmail'])->name('bookings.send-confirmation-email');

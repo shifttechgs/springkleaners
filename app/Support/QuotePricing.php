@@ -23,6 +23,88 @@ class QuotePricing
      */
     public static function lineItems(Booking $booking): array
     {
+        if (static::isCustom($booking)) {
+            return array_map(fn (array $item) => static::line(
+                (string) ($item['description'] ?? ''),
+                $item['note'] ?? null,
+                (int) ($item['qty'] ?? 1),
+                (float) ($item['unit_price'] ?? 0),
+            ), $booking->quote_items);
+        }
+
+        return static::automaticLineItems($booking);
+    }
+
+    /** True when an admin has edited this quote's lines by hand. */
+    public static function isCustom(Booking $booking): bool
+    {
+        return ! empty($booking->quote_items);
+    }
+
+    /** Sum of a set of quote lines, rounded to cents. */
+    public static function total(array $items): float
+    {
+        return round(array_sum(array_map(fn (array $item) => (float) $item['total'], $items)), 2);
+    }
+
+    /** One quote line, with its total worked out and rounded to cents. */
+    public static function line(string $description, ?string $note, int $qty, float $unitPrice): array
+    {
+        return [
+            'description' => $description,
+            'note' => filled($note) ? $note : null,
+            'qty' => $qty,
+            'unit_price' => round($unitPrice, 2),
+            'total' => round($qty * $unitPrice, 2),
+        ];
+    }
+
+    /**
+     * The booking fields to save when an admin sets a final price directly (the quick "price" box rather than
+     * the line editor). The lines always have to add up to the price the client sees, so:
+     *  - a hand-edited quote keeps its own total (the lines are the price; edit them to change it);
+     *  - an automatic quote that is overridden gets its lines frozen plus a "Price adjustment" line for the gap.
+     *
+     * @return array{quoted_price: float, quote_items?: array<int, array>}
+     */
+    public static function priceOverride(Booking $booking, float $price): array
+    {
+        $lines = static::lineItems($booking);
+        $linesTotal = static::total($lines);
+
+        if (static::isCustom($booking)) {
+            return ['quoted_price' => $linesTotal];
+        }
+
+        $price = round($price, 2);
+
+        if (abs($price - $linesTotal) < 0.005) {
+            return ['quoted_price' => $price];
+        }
+
+        $lines[] = static::line('Price adjustment', 'Agreed change to the estimated price.', 1, $price - $linesTotal);
+
+        return ['quoted_price' => $price, 'quote_items' => static::storable($lines)];
+    }
+
+    /** Lines in the shape stored on the booking (totals are always recalculated, never trusted). */
+    public static function storable(array $lines): array
+    {
+        return array_values(array_map(fn (array $line) => [
+            'description' => $line['description'],
+            'note' => $line['note'] ?? null,
+            'qty' => (int) $line['qty'],
+            'unit_price' => round((float) $line['unit_price'], 2),
+        ], $lines));
+    }
+
+    /**
+     * The lines worked out from the service and add-on prices.
+     *
+     * @return array<int, array{description: string, note: ?string, qty: int, unit_price: float, total: float}>
+     */
+    public static function automaticLineItems(Booking $booking): array
+    {
         $service = Services::find($booking->service) ?? [];
         $snapshot = ServiceSnapshot::for($booking);
 

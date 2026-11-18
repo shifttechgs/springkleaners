@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Client;
 use App\Support\AdminPagination;
 use App\Support\QuoteExpiry;
+use App\Support\QuotePricing;
 use App\Support\Services;
 use App\Support\ServiceSnapshot;
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -189,6 +190,15 @@ class BookingController extends Controller
             }
         }
 
+        // The price has to match the quote lines the client sees (see QuotePricing::priceOverride).
+        if (filled($booking->invoice_number)) {
+            unset($data['quoted_price']); // invoiced: the billed amount is locked
+        } elseif (QuotePricing::isCustom($booking)) {
+            $data['quoted_price'] = QuotePricing::total(QuotePricing::lineItems($booking));
+        } elseif (isset($data['quoted_price']) && abs((float) $data['quoted_price'] - (float) $booking->quoted_price) >= 0.005) {
+            $data = [...$data, ...QuotePricing::priceOverride($booking, (float) $data['quoted_price'])];
+        }
+
         $booking->update($data);
 
         return back()->with('status', 'Booking updated.');
@@ -201,8 +211,19 @@ class BookingController extends Controller
             'deposit_amount' => 'nullable|numeric|min:0',
         ]);
 
+        if (filled($booking->invoice_number)) {
+            return back()->withErrors(['quote' => 'Invoice '.$booking->invoice_number.' has been issued for this job, so its quote is locked.']);
+        }
+
+        // A hand-edited quote keeps its own total; a typed price on an automatic quote adds an adjustment line.
+        $price = QuotePricing::priceOverride($booking, (float) $data['quoted_price']);
+
+        if (isset($data['deposit_amount']) && (float) $data['deposit_amount'] > $price['quoted_price']) {
+            return back()->withErrors(['deposit_amount' => 'The deposit can\'t be more than the quote total (R'.number_format($price['quoted_price'], 2).').']);
+        }
+
         $booking->update([
-            'quoted_price' => $data['quoted_price'],
+            ...$price,
             'deposit_amount' => $data['deposit_amount'] ?? null,
             'status' => BookingStatus::Quoted,
             'accepted_token' => $booking->accepted_token ?? (string) Str::uuid(),

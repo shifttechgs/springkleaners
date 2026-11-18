@@ -177,8 +177,13 @@
                     </div>
                     <div>
                         <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Quoted Price (R)</label>
-                        <input type="number" step="0.01" min="0" name="quoted_price" value="{{ $booking->quoted_price }}"
-                               class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                        @if ($booking->invoice_number || \App\Support\QuotePricing::isCustom($booking))
+                            <p class="text-ink text-[13px] font-semibold">R{{ number_format((float) $booking->quoted_price, 2) }}</p>
+                            <p class="text-label text-[11.5px] mt-0.5">{{ $booking->invoice_number ? 'Locked — invoice issued.' : 'Set by the quote lines.' }}</p>
+                        @else
+                            <input type="number" step="0.01" min="0" name="quoted_price" value="{{ $booking->quoted_price }}"
+                                   class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                        @endif
                     </div>
                     <div>
                         <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Admin Notes</label>
@@ -190,13 +195,36 @@
             </div>
 
             <div id="edit-quote" class="card p-4 sm:p-6 scroll-mt-20">
-                <h2 class="font-bold text-[14px] tracking-tight mb-1">Custom Quote Price</h2>
-                <p class="text-muted text-[12.5px] mb-4">Override the auto-estimated price before sending — the "Send Quote" button above uses this once set.</p>
+                <h2 class="font-bold text-[14px] tracking-tight mb-1">Quote</h2>
+                @php
+                    $quoteLines = \App\Support\QuotePricing::lineItems($booking);
+                    $quoteIsCustom = \App\Support\QuotePricing::isCustom($booking);
+                @endphp
+                @if ($errors->has('quote') || $errors->has('deposit_amount'))
+                    <p class="mb-3 px-3 py-2 bg-rose-50 border border-rose-100 rounded-lg text-rose-600 text-[12.5px] font-medium">{{ $errors->first('quote') ?: $errors->first('deposit_amount') }}</p>
+                @endif
+                <p class="text-muted text-[12.5px] mb-4">
+                    R{{ number_format(\App\Support\QuotePricing::total($quoteLines), 2) }} &middot; {{ count($quoteLines) }} {{ \Illuminate\Support\Str::plural('line', count($quoteLines)) }}
+                    &middot; {{ $quoteIsCustom ? 'edited'.($booking->quote_edited_at ? ' '.$booking->quote_edited_at->format('d M, H:i') : '') : 'automatic pricing' }}
+                </p>
+                @if ($booking->invoice_number)
+                    <p class="text-label text-[12.5px]">Locked — invoice {{ $booking->invoice_number }} has been issued for this job.</p>
+                @else
+                <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="btn-primary w-full justify-center mb-4">Edit quote, date &amp; time</a>
+                @if ($quoteIsCustom)
+                    <p class="text-label text-[12px] mb-3">The price comes from the edited lines. Change the lines to change the price.</p>
+                @else
+                    <p class="text-label text-[12px] mb-3">Or set a final price quickly — a "Price adjustment" line is added so the quote still adds up.</p>
+                @endif
                 <form method="POST" action="{{ route('admin.bookings.send-quote', $booking) }}" class="space-y-3">
                     @csrf
-                    <input type="number" step="0.01" min="0" name="quoted_price" placeholder="Final price (R)"
-                           value="{{ $booking->quoted_price ?? $booking->total }}" required
-                           class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                    @if ($quoteIsCustom)
+                        <input type="hidden" name="quoted_price" value="{{ \App\Support\QuotePricing::total($quoteLines) }}">
+                    @else
+                        <input type="number" step="0.01" min="0" name="quoted_price" placeholder="Final price (R)"
+                               value="{{ $booking->quoted_price ?? $booking->total }}" required
+                               class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+                    @endif
                     <div>
                         <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Deposit Required (R) <span class="normal-case font-normal text-label">(optional)</span></label>
                         <input type="number" step="0.01" min="0" name="deposit_amount" placeholder="Leave blank for no deposit"
@@ -204,9 +232,14 @@
                                class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
                     </div>
                     <button type="submit" class="btn-gold w-full justify-center">
-                        {{ $booking->accepted_token ? 'Update Price & Regenerate Link' : 'Set Price & Send Quote' }}
+                        @if ($quoteIsCustom)
+                            {{ $booking->accepted_token ? 'Save Deposit & Resend Quote' : 'Send Quote' }}
+                        @else
+                            {{ $booking->accepted_token ? 'Update Price & Regenerate Link' : 'Set Price & Send Quote' }}
+                        @endif
                     </button>
                 </form>
+                @endif
                 @if ($booking->deposit_amount > 0 && ! $booking->deposit_paid_at)
                     <form method="POST" action="{{ route('admin.invoices.mark-deposit-paid', $booking) }}" class="mt-3">
                         @csrf

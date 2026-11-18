@@ -6,7 +6,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-@page { margin: 0; }
+/* Every page gets the same top/bottom space; the brand bar and footer sit inside these margins. */
+@page { margin: 40px 0 64px 0; }
+/* dompdf reads the html element's margin as the page margin, and the * reset above zeroes it, so set it here too. */
+html { margin: 40px 0 64px 0; }
 
 body {
     font-family: DejaVu Sans, Arial, sans-serif;
@@ -16,9 +19,9 @@ body {
     line-height: 1.45;
 }
 
-.brand-bar { background: #081d3a; height: 5px; width: 100%; }
+.brand-bar { position: fixed; top: -40px; left: 0; right: 0; background: #081d3a; height: 5px; }
 
-.wrap { padding: 22px 42px 56px; }
+.wrap { padding: 0 42px; }
 
 /* ── Header ──────────────────────────────────────────────── */
 .hdr { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -261,9 +264,10 @@ body {
 /* ── Footer ──────────────────────────────────────────────── */
 .footer {
     position: fixed;
-    bottom: 0;
+    bottom: -64px;
     left: 0;
     right: 0;
+    height: 49px;
     padding: 9px 42px 12px;
     border-top: 1px solid #e5e7eb;
     text-align: center;
@@ -277,6 +281,19 @@ body {
 <body>
 
 <div class="brand-bar"></div>
+
+    {{-- Footer — fixed to the bottom of every page. It has to come before the content: DomPDF only repeats
+         fixed elements on pages from where they appear onward. --}}
+    <div class="footer">
+        <div class="footer-line">
+            <strong style="color:#6b7280;">{{ \App\Support\Company::name() }}</strong>
+            &nbsp;&middot;&nbsp;{{ \App\Support\Company::email() }}
+            &nbsp;&middot;&nbsp;{{ \App\Support\Company::cell() }}
+        </div>
+        <div class="footer-line" style="color:#d1d5db; margin-top:2px;">
+            Generated {{ now()->format('d M Y \a\t H:i') }}&nbsp;&middot;&nbsp;Computer generated document
+        </div>
+    </div>
 
 <div class="wrap">
 
@@ -371,6 +388,20 @@ body {
         </tr>
     </table>
 
+    {{-- Payment status --}}
+    @if ($booking->payment_status->value === 'paid')
+    <div class="paid-stamp">
+        PAID in full on {{ $booking->paid_at?->format('d M Y') }}
+        @if ($booking->payment_method) &middot; {{ ucfirst($booking->payment_method) }} @endif
+    </div>
+    @else
+    <div class="payment-card">
+        <strong>Payment Details</strong><br>
+        Pay by EFT into the account below, or pay cash on the day.
+    </div>
+    @endif
+    @include('partials.banking-details-pdf', ['intro' => $booking->payment_status->value === 'paid' ? null : 'balance due R '.number_format($balanceDue, 2)])
+
     {{-- Scope of work --}}
     <div class="scope-box">
         <div class="card-lbl">What This Service Covered</div>
@@ -407,21 +438,6 @@ body {
         </table>
     </div>
 
-    {{-- Payment status --}}
-    @if ($booking->payment_status->value === 'paid')
-    <div class="paid-stamp">
-        PAID in full on {{ $booking->paid_at?->format('d M Y') }}
-        @if ($booking->payment_method) &middot; {{ ucfirst($booking->payment_method) }} @endif
-    </div>
-    @else
-    <div class="payment-card">
-        <strong>Payment Details</strong><br>
-        {{ \App\Support\Company::bankName() }} &middot; Branch Code {{ \App\Support\Company::branchCode() }} &middot; Account No {{ \App\Support\Company::accountNo() }}<br>
-        {{ \App\Support\Company::referenceNote() }}<br>
-        Or pay cash on the day.
-    </div>
-    @endif
-
     {{-- Notes --}}
     @if($booking->notes || $booking->admin_notes)
     <div class="card-wrap">
@@ -437,18 +453,6 @@ body {
     <div class="card-wrap">
         <div class="notes-card">
             Questions about this invoice? Contact us on {{ \App\Support\Company::cell() }} or {{ \App\Support\Company::email() }}.
-        </div>
-    </div>
-
-    {{-- Footer — fixed to bottom of every page --}}
-    <div class="footer">
-        <div class="footer-line">
-            <strong style="color:#6b7280;">{{ \App\Support\Company::name() }}</strong>
-            &nbsp;&middot;&nbsp;{{ \App\Support\Company::email() }}
-            &nbsp;&middot;&nbsp;{{ \App\Support\Company::cell() }}
-        </div>
-        <div class="footer-line" style="color:#d1d5db; margin-top:2px;">
-            Generated {{ now()->format('d M Y \a\t H:i') }}&nbsp;&middot;&nbsp;Computer generated document
         </div>
     </div>
 

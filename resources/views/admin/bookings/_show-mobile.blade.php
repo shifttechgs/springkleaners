@@ -120,6 +120,13 @@
     {{-- Quote settings --}}
     <p class="ios-section-label">Quote</p>
     <div class="ios-group mb-6">
+        @unless ($booking->invoice_number)
+            <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="ios-cell w-full text-left">
+                <span class="flex-1">Edit quote, date &amp; time</span>
+                <span class="ios-cell-value">{{ \App\Support\QuotePricing::isCustom($booking) ? 'Edited' : 'Automatic' }}</span>
+                {!! $chevron !!}
+            </a>
+        @endunless
         <button type="button" class="ios-cell w-full text-left" x-on:click="sheet = 'price'">
             <span class="flex-1">Price</span>
             <span class="ios-cell-value">R{{ number_format($price, 2) }}</span>
@@ -214,10 +221,20 @@
                 <span></span>
             </div>
             <div class="ios-group mx-4">
-                <label class="ios-cell">
-                    <span class="flex-shrink-0">Price (R)</span>
-                    <input type="number" name="quoted_price" step="0.01" min="0" inputmode="decimal" required value="{{ $booking->quoted_price ?? $booking->total }}" class="ios-field" aria-label="Price in rand">
-                </label>
+                @if (\App\Support\QuotePricing::isCustom($booking))
+                    {{-- The edited quote lines set the price; change them in the line editor. --}}
+                    <input type="hidden" name="quoted_price" value="{{ $booking->quoted_price }}">
+                    <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="ios-cell">
+                        <span class="flex-1">Price (from quote lines)</span>
+                        <span class="ios-cell-value">R{{ number_format((float) $booking->quoted_price, 2) }}</span>
+                        {!! $chevron !!}
+                    </a>
+                @else
+                    <label class="ios-cell">
+                        <span class="flex-shrink-0">Price (R)</span>
+                        <input type="number" name="quoted_price" step="0.01" min="0" inputmode="decimal" required value="{{ $booking->quoted_price ?? $booking->total }}" class="ios-field" aria-label="Price in rand">
+                    </label>
+                @endif
                 <label class="ios-cell">
                     <span class="flex-shrink-0">Deposit (R)</span>
                     <input type="number" name="deposit_amount" step="0.01" min="0" inputmode="decimal" value="{{ $booking->deposit_amount }}" placeholder="None" class="ios-field" aria-label="Deposit in rand">

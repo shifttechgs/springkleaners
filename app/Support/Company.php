@@ -56,6 +56,35 @@ class Company
         return Setting::get('banking_reference_note', 'Please use your NAME as reference.');
     }
 
+    /** Name the bank account is held in — what clients type as the beneficiary for an EFT. */
+    public static function accountHolder(): string
+    {
+        return Setting::get('banking_account_holder', '') ?: static::name();
+    }
+
+    /** e.g. "Business cheque" — optional, left off the documents when empty. */
+    public static function accountType(): string
+    {
+        return (string) Setting::get('banking_account_type', '');
+    }
+
+    /**
+     * The banking details printed on every quote and invoice (PDF, client pages and emails), in one place so
+     * they never drift apart.
+     *
+     * @return array<int, array{label: string, value: string}>
+     */
+    public static function bankingRows(): array
+    {
+        return array_values(array_filter([
+            ['label' => 'Account holder', 'value' => static::accountHolder()],
+            ['label' => 'Bank', 'value' => static::bankName()],
+            ['label' => 'Account number', 'value' => static::accountNo()],
+            ['label' => 'Branch code', 'value' => static::branchCode()],
+            ['label' => 'Account type', 'value' => static::accountType()],
+        ], fn (array $row) => filled($row['value'])));
+    }
+
     public static function reviewUrl(): string
     {
         return Setting::get('review_url', 'https://share.google/xbwUGIXI4vO1DeLGP');

@@ -6,7 +6,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-@page { margin: 0; }
+/* Every page gets the same top/bottom space; the brand bar and footer sit inside these margins. */
+@page { margin: 40px 0 64px 0; }
+/* dompdf reads the html element's margin as the page margin, and the * reset above zeroes it, so set it here too. */
+html { margin: 40px 0 64px 0; }
 
 body {
     font-family: DejaVu Sans, Arial, sans-serif;
@@ -16,9 +19,9 @@ body {
     line-height: 1.45;
 }
 
-.brand-bar { background: #081d3a; height: 5px; width: 100%; }
+.brand-bar { position: fixed; top: -40px; left: 0; right: 0; background: #081d3a; height: 5px; }
 
-.wrap { padding: 22px 42px 56px; }
+.wrap { padding: 0 42px; }
 
 /* ── Header ──────────────────────────────────────────────── */
 .hdr { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -261,9 +264,10 @@ body {
 /* ── Footer ──────────────────────────────────────────────── */
 .footer {
     position: fixed;
-    bottom: 0;
+    bottom: -64px;
     left: 0;
     right: 0;
+    height: 49px;
     padding: 9px 42px 12px;
     border-top: 1px solid #e5e7eb;
     text-align: center;
@@ -277,6 +281,19 @@ body {
 <body>
 
 <div class="brand-bar"></div>
+
+    {{-- Footer — fixed to the bottom of every page. It has to come before the content: DomPDF only repeats
+         fixed elements on pages from where they appear onward. --}}
+    <div class="footer">
+        <div class="footer-line">
+            <strong style="color:#6b7280;">{{ \App\Support\Company::name() }}</strong>
+            &nbsp;&middot;&nbsp;{{ \App\Support\Company::email() }}
+            &nbsp;&middot;&nbsp;{{ \App\Support\Company::cell() }}
+        </div>
+        <div class="footer-line" style="color:#d1d5db; margin-top:2px;">
+            Generated {{ now()->format('d M Y \a\t H:i') }}&nbsp;&middot;&nbsp;Computer generated document
+        </div>
+    </div>
 
 <div class="wrap">
 
@@ -354,13 +371,26 @@ body {
     <table class="totals">
         <tr class="sub">
             <td class="lc">Subtotal</td>
-            <td>R&nbsp;{{ number_format((float) ($booking->total ?? 0), 2) }}</td>
+            <td>R&nbsp;{{ number_format(\App\Support\QuotePricing::total($lineItems), 2) }}</td>
         </tr>
         <tr class="grand">
             <td class="lc">{{ $booking->quoted_price ? 'Quoted Price' : 'Estimated Total' }}</td>
             <td>R&nbsp;{{ number_format($finalTotal, 2) }}</td>
         </tr>
     </table>
+
+    {{-- Deposit --}}
+    @if ($booking->deposit_amount > 0)
+    <div class="accept-card">
+        <strong>Deposit Required: R&nbsp;{{ number_format((float) $booking->deposit_amount, 2) }}</strong><br>
+        Please pay via EFT to secure your booking date, using the banking details below.
+        @if ($booking->deposit_paid_at)
+            <br><strong>Deposit received {{ $booking->deposit_paid_at->format('d M Y') }}.</strong>
+        @endif
+    </div>
+    @endif
+
+    @include('partials.banking-details-pdf', ['intro' => $booking->deposit_amount > 0 ? 'for your deposit' : 'for EFT payment'])
 
     {{-- Scope of work --}}
     <div class="scope-box">
@@ -410,19 +440,6 @@ body {
     </div>
     @endif
 
-    {{-- Deposit --}}
-    @if ($booking->deposit_amount > 0)
-    <div class="accept-card">
-        <strong>Deposit Required: R&nbsp;{{ number_format((float) $booking->deposit_amount, 2) }}</strong><br>
-        Please pay via EFT to secure your booking date:<br>
-        {{ \App\Support\Company::bankName() }} &middot; Branch Code {{ \App\Support\Company::branchCode() }} &middot; Account No {{ \App\Support\Company::accountNo() }}<br>
-        {{ \App\Support\Company::referenceNote() }}
-        @if ($booking->deposit_paid_at)
-            <br><strong>Deposit received {{ $booking->deposit_paid_at->format('d M Y') }}.</strong>
-        @endif
-    </div>
-    @endif
-
     {{-- Disclaimer --}}
     <div class="disc-box">
         <strong>Please note:</strong>
@@ -436,18 +453,6 @@ body {
         Visit: {{ route('quote.show', $booking->accepted_token) }}
     </div>
     @endif
-
-    {{-- Footer — fixed to bottom of every page --}}
-    <div class="footer">
-        <div class="footer-line">
-            <strong style="color:#6b7280;">{{ \App\Support\Company::name() }}</strong>
-            &nbsp;&middot;&nbsp;{{ \App\Support\Company::email() }}
-            &nbsp;&middot;&nbsp;{{ \App\Support\Company::cell() }}
-        </div>
-        <div class="footer-line" style="color:#d1d5db; margin-top:2px;">
-            Generated {{ now()->format('d M Y \a\t H:i') }}&nbsp;&middot;&nbsp;Computer generated document
-        </div>
-    </div>
 
 </div>
 
