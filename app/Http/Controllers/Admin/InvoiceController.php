@@ -55,6 +55,7 @@ class InvoiceController extends Controller
         }
 
         Mail::to($booking->client->email)->send(new InvoiceMail($booking));
+        $booking->update(['invoice_sent_at' => now()]);
 
         return back()->with('status', 'Invoice emailed to '.$booking->client->email.'.');
     }

@@ -112,16 +112,91 @@ class QuoteEditorTest extends TestCase
         $this->assertSame(BookingStatus::Accepted, $booking->fresh()->status);
     }
 
-    public function test_an_invoiced_quote_is_locked(): void
+    private function invoiced(array $attrs = []): Booking
     {
-        $booking = $this->booking(['status' => BookingStatus::Completed, 'quoted_price' => 1230, 'invoice_number' => 'INV-2026-0001', 'invoiced_at' => now()]);
+        return $this->booking([
+            'status' => BookingStatus::Completed, 'quoted_price' => 1230, 'date' => now()->subDays(3)->toDateString(),
+            'invoice_number' => 'INV-2026-0001', 'invoiced_at' => now()->subDay(), 'accepted_token' => 'inv-tok', ...$attrs,
+        ])->fresh();
+    }
 
-        $this->actingAs($this->admin)->get(route('admin.bookings.quote.edit', $booking))->assertRedirect(route('admin.bookings.show', $booking));
+    public function test_an_unpaid_invoice_can_be_corrected_and_is_marked_revised(): void
+    {
+        $booking = $this->invoiced();
+
+        $this->actingAs($this->admin)->get(route('admin.bookings.quote.edit', $booking))->assertOk()->assertSee('Edit invoice')->assertSee('Save revised invoice');
+
+        $this->actingAs($this->admin)
+            ->put(route('admin.bookings.quote.update', $booking), $this->lines(['Deep clean', 1, 1230], ['Agreed discount', 1, -230]))
+            ->assertRedirect(route('admin.invoices.show', $booking))
+            ->assertSessionHas('status', fn ($m) => str_contains($m, 'revised') && str_contains($m, 'Send it to the client again'));
+
+        $booking->refresh();
+        $this->assertEquals(1000.0, (float) $booking->quoted_price);
+        $this->assertNotNull($booking->invoice_revised_at);
+        $this->assertSame(BookingStatus::Completed, $booking->status, 'Still a completed, invoiced job');
+        $this->assertTrue($booking->invoiceNeedsResend());
+
+        // The PDF, client page and email all say it was revised and show the corrected total.
+        $pdf = view('pdf.invoice', ['booking' => $booking])->render();
+        $this->assertStringContainsString('Revised', $pdf);
+        $this->assertStringContainsString('1,000.00', $pdf);
+        $this->get(route('invoice.show', 'inv-tok'))->assertOk()->assertSee('this is the latest version')->assertSee('Agreed discount');
+        $this->assertStringContainsString('Your updated invoice', (new \App\Mail\InvoiceMail($booking))->render());
+    }
+
+    public function test_emailing_the_revised_invoice_clears_the_resend_reminder(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+        $client = \App\Models\Client::create(['name' => 'Quote Client', 'phone_raw' => '0820000000', 'phone_normalized' => '27820000000', 'email' => 'client@example.com']);
+        $booking = $this->invoiced(['client_id' => $client->id]);
+
+        $this->actingAs($this->admin)->put(route('admin.bookings.quote.update', $booking), $this->lines(['Deep clean', 1, 1100]));
+        $this->actingAs($this->admin)->get(route('admin.invoices.show', $booking))->assertSee('Email the revised invoice');
+
+        $this->actingAs($this->admin)->post(route('admin.invoices.send-email', $booking))->assertSessionHasNoErrors();
+
+        $this->assertFalse($booking->fresh()->invoiceNeedsResend());
+        $this->actingAs($this->admin)->get(route('admin.invoices.show', $booking))->assertDontSee('Email the revised invoice');
+    }
+
+    public function test_a_paid_invoice_is_locked(): void
+    {
+        $booking = $this->invoiced(['payment_status' => \App\Enums\PaymentStatus::Paid, 'paid_at' => now()]);
+
+        $this->actingAs($this->admin)->get(route('admin.bookings.quote.edit', $booking))->assertRedirect(route('admin.invoices.show', $booking));
         $this->actingAs($this->admin)->put(route('admin.bookings.quote.update', $booking), $this->lines(['Cheaper', 1, 10]))->assertSessionHasErrors('quote');
+        $this->actingAs($this->admin)->delete(route('admin.bookings.quote.reset', $booking))->assertSessionHasErrors('quote');
         $this->actingAs($this->admin)->post(route('admin.bookings.send-quote', $booking), ['quoted_price' => 10])->assertSessionHasErrors('quote');
 
         $this->assertEquals(1230.0, (float) $booking->fresh()->quoted_price);
-        $this->assertSame(BookingStatus::Completed, $booking->fresh()->status);
+        $this->assertNull($booking->fresh()->invoice_revised_at);
+    }
+
+    public function test_a_received_deposit_cannot_be_changed_or_undercut(): void
+    {
+        $booking = $this->invoiced(['deposit_amount' => 300, 'deposit_paid_at' => now()->subDays(5)]);
+
+        // Posting a different deposit is ignored: received money stays as recorded.
+        $this->actingAs($this->admin)->put(route('admin.bookings.quote.update', $booking), [...$this->lines(['Deep clean', 1, 1230]), 'deposit_amount' => 50]);
+        $this->assertEquals(300.0, (float) $booking->fresh()->deposit_amount);
+
+        // And the total can't drop below what's already been paid.
+        $this->actingAs($this->admin)->put(route('admin.bookings.quote.update', $booking), $this->lines(['Deep clean', 1, 200]))
+            ->assertSessionHasErrors('deposit_amount');
+        $this->assertEquals(1230.0, (float) $booking->fresh()->quoted_price);
+    }
+
+    public function test_an_invoice_date_can_be_corrected_to_a_past_weekday(): void
+    {
+        $booking = $this->invoiced();
+        $pastWednesday = now()->previous(\Illuminate\Support\Carbon::WEDNESDAY)->subWeek()->toDateString();
+
+        $this->actingAs($this->admin)
+            ->put(route('admin.bookings.quote.update', $booking), [...$this->lines(['Deep clean', 1, 1230]), 'date' => $pastWednesday, 'time' => Booking::AFTERNOON_SLOT])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame($pastWednesday, $booking->fresh()->date->toDateString());
     }
 
     public function test_quick_price_on_an_automatic_quote_adds_an_adjustment_line(): void

@@ -66,7 +66,7 @@ class QuoteEditorController extends Controller
         $newSlot = $data['time'] ?? $currentSlot;
         $moved = ! $newDate->isSameDay($booking->date) || $newSlot !== $currentSlot;
 
-        if ($moved) {
+        if ($moved && ! $booking->isInvoiced()) {
             if ($newDate->lt(now()->startOfDay())) {
                 throw ValidationException::withMessages(['date' => 'Pick today or a later date.']);
             }
@@ -86,12 +86,19 @@ class QuoteEditorController extends Controller
         $total = QuotePricing::total($lines);
         $deposit = isset($data['deposit_amount']) ? round((float) $data['deposit_amount'], 2) : null;
 
+        // A deposit that's been received is money in the bank: it stays as recorded.
+        if ($booking->deposit_paid_at) {
+            $deposit = (float) $booking->deposit_amount;
+        }
+
         if ($total < 0) {
             throw ValidationException::withMessages(['items' => 'The quote total can\'t be below R0 — check the discount lines.']);
         }
 
         if ($deposit !== null && $deposit > $total) {
-            throw ValidationException::withMessages(['deposit_amount' => 'The deposit can\'t be more than the quote total (R'.number_format($total, 2).').']);
+            throw ValidationException::withMessages(['deposit_amount' => $booking->deposit_paid_at
+                ? 'A deposit of R'.number_format($deposit, 2).' has already been received, so the total can\'t be less than that.'
+                : 'The deposit can\'t be more than the total (R'.number_format($total, 2).').']);
         }
 
         // Keep the scope wording the client was quoted on, before the price changes.
@@ -104,14 +111,20 @@ class QuoteEditorController extends Controller
             'quote_edited_at' => now(),
         ];
 
+        if ($booking->isInvoiced()) {
+            $changes['invoice_revised_at'] = now();
+        }
+
         $priceChanged = abs($total - (float) ($booking->quoted_price ?? $booking->total ?? 0)) >= 0.005;
-        $message = 'Quote updated — total R'.number_format($total, 2).'.';
+        $message = ($booking->isInvoiced() ? 'Invoice '.$booking->invoice_number.' revised' : 'Quote updated').' — total R'.number_format($total, 2).'.';
 
         // The client agreed to a different amount: they confirm the new price on the same link.
         if ($booking->status === BookingStatus::Accepted && $priceChanged) {
             $changes['status'] = BookingStatus::Quoted;
             $changes['accepted_at'] = null;
             $message .= ' The client had accepted the old price, so it is back to "Quoted" for them to confirm.';
+        } elseif ($booking->isInvoiced()) {
+            $message .= ' Send it to the client again so they have the corrected version.';
         } elseif ($booking->accepted_token) {
             $message .= ' The client\'s quote link already shows the new version.';
         }
@@ -119,7 +132,7 @@ class QuoteEditorController extends Controller
         if (! $moved) {
             $booking->update($changes);
 
-            return redirect()->route('admin.bookings.show', $booking)->with('status', $message);
+            return $this->afterSave($booking, $message);
         }
 
         // Moving to a new date/slot: check and save under the same per-date lock the website uses, so the
@@ -156,7 +169,7 @@ class QuoteEditorController extends Controller
             $message .= ' Let the client know — you can resend the booking confirmation.';
         }
 
-        return redirect()->route('admin.bookings.show', $booking)->with('status', $message);
+        return $this->afterSave($booking, $message);
     }
 
     /** Throw away the hand-edited lines and go back to the automatic service + add-on pricing. */
@@ -170,12 +183,13 @@ class QuoteEditorController extends Controller
         $automatic = QuotePricing::total(QuotePricing::automaticLineItems($booking));
 
         $booking->forceFill([
-            // A quote that hasn't gone out yet goes back to being an estimate; a sent one keeps a price.
-            'quoted_price' => $booking->quote_sent_at ? $automatic : null,
+            // A quote that hasn't gone out yet goes back to being an estimate; a sent quote or an invoice keeps a price.
+            'quoted_price' => ($booking->quote_sent_at || $booking->isInvoiced()) ? $automatic : null,
             'quote_edited_at' => now(),
+            'invoice_revised_at' => $booking->isInvoiced() ? now() : $booking->invoice_revised_at,
         ])->save();
 
-        if ($booking->deposit_amount > $automatic) {
+        if (! $booking->deposit_paid_at && $booking->deposit_amount > $automatic) {
             $booking->update(['deposit_amount' => $automatic ?: null]);
         }
 
@@ -183,14 +197,21 @@ class QuoteEditorController extends Controller
             ->with('status', 'Back to automatic pricing — R'.number_format($automatic, 2).'.');
     }
 
-    /** Once an invoice exists the quote is what was billed, so it can't change any more. */
+    /** Unpaid invoices can still be corrected (and are marked Revised). A paid invoice is a closed record. */
     private function lockedRedirect(Booking $booking): ?RedirectResponse
     {
-        if (blank($booking->invoice_number)) {
+        if (! $booking->isPriceLocked()) {
             return null;
         }
 
-        return redirect()->route('admin.bookings.show', $booking)
-            ->withErrors(['quote' => 'Invoice '.$booking->invoice_number.' has been issued for this job, so its quote is locked.']);
+        return redirect()->route('admin.invoices.show', $booking)
+            ->withErrors(['quote' => 'Invoice '.$booking->invoice_number.' has been paid, so it is locked.']);
+    }
+
+    /** Invoices go back to the invoice page (where it can be re-sent); quotes to the booking. */
+    private function afterSave(Booking $booking, string $message): RedirectResponse
+    {
+        return redirect()->route($booking->isInvoiced() ? 'admin.invoices.show' : 'admin.bookings.show', $booking)
+            ->with('status', $message);
     }
 }

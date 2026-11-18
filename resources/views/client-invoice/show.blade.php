@@ -15,6 +15,9 @@
             </h1>
             <p class="text-white/60 text-[15px]">
                 {{ $booking->invoice_number }} &middot; {{ $booking->date->format('l, d F Y') }}
+                @if ($booking->invoice_revised_at)
+                    <br><span class="text-[#f6e304]/90 text-[13px] font-semibold">Revised {{ $booking->invoice_revised_at->format('d M Y') }} — this is the latest version.</span>
+                @endif
             </p>
         </div>
     </section>

@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\Client;
 use App\Models\Expense;
 use App\Support\QuoteExpiry;
+use App\Support\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
@@ -174,9 +175,10 @@ class DashboardController extends Controller
             ->whereIn('status', BookingStatus::occupyingSlot())
             ->orderByRaw("CASE WHEN time LIKE '%AM%' THEN 0 ELSE 1 END")
             ->orderBy('time')
-            ->get(['id', 'date', 'time', 'status', 'name']);
+            ->get(['id', 'date', 'time', 'status', 'name', 'service', 'quoted_price', 'total']);
 
         $today = now()->toDateString();
+        $services = Services::list();
         $days = [];
 
         foreach ($bookings as $booking) {
@@ -190,10 +192,22 @@ class DashboardController extends Controller
                 default => 'waiting',
             };
 
-            $job = ['name' => $booking->name, 'time' => $booking->time, 'status' => $booking->status->label(), 'tone' => $tone];
-            $days[$key]['jobs'][] = $job;
-
+            $job = [
+                'name' => $booking->name,
+                'time' => $booking->time,
+                'status' => $booking->status->label(),
+                'tone' => $tone,
+                // for the day panel opened by clicking the calendar
+                'service' => $services[$booking->service]['name'] ?? $booking->service,
+                'value' => 'R'.number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 0),
+                'badge' => $booking->status->badgeColor(),
+                'dot' => $booking->status->dotColor(),
+                'url' => route('admin.bookings.show', $booking),
+            ];
             $slot = Booking::slotFor($booking->time) === Booking::MORNING_SLOT ? 'am' : 'pm';
+            $job['slot'] = $slot;
+
+            $days[$key]['jobs'][] = $job;
             $days[$key]['slots'][$slot] ??= $job;
 
             if ($tone === 'waiting') {

@@ -1,8 +1,14 @@
 @extends('admin.layout')
-@section('title', 'Edit quote — '.$booking->name)
-@section('navTitle', 'Edit quote')
-@section('back', route('admin.bookings.show', $booking))
-@section('backLabel', 'Booking')
+@php
+    // Same editor for quotes and unpaid invoices.
+    $isInvoice = $booking->isInvoiced();
+    $docWord = $isInvoice ? 'invoice' : 'quote';
+    $backUrl = $isInvoice ? route('admin.invoices.show', $booking) : route('admin.bookings.show', $booking);
+@endphp
+@section('title', 'Edit '.$docWord.' — '.$booking->name)
+@section('navTitle', 'Edit '.$docWord)
+@section('back', $backUrl)
+@section('backLabel', $isInvoice ? 'Invoice' : 'Booking')
 @section('content')
 
     @php
@@ -12,7 +18,8 @@
             'qty' => $item['qty'],
             'unit_price' => $item['unit_price'],
         ], $items));
-        $wasAccepted = $booking->status === \App\Enums\BookingStatus::Accepted;
+        $wasAccepted = ! $isInvoice && $booking->status === \App\Enums\BookingStatus::Accepted;
+        $depositLocked = (bool) $booking->deposit_paid_at;
         $acceptedTotal = (float) ($booking->quoted_price ?? $booking->total ?? 0);
     @endphp
 
@@ -21,13 +28,13 @@
         <span>/</span>
         <a href="{{ route('admin.bookings.show', $booking) }}" class="hover:text-navy transition-colors">{{ $booking->name }}</a>
         <span>/</span>
-        <span class="text-ink">Edit quote</span>
+        <span class="text-ink">Edit {{ $docWord }}</span>
     </div>
 
     <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
         <div>
-            <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">Quote SK-{{ str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}</p>
-            <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Edit quote</h1>
+            <p class="text-label text-[11px] uppercase tracking-wider font-semibold mb-1">{{ $isInvoice ? 'Invoice '.$booking->invoice_number : 'Quote SK-'.str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}</p>
+            <h1 class="text-[26px] font-extrabold tracking-tight leading-none">Edit {{ $docWord }}</h1>
             <p class="text-muted text-[13px] mt-2">{{ $booking->name }} &middot; {{ \App\Support\ServiceSnapshot::for($booking)['name'] }} &middot; {{ $booking->date->format('d M Y') }}</p>
         </div>
         <x-admin.status-badge :status="$booking->status" />
@@ -39,7 +46,13 @@
         </div>
     @endif
 
-    @if ($wasAccepted)
+    @if ($isInvoice)
+        <div class="mb-6 px-4 py-3 bg-amber-50 border border-amber-100 rounded-xl text-amber-800 text-[13px]">
+            <strong>This invoice has been issued but not paid yet.</strong>
+            Saving corrects it and marks it <strong>Revised</strong> on the PDF and the client's invoice page — then send it to the client again.
+            Once it's marked paid it can't be changed.
+        </div>
+    @elseif ($wasAccepted)
         <div class="mb-6 px-4 py-3 bg-amber-50 border border-amber-100 rounded-xl text-amber-800 text-[13px]">
             <strong>The client already accepted R{{ number_format($acceptedTotal, 2) }}.</strong>
             If you change the total, the booking goes back to "Quoted" and they confirm the new price on the same link.
@@ -103,7 +116,13 @@
                  get label() { if (!this.date) return ''; return new Date(this.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); },
              }">
             <h2 class="font-bold text-[14px] tracking-tight">Service date &amp; time</h2>
-            <p class="text-label text-[12px] mt-0.5 mb-4">Weekends only, two slots a day, one booking per slot.</p>
+            <p class="text-label text-[12px] mt-0.5 mb-4">
+                @if ($isInvoice)
+                    Correct the date the job was done if it's wrong on the invoice. Another job's slot still can't be taken.
+                @else
+                    Weekends only, two slots a day, one booking per slot.
+                @endif
+            </p>
 
             <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-4 items-start">
                 <label class="block">
@@ -212,7 +231,7 @@
             </div>
 
             <div class="px-4 sm:px-6 py-4 border-t border-line bg-[#fafbfc] flex items-center justify-between gap-4">
-                <span class="text-ink text-[14px] font-bold">Quote total</span>
+                <span class="text-ink text-[14px] font-bold">{{ ucfirst($docWord) }} total</span>
                 <span class="text-[22px] font-extrabold tracking-tight" :class="total < 0 ? 'text-rose-600' : 'text-ink'" x-text="money(total)"></span>
             </div>
             <p x-show="total < 0" x-cloak class="px-6 pb-4 bg-[#fafbfc] text-rose-600 text-[12.5px] font-semibold">The total can't be below R0 — check the discount lines.</p>
@@ -220,19 +239,26 @@
 
         <div class="card p-4 sm:p-6 mb-6 max-w-md">
             <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold" for="deposit">Deposit required (R) <span class="normal-case font-normal text-label">(optional)</span></label>
-            <input id="deposit" type="number" name="deposit_amount" x-model="deposit" step="0.01" min="0" inputmode="decimal" placeholder="Leave blank for no deposit"
-                   class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
-            <p x-show="deposit !== '' && parseFloat(deposit) > total" x-cloak class="text-rose-600 text-[12px] font-semibold mt-1.5">The deposit is more than the quote total.</p>
+            @if ($depositLocked)
+                {{-- Received money stays as recorded; it's sent along so the totals check still works. --}}
+                <input type="hidden" name="deposit_amount" value="{{ $booking->deposit_amount }}">
+                <p class="text-ink text-[14px] font-semibold">R{{ number_format((float) $booking->deposit_amount, 2) }}</p>
+                <p class="text-emerald-700 text-[12px] mt-0.5">Received {{ $booking->deposit_paid_at->format('d M Y') }} — can't be changed. The total can't go below it.</p>
+            @else
+                <input id="deposit" type="number" name="deposit_amount" x-model="deposit" step="0.01" min="0" inputmode="decimal" placeholder="Leave blank for no deposit"
+                       class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+            @endif
+            <p x-show="deposit !== '' && parseFloat(deposit) > total" x-cloak class="text-rose-600 text-[12px] font-semibold mt-1.5">The deposit is more than the {{ $docWord }} total.</p>
         </div>
 
         <div class="flex items-center justify-between gap-3 flex-wrap">
-            <a href="{{ route('admin.bookings.show', $booking) }}" class="text-muted text-[13px] font-semibold hover:text-ink transition-colors">Cancel</a>
+            <a href="{{ $backUrl }}" class="text-muted text-[13px] font-semibold hover:text-ink transition-colors">Cancel</a>
             <div class="flex items-center gap-2 flex-wrap">
-                <a href="{{ route('admin.bookings.quote-pdf.preview', $booking) }}" target="_blank" rel="noopener noreferrer"
+                <a href="{{ $isInvoice ? route('admin.invoices.pdf.preview', $booking) : route('admin.bookings.quote-pdf.preview', $booking) }}" target="_blank" rel="noopener noreferrer"
                    class="inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
                     Preview saved PDF
                 </a>
-                <button type="submit" class="btn-primary" :disabled="total < 0">Save quote &middot; <span x-text="money(total)"></span></button>
+                <button type="submit" class="btn-primary" :disabled="total < 0">{{ $isInvoice ? 'Save revised invoice' : 'Save quote' }} &middot; <span x-text="money(total)"></span></button>
             </div>
         </div>
     </form>

@@ -23,7 +23,12 @@
 
     <tr>
         <td style="padding:36px;">
-            <h1 style="margin:0 0 12px; font-size:20px; font-weight:800; color:#081d3a;">Your invoice is ready</h1>
+            <h1 style="margin:0 0 12px; font-size:20px; font-weight:800; color:#081d3a;">{{ $booking->invoice_revised_at ? 'Your updated invoice' : 'Your invoice is ready' }}</h1>
+            @if ($booking->invoice_revised_at)
+                <p style="margin:0 0 12px; font-size:14px; line-height:1.6; color:#92400e; background:#fffbeb; border-radius:8px; padding:10px 12px;">
+                    We've corrected your invoice (revised {{ $booking->invoice_revised_at->format('d M Y') }}). Please use this version — it replaces the one we sent before.
+                </p>
+            @endif
             <p style="margin:0 0 20px; font-size:14px; line-height:1.6; color:#4b5563;">
                 Hi {{ $booking->name }}, thanks again for choosing {{ \App\Support\Company::name() }}. Your invoice <strong style="color:#081d3a;">{{ $booking->invoice_number }}</strong> for the {{ $booking->date->format('d M Y') }} job is ready to view and download.
             </p>

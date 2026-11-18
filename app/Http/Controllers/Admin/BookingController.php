@@ -199,8 +199,8 @@ class BookingController extends Controller
         }
 
         // The price has to match the quote lines the client sees (see QuotePricing::priceOverride).
-        if (filled($booking->invoice_number)) {
-            unset($data['quoted_price']); // invoiced: the billed amount is locked
+        if ($booking->isInvoiced()) {
+            unset($data['quoted_price']); // invoiced: change it through the invoice editor (locked once paid)
         } elseif (QuotePricing::isCustom($booking)) {
             $data['quoted_price'] = QuotePricing::total(QuotePricing::lineItems($booking));
         } elseif (isset($data['quoted_price']) && abs((float) $data['quoted_price'] - (float) $booking->quoted_price) >= 0.005) {
@@ -219,8 +219,8 @@ class BookingController extends Controller
             'deposit_amount' => 'nullable|numeric|min:0',
         ]);
 
-        if (filled($booking->invoice_number)) {
-            return back()->withErrors(['quote' => 'Invoice '.$booking->invoice_number.' has been issued for this job, so its quote is locked.']);
+        if ($booking->isInvoiced()) {
+            return back()->withErrors(['quote' => 'Invoice '.$booking->invoice_number.' has been issued for this job — use Edit invoice to correct it.']);
         }
 
         // A hand-edited quote keeps its own total; a typed price on an automatic quote adds an adjustment line.

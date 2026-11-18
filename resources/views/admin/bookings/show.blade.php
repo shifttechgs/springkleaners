@@ -179,7 +179,15 @@
                         <label class="block text-label text-[11px] uppercase tracking-wider mb-1.5 font-semibold">Quoted Price (R)</label>
                         @if ($booking->invoice_number || \App\Support\QuotePricing::isCustom($booking))
                             <p class="text-ink text-[13px] font-semibold">R{{ number_format((float) $booking->quoted_price, 2) }}</p>
-                            <p class="text-label text-[11.5px] mt-0.5">{{ $booking->invoice_number ? 'Locked — invoice issued.' : 'Set by the quote lines.' }}</p>
+                            <p class="text-label text-[11.5px] mt-0.5">
+                                @if ($booking->isPriceLocked())
+                                    Locked — invoice paid.
+                                @elseif ($booking->invoice_number)
+                                    Change it with <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="text-navy font-semibold">Edit invoice</a>.
+                                @else
+                                    Set by the quote lines.
+                                @endif
+                            </p>
                         @else
                             <input type="number" step="0.01" min="0" name="quoted_price" value="{{ $booking->quoted_price }}"
                                    class="w-full bg-white border border-line rounded-xl px-3.5 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
@@ -207,8 +215,11 @@
                     R{{ number_format(\App\Support\QuotePricing::total($quoteLines), 2) }} &middot; {{ count($quoteLines) }} {{ \Illuminate\Support\Str::plural('line', count($quoteLines)) }}
                     &middot; {{ $quoteIsCustom ? 'edited'.($booking->quote_edited_at ? ' '.$booking->quote_edited_at->format('d M, H:i') : '') : 'automatic pricing' }}
                 </p>
-                @if ($booking->invoice_number)
-                    <p class="text-label text-[12.5px]">Locked — invoice {{ $booking->invoice_number }} has been issued for this job.</p>
+                @if ($booking->isPriceLocked())
+                    <p class="text-label text-[12.5px]">Locked — invoice {{ $booking->invoice_number }} has been paid.</p>
+                @elseif ($booking->invoice_number)
+                    <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="btn-primary w-full justify-center mb-2">Edit invoice</a>
+                    <p class="text-label text-[12px]">Invoice {{ $booking->invoice_number }} isn't paid yet, so it can still be corrected. It'll be marked Revised.</p>
                 @else
                 <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="btn-primary w-full justify-center mb-4">Edit quote, date &amp; time</a>
                 @if ($quoteIsCustom)

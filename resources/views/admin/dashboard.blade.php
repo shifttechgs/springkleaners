@@ -248,8 +248,25 @@
             @endif
         </div>
 
-        {{-- Calendar --}}
-        <div class="card p-4 flex flex-col lg:min-h-0 max-lg:order-first">
+        {{-- Calendar. Click any day to see its jobs (and which slots are free) without leaving the dashboard. --}}
+        <div class="card p-4 flex flex-col lg:min-h-0 max-lg:order-first"
+             x-data="{
+                 days: {{ \Illuminate\Support\Js::from($calendarDays) }},
+                 today: {{ \Illuminate\Support\Js::from(now()->toDateString()) }},
+                 bookableDays: {{ \Illuminate\Support\Js::from(\App\Models\Booking::BOOKABLE_DAYS) }},
+                 slotLabels: {{ \Illuminate\Support\Js::from(['am' => \App\Models\Booking::MORNING_SLOT, 'pm' => \App\Models\Booking::AFTERNOON_SLOT]) }},
+                 listUrl: {{ \Illuminate\Support\Js::from(route('admin.bookings.index')) }},
+                 createUrl: {{ \Illuminate\Support\Js::from(route('admin.bookings.create')) }},
+                 open: null,
+                 openDay(date) { this.open = date; this.$nextTick(() => this.$refs.dayClose?.focus()); },
+                 close() { this.open = null; },
+                 get day() { return this.open ? (this.days[this.open] || { jobs: [] }) : null },
+                 get label() { return this.open ? new Date(this.open + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '' },
+                 get isPast() { return this.open && this.open < this.today },
+                 get isBookable() { return this.open && !this.isPast && this.bookableDays.includes(new Date(this.open + 'T00:00:00').getDay()) },
+                 jobsIn(slot) { return this.day ? this.day.jobs.filter(j => j.slot === slot) : [] },
+             }"
+             x-on:keydown.escape.window="close()">
             @php
                 $prevMonth = $calendarMonth->copy()->subMonthNoOverflow();
                 $nextMonth = $calendarMonth->copy()->addMonthNoOverflow();
@@ -314,8 +331,8 @@
                             $cellBg = $isToday ? '#081d3a' : ($dayData['upcoming'] ? ($dayData['allConfirmed'] ? '#e7f8ef' : '#fff4e0') : '#f6f7fa');
                             $cellRing = $isToday ? '' : ($dayData['upcoming'] ? ($dayData['allConfirmed'] ? 'box-shadow: inset 0 0 0 1px #a6e9c6;' : 'box-shadow: inset 0 0 0 1px #fbd38d;') : '');
                         @endphp
-                        <a href="{{ route('admin.bookings.index', ['date' => $dateStr]) }}"
-                           title="{{ $tip }}" aria-label="{{ str_replace("\n", ', ', $tip) }}"
+                        <button type="button" x-on:click="openDay('{{ $dateStr }}')"
+                           title="{{ $tip }}" aria-label="{{ str_replace([":\n", "\n"], [': ', '; '], $tip) }}"
                            class="rounded-md flex flex-col items-center justify-center gap-[3px] relative hover:ring-2 hover:ring-navy transition-all {{ $dayData['upcoming'] || $isToday ? '' : 'opacity-70' }}"
                            style="background:{{ $cellBg }}; {{ $cellRing }}">
                             <span class="text-[11px] max-lg:text-[14px] font-semibold leading-none {{ $isToday ? 'text-white' : 'text-ink' }}">{{ $day }}</span>
@@ -329,12 +346,14 @@
                                           style="background:{{ $slotJob ? ($isToday ? ($slotJob['tone'] === 'confirmed' ? '#f6e304' : '#ffffff') : $tones[$slotJob['tone']]) : ($isToday ? 'rgba(255,255,255,0.25)' : '#e4e7ec') }};"></span>
                                 @endforeach
                             </span>
-                        </a>
+                        </button>
                     @else
-                        <div class="rounded-md flex items-center justify-center"
+                        <button type="button" x-on:click="openDay('{{ $dateStr }}')"
+                             aria-label="{{ $cellDate->format('D j M') }}: no jobs"
+                             class="rounded-md flex items-center justify-center hover:ring-2 hover:ring-navy/40 transition-all"
                              style="{{ $isToday ? 'background:#081d3a;' : ($isWeekend ? 'background:rgba(246,227,4,0.06);' : '') }}">
                             <span class="text-[11px] max-lg:text-[14px] {{ $isToday ? 'text-white font-semibold' : ($isWeekend ? 'text-ink' : 'text-label') }}">{{ $day }}</span>
-                        </div>
+                        </button>
                     @endif
                 @endfor
             </div>
@@ -345,6 +364,65 @@
                 <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#98a2b3;"></span>Done</span>
                 <span class="ml-auto">Bars: AM | PM</span>
             </div>
+
+            <template x-teleport="body">
+                <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4"
+                     role="dialog" aria-modal="true" :aria-label="'Jobs on ' + label">
+                    <div x-show="open" x-transition.opacity.duration.200ms class="absolute inset-0" style="background:rgba(8,29,58,0.45);" x-on:click="close()"></div>
+                    <div x-show="open"
+                         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                         class="ios-sheet-panel relative bg-white rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto"
+                         style="box-shadow:0 24px 60px -16px rgba(8,29,58,0.45);">
+                        <div class="flex items-start justify-between gap-3 px-5 pt-5 pb-3 border-b border-line">
+                            <div>
+                                <p class="text-label text-[11px] uppercase tracking-wider font-semibold">Jobs</p>
+                                <h3 class="font-bold text-[16px] text-ink leading-tight mt-0.5" x-text="label"></h3>
+                            </div>
+                            <button type="button" x-ref="dayClose" x-on:click="close()" class="w-8 h-8 -mr-1 rounded-lg flex items-center justify-center text-label hover:text-ink hover:bg-canvas" aria-label="Close">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="px-5 py-4 space-y-4">
+                            <template x-for="slot in ['am', 'pm']" :key="slot">
+                                <div>
+                                    <p class="text-label text-[11.5px] font-semibold mb-1.5">
+                                        <span x-text="slot === 'am' ? 'Morning' : 'Afternoon'"></span>
+                                        &middot; <span x-text="slotLabels[slot]"></span>
+                                    </p>
+                                    <template x-for="(job, i) in jobsIn(slot)" :key="slot + i">
+                                        <a :href="job.url" class="block border border-line rounded-xl px-3.5 py-3 mb-2 hover:border-navy transition-colors">
+                                            <div class="flex items-start justify-between gap-3">
+                                                <div class="min-w-0">
+                                                    <p class="font-semibold text-[14px] text-ink truncate" x-text="job.name"></p>
+                                                    <p class="text-muted text-[12.5px] truncate" x-text="job.service + (job.time !== slotLabels[slot] ? ' · ' + job.time : '')"></p>
+                                                </div>
+                                                <span class="flex-shrink-0 text-ink font-bold text-[13px]" x-text="job.value"></span>
+                                            </div>
+                                            <div class="flex items-center justify-between gap-3 mt-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold" :class="job.badge">
+                                                    <span class="badge-dot" :class="job.dot"></span><span x-text="job.status"></span>
+                                                </span>
+                                                <span class="text-navy text-[12.5px] font-semibold">Open booking &rarr;</span>
+                                            </div>
+                                        </a>
+                                    </template>
+                                    <div x-show="jobsIn(slot).length === 0" class="flex items-center justify-between gap-3 border border-dashed border-line rounded-xl px-3.5 py-3">
+                                        <span class="text-muted text-[13px]" x-text="isPast ? 'No job' : 'Free'"></span>
+                                        <a x-show="isBookable" :href="createUrl" class="text-navy text-[12.5px] font-semibold hover:opacity-70">+ Add booking</a>
+                                    </div>
+                                </div>
+                            </template>
+                            <p x-show="!isPast && !isBookable" class="text-label text-[12px]">Weekdays aren't open for bookings.</p>
+                        </div>
+
+                        <div class="px-5 pb-5" x-show="day && day.jobs.length">
+                            <a :href="listUrl + '?date=' + open" class="text-navy text-[12.5px] font-semibold hover:opacity-70">See this day in the bookings list &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
 
     </div>

@@ -315,6 +315,10 @@ body {
                 <div class="meta-val">{{ $booking->invoice_number }}</div>
                 <div class="meta-lbl">Date Issued</div>
                 <div class="meta-val">{{ ($booking->invoiced_at ?? now())->format('d M Y') }}</div>
+                @if ($booking->invoice_revised_at)
+                    <div class="meta-lbl">Revised</div>
+                    <div class="meta-val">{{ $booking->invoice_revised_at->format('d M Y') }}</div>
+                @endif
                 <div class="meta-lbl">Service Date</div>
                 <div class="meta-val">{{ $booking->date->format('d M Y') }} &middot; {{ $booking->time }}</div>
             </td>

@@ -61,6 +61,24 @@ class Booking extends Model
      */
     public const BOOKABLE_DAYS = [6, 0];
 
+    public function isInvoiced(): bool
+    {
+        return filled($this->invoice_number);
+    }
+
+    /** A paid invoice is a closed record; until then the quote/invoice can still be corrected. */
+    public function isPriceLocked(): bool
+    {
+        return $this->isInvoiced() && $this->payment_status === PaymentStatus::Paid;
+    }
+
+    /** Corrected since it was last emailed (or never emailed since the correction). */
+    public function invoiceNeedsResend(): bool
+    {
+        return $this->invoice_revised_at !== null
+            && ($this->invoice_sent_at === null || $this->invoice_sent_at->lt($this->invoice_revised_at));
+    }
+
     public static function isBookableDay(\DateTimeInterface $date): bool
     {
         return in_array((int) $date->format('w'), self::BOOKABLE_DAYS, true);
@@ -73,7 +91,7 @@ class Booking extends Model
         'addons', 'addon_quantities', 'service_snapshot', 'booking_type', 'frequency', 'subtotal', 'total',
         'status', 'quoted_price', 'admin_notes', 'accepted_token',
         'quote_sent_at', 'accepted_at', 'quote_items', 'quote_edited_at',
-        'invoice_number', 'invoiced_at', 'payment_status', 'payment_method', 'paid_at',
+        'invoice_number', 'invoiced_at', 'invoice_revised_at', 'invoice_sent_at', 'payment_status', 'payment_method', 'paid_at',
         'deposit_amount', 'deposit_paid_at', 'confirmation_sent_at', 'thank_you_sent_at',
     ];
 
@@ -93,6 +111,8 @@ class Booking extends Model
         'quote_edited_at' => 'datetime',
         'accepted_at' => 'datetime',
         'invoiced_at' => 'datetime',
+        'invoice_revised_at' => 'datetime',
+        'invoice_sent_at' => 'datetime',
         'payment_status' => PaymentStatus::class,
         'paid_at' => 'datetime',
         'deposit_amount' => 'decimal:2',

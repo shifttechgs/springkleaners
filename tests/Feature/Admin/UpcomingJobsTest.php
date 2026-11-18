@@ -86,6 +86,27 @@ class UpcomingJobsTest extends TestCase
         $res->assertSee('Morning Client · Accepted', false)->assertSee('Next job:');
     }
 
+    public function test_clicking_a_day_has_everything_the_day_panel_needs_and_is_quote_safe(): void
+    {
+        $this->travelTo(now()->startOfMonth()->addDays(1));
+        $day = now()->addDays(3)->toDateString();
+        $booking = $this->booking('Pat O\'Brien "Bob"', $day, BookingStatus::Quoted, Booking::AFTERNOON_SLOT);
+
+        $res = $this->actingAs($this->admin)->get(route('admin.dashboard'))->assertOk();
+        $job = $res->viewData('calendarDays')[$day]['jobs'][0];
+
+        $this->assertSame('pm', $job['slot']);
+        $this->assertSame('Deep Cleaning', $job['service']);
+        $this->assertSame('R1,000', $job['value']);
+        $this->assertSame(route('admin.bookings.show', $booking), $job['url']);
+
+        // The calendar's Alpine state holds client names; a quote in a name must not cut the attribute short.
+        $dom = new \DOMDocument;
+        @$dom->loadHTML($res->getContent());
+        $state = (new \DOMXPath($dom))->evaluate('string(//div[contains(@x-data, "openDay")]/@x-data)');
+        $this->assertStringContainsString('jobsIn(slot)', $state, 'Calendar x-data attribute was cut short');
+    }
+
     public function test_calendar_month_switching_is_safe(): void
     {
         $this->travelTo(\Illuminate\Support\Carbon::parse('2026-01-31 10:00'));

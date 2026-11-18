@@ -28,6 +28,16 @@
         </div>
     @endif
 
+    @if ($booking->invoiceNeedsResend())
+        <div class="mb-6 px-4 py-3 bg-amber-50 border border-amber-100 rounded-xl text-amber-800 text-[13px] flex items-center justify-between gap-3 flex-wrap">
+            <span><strong>Revised {{ $booking->invoice_revised_at->format('d M Y, H:i') }}</strong> — the client hasn't been sent this version yet.</span>
+            <form method="POST" action="{{ route('admin.invoices.send-email', $booking) }}">
+                @csrf
+                <button type="submit" class="inline-flex items-center gap-2 bg-white border border-amber-200 text-amber-900 font-semibold px-3.5 py-2 rounded-xl text-[12.5px] hover:border-amber-400 transition-colors">Email the revised invoice</button>
+            </form>
+        </div>
+    @endif
+
     <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
         <div class="flex items-center gap-4">
             <div class="avatar" style="width:44px;height:44px;border-radius:14px;font-size:16px;">{{ strtoupper(substr($booking->name, 0, 1)) }}</div>
@@ -35,6 +45,7 @@
                 <h1 class="text-[22px] font-extrabold tracking-tight leading-tight">{{ $booking->invoice_number }}</h1>
                 <p class="text-muted text-[13px] mt-0.5">
                     {{ $booking->name }} &middot; {{ $booking->invoiced_at?->format('d M Y') }}
+                    @if ($booking->invoice_revised_at) &middot; <span class="text-amber-700 font-semibold">Revised {{ $booking->invoice_revised_at->format('d M Y') }}</span>@endif
                     &middot; <a href="{{ route('admin.bookings.show', $booking) }}" class="text-navy font-semibold hover:opacity-70 transition-opacity">View Booking &rarr;</a>
                 </p>
             </div>
@@ -50,6 +61,14 @@
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             Preview PDF
         </a>
+
+        @unless ($booking->isPriceLocked())
+            <a href="{{ route('admin.bookings.quote.edit', $booking) }}"
+               class="justify-center inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                Edit invoice
+            </a>
+        @endunless
 
         <a href="{{ route('admin.invoices.pdf', $booking) }}"
            class="justify-center inline-flex items-center gap-2 bg-white border border-line text-ink font-semibold px-4 py-2.5 rounded-xl text-[13px] hover:border-navy transition-colors">

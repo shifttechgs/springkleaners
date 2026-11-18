@@ -120,9 +120,9 @@
     {{-- Quote settings --}}
     <p class="ios-section-label">Quote</p>
     <div class="ios-group mb-6">
-        @unless ($booking->invoice_number)
+        @unless ($booking->isPriceLocked())
             <a href="{{ route('admin.bookings.quote.edit', $booking) }}" class="ios-cell w-full text-left">
-                <span class="flex-1">Edit quote, date &amp; time</span>
+                <span class="flex-1">{{ $booking->invoice_number ? 'Edit invoice' : 'Edit quote, date & time' }}</span>
                 <span class="ios-cell-value">{{ \App\Support\QuotePricing::isCustom($booking) ? 'Edited' : 'Automatic' }}</span>
                 {!! $chevron !!}
             </a>
