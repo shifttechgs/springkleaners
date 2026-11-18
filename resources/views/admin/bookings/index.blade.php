@@ -28,8 +28,12 @@
                 <option value="{{ $slug }}" @selected(request('service') === $slug)>{{ $service['name'] }}</option>
             @endforeach
         </select>
+        <select name="when" class="bg-white border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink focus:border-navy focus:outline-none transition-colors">
+            <option value="">All dates</option>
+            <option value="upcoming" @selected(request('when') === 'upcoming')>Upcoming jobs</option>
+        </select>
         <button type="submit" class="btn-primary">Filter</button>
-        @if (request()->anyFilled(['search', 'status', 'service']))
+        @if (request()->anyFilled(['search', 'status', 'service', 'when']))
             <a href="{{ route('admin.bookings.index') }}" class="flex items-center text-muted font-semibold text-[13px] hover:text-navy transition-colors px-1">Clear</a>
         @endif
     </form>

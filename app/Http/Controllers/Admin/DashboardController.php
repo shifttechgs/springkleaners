@@ -71,8 +71,12 @@ class DashboardController extends Controller
             ->where('date', '<', $today)
             ->count();
 
-        $upcomingJobs = Booking::where('status', BookingStatus::Accepted)
-            ->where('date', '>=', $today)
+        // Everything still on the schedule from today on — confirmed jobs and ones awaiting a quote or the
+        // client's go-ahead (they hold the slot too). Each row shows its status.
+        $upcomingQuery = Booking::whereIn('status', BookingStatus::scheduled())->where('date', '>=', $today);
+        $upcomingCount = (clone $upcomingQuery)->count();
+
+        $upcomingJobs = $upcomingQuery
             ->orderBy('date')
             // Morning slot before afternoon: times are text, and "1:00 PM – 5:00 PM" would sort before "8:00 AM – 12:00 PM".
             ->orderByRaw("CASE WHEN time LIKE '%AM%' THEN 0 ELSE 1 END")
@@ -125,6 +129,7 @@ class DashboardController extends Controller
             'jobsTomorrow' => $jobsTomorrow,
             'overdueJobs' => $overdueJobs,
             'upcomingJobs' => $upcomingJobs,
+            'upcomingCount' => $upcomingCount,
             'clientCount' => Client::count(),
             'newClientsThisMonth' => Client::where('created_at', '>=', now()->startOfMonth())->count(),
         ]);

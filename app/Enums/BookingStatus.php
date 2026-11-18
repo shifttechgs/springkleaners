@@ -54,4 +54,12 @@ enum BookingStatus: string
     {
         return [self::Pending, self::Quoted, self::Accepted, self::Completed];
     }
+
+    /**
+     * Jobs still on the schedule: requested, quoted or confirmed, and not yet done. Used for "upcoming jobs".
+     */
+    public static function scheduled(): array
+    {
+        return [self::Pending, self::Quoted, self::Accepted];
+    }
 }

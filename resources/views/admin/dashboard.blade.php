@@ -194,12 +194,18 @@
         {{-- Upcoming Jobs Schedule --}}
         <div class="lg:col-span-2 card overflow-hidden flex flex-col lg:min-h-0">
             <div class="px-5 py-3 border-b border-line flex items-center justify-between flex-shrink-0">
-                <h2 class="font-bold text-[13px] tracking-tight">Upcoming Jobs</h2>
-                <a href="{{ route('admin.bookings.index', ['status' => 'accepted']) }}" class="text-navy font-semibold text-[12px] hover:opacity-70 transition-opacity">View all &rarr;</a>
+                <h2 class="font-bold text-[13px] tracking-tight">
+                    Upcoming Jobs
+                    @if ($upcomingCount > 0)
+                        <span class="ml-1 text-label font-semibold text-[12px]">{{ $upcomingCount > $upcomingJobs->count() ? $upcomingJobs->count().' of '.$upcomingCount : $upcomingCount }}</span>
+                    @endif
+                </h2>
+                <a href="{{ route('admin.bookings.index', ['when' => 'upcoming']) }}" class="text-navy font-semibold text-[12px] hover:opacity-70 transition-opacity">View all &rarr;</a>
             </div>
             @if ($upcomingJobs->isEmpty())
                 <div class="px-6 py-10 text-center">
-                    <p class="text-muted text-[13px]">No confirmed jobs on the schedule yet.</p>
+                    <p class="text-muted text-[13px]">No upcoming jobs on the schedule.</p>
+                    <a href="{{ route('admin.bookings.create') }}" class="inline-block mt-2 text-navy font-semibold text-[12.5px] hover:opacity-70 transition-opacity">+ Add a booking</a>
                 </div>
             @else
                 <div class="overflow-y-auto min-h-0">
@@ -209,6 +215,7 @@
                                 <th class="px-5 py-2">Client</th>
                                 <th class="px-5 py-2">Service</th>
                                 <th class="px-5 py-2">Date</th>
+                                <th class="px-5 py-2">Status</th>
                                 <th class="px-5 py-2">Value</th>
                                 <th class="px-5 py-2"></th>
                             </tr>
@@ -223,7 +230,11 @@
                                         </div>
                                     </td>
                                     <td class="px-5 py-2 text-muted text-[13px]" data-label="Service">{{ \App\Support\Services::find($booking->service)['name'] ?? $booking->service }}</td>
-                                    <td class="px-5 py-2 text-muted text-[13px]" data-label="Date">{{ $booking->date->format('d M') }} &middot; {{ $booking->time }}</td>
+                                    <td class="px-5 py-2 text-muted text-[13px]" data-label="Date">
+                                        <span class="font-semibold text-ink">{{ $booking->date->isToday() ? 'Today' : ($booking->date->isTomorrow() ? 'Tomorrow' : $booking->date->format('D d M')) }}</span>
+                                        &middot; {{ $booking->time }}
+                                    </td>
+                                    <td class="px-5 py-2" data-label="Status"><x-admin.status-badge :status="$booking->status" /></td>
                                     <td class="px-5 py-2 text-muted text-[13px] td-corner">R{{ number_format((float) ($booking->quoted_price ?? $booking->total ?? 0), 0) }}</td>
                                     <td class="px-5 py-2 text-right td-link">
                                         <a href="{{ route('admin.bookings.show', $booking) }}" class="row-link text-navy font-semibold text-[13px] hover:opacity-70 transition-opacity">View</a>

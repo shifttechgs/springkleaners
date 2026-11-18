@@ -28,6 +28,9 @@ class BookingController extends Controller
     {
         QuoteExpiry::sweep();
 
+        // "Upcoming" = still on the schedule from today on, soonest first (the dashboard's "View all").
+        $upcoming = $request->query('when') === 'upcoming';
+
         $bookings = Booking::query()
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->query('status')))
             ->when($request->filled('service'), fn ($q) => $q->where('service', $request->query('service')))
@@ -36,8 +39,13 @@ class BookingController extends Controller
                 $search = $request->query('search');
                 $q->where(fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('phone', 'like', "%{$search}%"));
             })
-            ->orderByDesc('date')
-            ->orderByDesc('id')
+            ->when($upcoming, fn ($q) => $q
+                ->whereIn('status', BookingStatus::scheduled())
+                ->where('date', '>=', now()->toDateString())
+                ->orderBy('date')
+                ->orderByRaw("CASE WHEN time LIKE '%AM%' THEN 0 ELSE 1 END")
+                ->orderBy('time'))
+            ->when(! $upcoming, fn ($q) => $q->orderByDesc('date')->orderByDesc('id'))
             ->paginate(AdminPagination::PER_PAGE)
             ->withQueryString();
 
