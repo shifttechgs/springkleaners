@@ -11,11 +11,13 @@ use App\Models\Client;
 use App\Support\QuoteExpiry;
 use App\Support\Services;
 use App\Support\ServiceSnapshot;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -61,7 +63,7 @@ class BookingController extends Controller
         return view('admin.bookings.create', [
             'services' => Services::list(),
             'addons' => Services::addons(),
-            'timeSlots' => ['8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM'],
+            'timeSlots' => Booking::TIME_SLOTS,
         ]);
     }
 
@@ -74,7 +76,7 @@ class BookingController extends Controller
             'phone' => 'required|string|max:50',
             'service' => 'required|string|in:'.implode(',', Services::slugs()),
             'date' => 'required|date',
-            'time' => 'required|string|max:20',
+            'time' => ['required', 'string', Rule::in(Booking::TIME_SLOTS)],
             'address' => 'nullable|string|max:255',
             'suburb' => 'nullable|string|max:255',
             'property_type' => 'nullable|string|max:50',
@@ -103,30 +105,42 @@ class BookingController extends Controller
             return back()->withErrors(['date' => 'We only take bookings on Saturdays and Sundays — pick a weekend date.'])->withInput();
         }
 
-        $existing = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->count();
+        // Checked and saved under the same per-date lock as website bookings, so nothing can double-book a slot.
+        try {
+            $result = Booking::withDateLock($date, function () use ($date, $data) {
+                $existing = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->count();
+                $taken = Booking::takenSlots($date);
 
-        if ($existing >= Booking::DAILY_CAPACITY) {
-            return back()->withErrors(['date' => 'That date is already at capacity ('.Booking::DAILY_CAPACITY.' bookings) — pick another date.'])->withInput();
+                if ($existing >= Booking::DAILY_CAPACITY || count($taken) >= count(Booking::TIME_SLOTS)) {
+                    return ['date' => 'That date is fully booked (both slots are taken) — pick another date.'];
+                }
+
+                if (in_array($data['time'], $taken, true)) {
+                    return ['time' => 'That slot is already booked on this date — pick the other slot.'];
+                }
+
+                $client = Client::findOrCreateByPhone([
+                    'name' => $data['name'],
+                    'phone' => $data['phone'],
+                    'suburb' => $data['suburb'] ?? null,
+                ]);
+
+                return Booking::create([
+                    ...$data,
+                    'client_id' => $client->id,
+                    'booking_type' => $data['booking_type'] ?? 'once-off',
+                    'status' => BookingStatus::Pending,
+                ]);
+            });
+        } catch (LockTimeoutException) {
+            $result = ['time' => 'Someone else is booking this date right now — try again in a moment.'];
         }
 
-        $timeTaken = Booking::whereIn('status', BookingStatus::occupyingSlot())->whereDate('date', $date->toDateString())->where('time', $data['time'])->exists();
-
-        if ($timeTaken) {
-            return back()->withErrors(['time' => 'That time slot is already booked on this date — pick another time.'])->withInput();
+        if (is_array($result)) {
+            return back()->withErrors($result)->withInput();
         }
 
-        $client = Client::findOrCreateByPhone([
-            'name' => $data['name'],
-            'phone' => $data['phone'],
-            'suburb' => $data['suburb'] ?? null,
-        ]);
-
-        $booking = Booking::create([
-            ...$data,
-            'client_id' => $client->id,
-            'booking_type' => $data['booking_type'] ?? 'once-off',
-            'status' => BookingStatus::Pending,
-        ]);
+        $booking = $result;
 
         return redirect()->route('admin.bookings.show', $booking)->with('status', 'Booking recorded — review and send a quote when ready.');
     }
@@ -146,6 +160,24 @@ class BookingController extends Controller
 
             // Bookings invoiced without a quote step still need their scope frozen.
             ServiceSnapshot::ensureStored($booking);
+        }
+
+        // Reopening a cancelled or expired booking takes its slot back, so it must still be free.
+        $occupying = array_map(fn (BookingStatus $s) => $s->value, BookingStatus::occupyingSlot());
+        $wasOccupying = in_array($booking->status?->value, $occupying, true);
+        $willOccupy = in_array($data['status'], $occupying, true);
+
+        if (! $wasOccupying && $willOccupy) {
+            $slot = Booking::slotFor($booking->time);
+            $clash = Booking::whereIn('status', BookingStatus::occupyingSlot())
+                ->whereDate('date', $booking->date->toDateString())
+                ->whereKeyNot($booking->id)
+                ->pluck('time')
+                ->contains(fn ($time) => Booking::slotFor($time) === $slot);
+
+            if ($clash) {
+                return back()->withErrors(['status' => "Can't reopen this booking: the {$slot} slot on {$booking->date->format('j M Y')} has been taken by another booking."]);
+            }
         }
 
         $booking->update($data);

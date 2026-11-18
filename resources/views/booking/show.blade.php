@@ -96,6 +96,12 @@
     .time-selected { background: #081d3a; color: #fff; border-color: #081d3a; }
     .time-taken { background: #f8f9fc; color: #d5d9e2; cursor: not-allowed; }
     .time-taken:hover { border-color: #e8eaf0; }
+    .slot-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; padding: 13px 14px; }
+    .slot-name { display: block; font-size: 13px; font-weight: 700; }
+    .slot-time { display: block; font-size: 12px; font-weight: 600; opacity: .7; margin-top: 2px; }
+    .slot-tag { flex-shrink: 0; font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #ecfdf3; color: #067647; }
+    .time-taken .slot-tag { background: #fef2f2; color: #e5484d; }
+    .time-selected .slot-tag { background: rgba(255,255,255,.15); color: #fff; }
 
     .step-dot {
         width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -145,7 +151,7 @@
         bookingType: 'once-off', frequency: 'Weekly',
         calMonth: (new Date()).getMonth(), calYear: (new Date()).getFullYear(),
         selectedDate: null, selectedTime: null,
-        timeSlots: ['8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM'],
+        timeSlots: {{ \Illuminate\Support\Js::from(\App\Models\Booking::TIME_SLOTS) }},
         availability: {}, bookedTimes: {}, capacity: 2, nextAvailable: null, dateError: '', checkingDate: false,
 
         init() {
@@ -230,7 +236,7 @@
         dateKey(d) { return this.dateISO(new Date(this.calYear, this.calMonth, d)); },
         bookedCount(d) { return this.availability[this.dateKey(d)] || 0; },
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
-        bookableDays: @json(\App\Models\Booking::BOOKABLE_DAYS),
+        bookableDays: {{ \Illuminate\Support\Js::from(\App\Models\Booking::BOOKABLE_DAYS) }},
         isClosedDay(d) { return !!d && !this.bookableDays.includes(new Date(this.calYear, this.calMonth, d).getDay()); },
         isSelectable(d) { return !!d && !this.isPast(d) && !this.isClosedDay(d) && !this.isFull(d); },
         isTimeTaken(t) {
@@ -678,7 +684,7 @@
                 {{-- ── STEP 2: SCHEDULE ── --}}
                 <div x-show="step === 2" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Choose your date &amp; time</h2>
-                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We currently take bookings on Saturdays and Sundays, with {{ \App\Models\Booking::DAILY_CAPACITY }} client slots per day — pick a weekend date below.</p>
+                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We currently take bookings on Saturdays and Sundays, with two slots per day: 8am–12pm and 1pm–5pm. Pick a weekend date below.</p>
 
                     <div x-show="nextAvailable && !isNextAvailableAlreadySelected" x-cloak
                          class="flex items-center justify-between gap-3 bg-[#f8f9fc] border border-[#e8eaf0] rounded-xl px-4 py-3 mb-6">
@@ -747,16 +753,22 @@
                             <p class="fl mb-3">Pick a time</p>
                             <div x-show="!selectedDate" class="text-[#adb5c4] text-[13px] bg-[#f8f9fc] rounded-xl p-5 text-center">Choose a date first.</div>
                             <div x-show="selectedDate" x-cloak>
-                                <p class="text-[#8a94a6] text-[11.5px] font-semibold mb-2" x-text="selectedDateBookedCount + ' of ' + capacity + ' client slots already booked for this date'"></p>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <template x-for="t in timeSlots" :key="t">
+                                <p class="text-[#8a94a6] text-[11.5px] font-semibold mb-2" x-text="(capacity - selectedDateBookedCount > 0 ? (capacity - selectedDateBookedCount) : 0) + ' of ' + capacity + ' slots available on ' + selectedDateLabel"></p>
+                                <div class="grid grid-cols-1 gap-2">
+                                    <template x-for="(t, i) in timeSlots" :key="t">
                                         <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }"
-                                             class="time-slot" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')"
-                                             :title="isTimeTaken(t) ? 'Already booked' : ''" x-text="t"></div>
+                                             class="time-slot slot-row" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')"
+                                             :title="isTimeTaken(t) ? 'Already booked' : ''">
+                                            <span>
+                                                <span class="slot-name" x-text="i === 0 ? 'Morning' : 'Afternoon'"></span>
+                                                <span class="slot-time" x-text="t"></span>
+                                            </span>
+                                            <span class="slot-tag" x-text="isTimeTaken(t) ? 'Booked' : (selectedTime === t ? 'Selected' : 'Available')"></span>
+                                        </div>
                                     </template>
                                 </div>
                             </div>
-                            <p class="text-[#adb5c4] text-[12px] mt-4">Need a different time? Mention it in your WhatsApp message and we'll do our best to accommodate.</p>
+                            <p class="text-[#adb5c4] text-[12px] mt-4">Each job is a 4-hour slot. One booking per slot, so your time is reserved for you only.</p>
                         </div>
                     </div>
 

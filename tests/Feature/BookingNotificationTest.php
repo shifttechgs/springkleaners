@@ -19,7 +19,7 @@ class BookingNotificationTest extends TestCase
         return [
             'service' => 'deep-cleaning',
             'date' => Carbon::now()->next(Carbon::SATURDAY)->toDateString(),
-            'time' => '9:00 AM',
+            'time' => \App\Models\Booking::MORNING_SLOT,
             'name' => 'Test Client',
             'phone' => '0821234567',
             'email' => 'client@example.com',
@@ -36,7 +36,7 @@ class BookingNotificationTest extends TestCase
 
         Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('bookings@springkleaners.co.za'));
         Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('shifttechgs1@gmail.com'));
-        Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('springkleanersco@gmail.com'));
+        Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('netsaicharity@gmail.com'));
         Mail::assertSent(BookingRequestReceivedMail::class, fn ($mail) => $mail->hasTo('client@example.com'));
         Mail::assertSentCount(4);
     }
@@ -79,13 +79,13 @@ class BookingNotificationTest extends TestCase
         Mail::fake();
 
         User::factory()->create([
-            'email' => 'springkleanersco@gmail.com',
+            'email' => 'netsaicharity@gmail.com',
             'notify_new_bookings' => true,
         ]);
 
         $this->postJson('/book/reserve', $this->validBookingPayload())->assertOk();
 
-        Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('springkleanersco@gmail.com'), 1);
+        Mail::assertSent(NewBookingAlertMail::class, fn ($mail) => $mail->hasTo('netsaicharity@gmail.com'), 1);
         Mail::assertSentCount(4);
     }
 

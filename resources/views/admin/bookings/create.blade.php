@@ -32,6 +32,12 @@
     .time-slot:hover { border-color: #c9cedb; }
     .time-selected { background: #081d3a; color: #fff; border-color: #081d3a; }
     .time-taken { background: #f8f9fc; color: #d5d9e2; cursor: not-allowed; }
+    .slot-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; padding: 13px 14px; }
+    .slot-name { display: block; font-size: 13px; font-weight: 700; }
+    .slot-time { display: block; font-size: 12px; font-weight: 600; opacity: .7; margin-top: 2px; }
+    .slot-tag { flex-shrink: 0; font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #ecfdf3; color: #067647; }
+    .time-taken .slot-tag { background: #fef2f2; color: #e5484d; }
+    .time-selected .slot-tag { background: rgba(255,255,255,.15); color: #fff; }
     [x-cloak] { display: none !important; }
 </style>
 @endpush
@@ -108,7 +114,7 @@
         dateKey(d) { return this.dateISO(new Date(this.calYear, this.calMonth, d)); },
         bookedCount(d) { return this.availability[this.dateKey(d)] || 0; },
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
-        bookableDays: @json(\App\Models\Booking::BOOKABLE_DAYS),
+        bookableDays: {{ \Illuminate\Support\Js::from(\App\Models\Booking::BOOKABLE_DAYS) }},
         isClosedDay(d) { return !!d && !this.bookableDays.includes(new Date(this.calYear, this.calMonth, d).getDay()); },
         isSelectable(d) { return !!d && !this.isPast(d) && !this.isClosedDay(d) && !this.isFull(d); },
         isSelected(d) { if (!d || !this.selectedDate) return false; return this.selectedDate.getFullYear() === this.calYear && this.selectedDate.getMonth() === this.calMonth && this.selectedDate.getDate() === d; },
@@ -515,16 +521,24 @@
                             <div>
                                 <p class="fl mb-2">Pick a time</p>
                                 <div x-show="!selectedDate" class="text-label text-[12.5px] bg-canvas rounded-xl p-4 text-center">Choose a date first.</div>
-                                <div x-show="selectedDate" x-cloak class="grid grid-cols-2 gap-2">
-                                    <template x-for="t in timeSlots" :key="t">
-                                        <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }" class="time-slot" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')" :title="isTimeTaken(t) ? 'Already booked' : ''" x-text="t"></div>
+                                <div x-show="selectedDate" x-cloak class="grid grid-cols-1 gap-2">
+                                    <template x-for="(t, i) in timeSlots" :key="t">
+                                        <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }"
+                                             class="time-slot slot-row" :class="isTimeTaken(t) ? 'time-taken' : (selectedTime === t ? 'time-selected' : '')"
+                                             :title="isTimeTaken(t) ? 'Already booked' : ''">
+                                            <span>
+                                                <span class="slot-name" x-text="i === 0 ? 'Morning' : 'Afternoon'"></span>
+                                                <span class="slot-time" x-text="t"></span>
+                                            </span>
+                                            <span class="slot-tag" x-text="isTimeTaken(t) ? 'Booked' : (selectedTime === t ? 'Selected' : 'Available')"></span>
+                                        </div>
                                     </template>
                                 </div>
                             </div>
                         </div>
 
                         <p x-show="errors.dateTime" x-cloak class="text-rose-500 text-[12.5px] font-semibold mt-4 bg-rose-50 rounded-lg px-4 py-3">Please select an available date and a time.</p>
-                        <p class="text-label text-[11.5px] mt-4">{{ \App\Models\Booking::DAILY_CAPACITY }} slots/day — same rule as the website.</p>
+                        <p class="text-label text-[11.5px] mt-4">2 slots/day (8am–12pm, 1pm–5pm), one booking each — same rule as the website.</p>
                     </div>
 
                     <div class="hidden lg:flex justify-end">

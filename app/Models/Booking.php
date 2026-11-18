@@ -10,7 +10,50 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Booking extends Model
 {
+    /** The only bookable time slots each day. One booking per slot, so the daily capacity is the slot count. */
+    public const MORNING_SLOT = '8:00 AM – 12:00 PM';
+
+    public const AFTERNOON_SLOT = '1:00 PM – 5:00 PM';
+
+    public const TIME_SLOTS = [self::MORNING_SLOT, self::AFTERNOON_SLOT];
+
     public const DAILY_CAPACITY = 2;
+
+    /**
+     * The slot a stored time belongs to. Older bookings were saved with single times ("9:00 AM", "2:00 PM"),
+     * so anything before noon counts as the morning slot and anything from noon on as the afternoon slot.
+     */
+    public static function slotFor(?string $time): string
+    {
+        if (in_array($time, self::TIME_SLOTS, true)) {
+            return $time;
+        }
+
+        try {
+            return \Illuminate\Support\Carbon::parse((string) $time)->hour < 12 ? self::MORNING_SLOT : self::AFTERNOON_SLOT;
+        } catch (\Throwable) {
+            return self::MORNING_SLOT;
+        }
+    }
+
+    /** Slots already taken on a date, by bookings that still hold their slot. */
+    public static function takenSlots(\DateTimeInterface $date): array
+    {
+        return self::query()
+            ->whereIn('status', BookingStatus::occupyingSlot())
+            ->whereDate('date', $date->format('Y-m-d'))
+            ->pluck('time')
+            ->map(fn ($time) => self::slotFor($time))
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /** Lock a date while a booking is checked and saved, so two people can't take the same slot at the same moment. */
+    public static function withDateLock(\DateTimeInterface $date, callable $callback): mixed
+    {
+        return \Illuminate\Support\Facades\Cache::lock('booking-date:'.$date->format('Y-m-d'), 15)->block(10, $callback);
+    }
 
     /**
      * Days of the week we take bookings on (Carbon dayOfWeek: 0 = Sunday … 6 = Saturday).

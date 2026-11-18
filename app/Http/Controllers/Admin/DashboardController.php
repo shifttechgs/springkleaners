@@ -74,6 +74,8 @@ class DashboardController extends Controller
         $upcomingJobs = Booking::where('status', BookingStatus::Accepted)
             ->where('date', '>=', $today)
             ->orderBy('date')
+            // Morning slot before afternoon: times are text, and "1:00 PM – 5:00 PM" would sort before "8:00 AM – 12:00 PM".
+            ->orderByRaw("CASE WHEN time LIKE '%AM%' THEN 0 ELSE 1 END")
             ->orderBy('time')
             ->limit(8)
             ->get();
