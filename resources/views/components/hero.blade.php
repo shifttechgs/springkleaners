@@ -2,22 +2,24 @@
 <link rel="preload" href="/fonts/geist-600.woff2" as="font" type="font/woff2" crossorigin>
 @endpush
 @php
-    // Titles come from the services table so the dropdown matches the rest of the site. If the
-    // database is unreachable the homepage still renders, using these defaults.
-    $heroServices = [
-        ['value' => 'deep-cleaning', 'name' => 'Deep Cleaning', 'short' => 'Deep Cleaning'],
-        ['value' => 'end-of-tenancy', 'name' => 'End-of-Tenancy Cleaning', 'short' => 'End-of-Tenancy'],
-        ['value' => 'post-construction', 'name' => 'Post Construction Cleaning', 'short' => 'Post Construction'],
-    ];
+    // Bookable services with their pricing, for the hero's instant quote (same formula as the full booking
+    // form). If the database is unreachable the homepage still renders; the card then links to the full form.
+    $heroServices = [];
     try {
-        $liveServices = \App\Support\Services::list();
-        $heroServices = array_map(fn (array $option) => [
-            'value' => $option['value'],
-            'name' => $liveServices[$option['value']]['name'] ?? $option['name'],
-            'short' => $option['short'],
-        ], $heroServices);
+        foreach (\App\Support\Services::bookable() as $slug => $svc) {
+            $heroServices[$slug] = [
+                'name' => $svc['name'],
+                'base_price' => (float) $svc['base_price'],
+                'included_bedrooms' => (int) $svc['included_bedrooms'],
+                'included_bathrooms' => (int) $svc['included_bathrooms'],
+                'bedroom_price' => (float) $svc['bedroom_price'],
+                'bathroom_price' => (float) $svc['bathroom_price'],
+                'extra_room_price' => (float) $svc['extra_room_price'],
+                'service_fee' => (float) $svc['service_fee'],
+            ];
+        }
     } catch (\Throwable $e) {
-        // keep the defaults above
+        $heroServices = [];
     }
     // Hero slides: background photos that change with a striped reveal (see the hero slider script at the end).
     // `dim` is how much of the photo shows through on desktop, `dimMobile` on phones (lower = darker, for text contrast).
@@ -29,7 +31,9 @@
     ], fn (array $slide) => $slide['enabled']));
     $heroHasSlideshow = count($heroSlides) > 1;
 @endphp
-<section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-10">
+{{-- overflow: clip (with overflow-hidden as the fallback) so the zooming background can never make the hero
+     scroll sideways inside itself — e.g. when a field in the quote card gets focus. --}}
+<section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-10" style="overflow: clip;">
 
     {{-- Background slides. Each photo fades into the near-black base (mask on .hero-photo) and drifts slowly while on
          screen; the next one arrives through horizontal stripes. Decorative, so hidden from screen readers. --}}
@@ -78,233 +82,414 @@
             </div>
 
             <div class="lg:col-span-5" id="hero-form">
+                @if (empty($heroServices))
+                    <div class="bg-[#f6f8fb] rounded-xl p-6 sm:p-7 ring-1 ring-white/30">
+                        <p class="font-display text-[#081d3a] text-[26px] leading-none mb-3">Get your instant quote</p>
+                        <x-arrow-button block href="{{ route('booking.show') }}">Start my quote</x-arrow-button>
+                    </div>
+                @else
+                {{-- Instant quote + booking in four short steps, right here in the hero: what & where, size (live
+                     price), when (real availability), contact. It submits to the same endpoint as the full booking
+                     form, so slot rules, alerts and emails all apply. Everything goes in quote-safe (@js / Js::from). --}}
                 <div x-data="{
+                    step: 1,
+                    done: false,
+                    submitting: false,
+                    serverError: '',
                     suburbs: @js(config('served_suburbs')),
                     suburbQuery: '',
                     filteredSuburbs: [],
                     showSuggestions: false,
                     selectedSuburb: '',
                     locationStatus: null,
-                    serviceError: false,
-                    errors: { name: false, phone: false },
-                    form: {
-                        name: '',
-                        phone: '',
-                        email: '',
-                        service: '',
-                        propertyType: 'Residential'
-                    },
                     waitlistEmail: '',
+                    services: @js($heroServices),
+                    serviceKey: @js(array_key_exists('deep-cleaning', $heroServices) ? 'deep-cleaning' : (array_key_first($heroServices) ?? '')),
+                    propertyType: 'House',
+                    bedrooms: 2, bathrooms: 1, extraRooms: 0,
+                    date: '', slot: '',
+                    slotLabels: @js(\App\Models\Booking::TIME_SLOTS),
+                    bookableDays: @js(\App\Models\Booking::BOOKABLE_DAYS),
+                    counts: {}, taken: {}, capacity: 2, loadingDates: false, loadedMonths: [],
+                    form: { name: '', phone: '', email: '', address: '' },
+                    errors: {},
+                    availabilityUrl: @js(route('booking.availability')),
+                    reserveUrl: @js(route('booking.reserve')),
+                    fullFormUrl: @js(route('booking.show')),
+                    stepNames: ['Your clean', 'Size & price', 'Date & time', 'Your details'],
+
+                    get service() { return this.services[this.serviceKey] || null },
+                    get subtotal() {
+                        const s = this.service; if (!s) return 0;
+                        return s.base_price
+                            + Math.max(0, this.bedrooms - s.included_bedrooms) * s.bedroom_price
+                            + Math.max(0, this.bathrooms - s.included_bathrooms) * s.bathroom_price
+                            + this.extraRooms * s.extra_room_price;
+                    },
+                    get total() { return this.subtotal + (this.service ? this.service.service_fee : 0) },
+                    money(n) { return 'R' + Math.round(n).toLocaleString('en-US') },
+                    sizeLabel(n, max) { return n >= max ? max + '+' : String(n) },
+
                     filterSuburbs() {
-                        if (this.suburbQuery.length < 1) {
-                            this.filteredSuburbs = [];
-                            this.showSuggestions = false;
-                            return;
-                        }
-                        this.filteredSuburbs = this.suburbs.filter(s =>
-                            s.toLowerCase().includes(this.suburbQuery.toLowerCase())
-                        );
-                        this.showSuggestions = this.filteredSuburbs.length > 0;
                         this.locationStatus = null;
+                        if (this.suburbQuery.length < 1) { this.filteredSuburbs = []; this.showSuggestions = false; return; }
+                        const q = this.suburbQuery.toLowerCase();
+                        this.filteredSuburbs = this.suburbs.filter(s => s.toLowerCase().includes(q));
+                        this.showSuggestions = this.filteredSuburbs.length > 0;
                     },
-                    selectSuburb(suburb) {
-                        this.selectedSuburb = suburb;
-                        this.suburbQuery = suburb;
-                        this.showSuggestions = false;
-                        this.locationStatus = 'valid';
-                    },
+                    selectSuburb(s) { this.selectedSuburb = s; this.suburbQuery = s; this.showSuggestions = false; this.locationStatus = 'valid'; this.errors.suburb = false; },
                     checkLocation() {
                         this.showSuggestions = false;
-                        if (!this.suburbQuery.trim()) return;
-                        const match = this.suburbs.find(s =>
-                            s.toLowerCase() === this.suburbQuery.toLowerCase()
-                        );
-                        if (match) {
-                            this.selectedSuburb = match;
-                            this.locationStatus = 'valid';
-                        } else {
-                            this.locationStatus = 'invalid';
+                        if (!this.suburbQuery.trim()) { this.locationStatus = 'required'; return; }
+                        const m = this.suburbs.find(s => s.toLowerCase() === this.suburbQuery.trim().toLowerCase());
+                        if (m) { this.selectSuburb(m); } else { this.locationStatus = 'invalid'; }
+                    },
+
+                    next() {
+                        this.serverError = '';
+                        if (this.step === 1) {
+                            if (this.locationStatus !== 'valid') this.checkLocation();
+                            this.errors.service = !this.service;
+                            if (this.locationStatus !== 'valid' || this.errors.service) return;
+                        }
+                        if (this.step === 3) {
+                            this.errors.when = !this.date || !this.slot;
+                            if (this.errors.when) return;
+                        }
+                        this.go(this.step + 1);
+                    },
+                    back() { if (this.step > 1) this.go(this.step - 1) },
+                    go(n) {
+                        this.step = n;
+                        if (n === 3) this.loadDates();
+                        this.$nextTick(() => this.$refs['step' + n]?.querySelector('input, button, select')?.focus({ preventScroll: true }));
+                    },
+
+                    // Next bookable dates, with how many slots are left on each.
+                    async loadDates() {
+                        const now = new Date();
+                        const months = [0, 1].map(k => { const d = new Date(now.getFullYear(), now.getMonth() + k, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-01'; });
+                        const todo = months.filter(m => !this.loadedMonths.includes(m));
+                        if (!todo.length) return;
+                        this.loadingDates = true;
+                        try {
+                            for (const m of todo) {
+                                const json = await (await fetch(this.availabilityUrl + '?month=' + m)).json();
+                                Object.assign(this.counts, json.counts || {});
+                                Object.assign(this.taken, json.times || {});
+                                this.capacity = json.capacity || this.capacity;
+                                this.loadedMonths.push(m);
+                            }
+                        } catch (e) {}
+                        this.loadingDates = false;
+                    },
+                    iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') },
+                    get dateOptions() {
+                        const out = [];
+                        const d = new Date(); d.setHours(0, 0, 0, 0);
+                        for (let i = 0; i < 62 && out.length < 6; i++, d.setDate(d.getDate() + 1)) {
+                            if (!this.bookableDays.includes(d.getDay())) continue;
+                            const iso = this.iso(d);
+                            const used = Math.max(this.counts[iso] || 0, (this.taken[iso] || []).length);
+                            out.push({ iso, day: d.toLocaleDateString('en-GB', { weekday: 'short' }), date: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }), left: Math.max(0, this.capacity - used) });
+                        }
+                        return out;
+                    },
+                    slotTaken(s) { return (this.taken[this.date] || []).includes(s) },
+                    pickDate(o) { if (o.left < 1) return; this.date = o.iso; if (this.slot && this.slotTaken(this.slot)) this.slot = ''; this.errors.when = false; },
+                    get whenLabel() {
+                        if (!this.date) return '';
+                        return new Date(this.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + (this.slot ? ', ' + this.slot : '');
+                    },
+                    get fullFormLink() {
+                        const p = new URLSearchParams();
+                        if (this.serviceKey) p.set('service', this.serviceKey);
+                        if (this.selectedSuburb) p.set('suburb', this.selectedSuburb);
+                        return this.fullFormUrl + (p.toString() ? '?' + p.toString() : '');
+                    },
+
+                    async submit() {
+                        if (this.submitting) return;
+                        const f = this.form;
+                        this.errors = {
+                            name: !f.name.trim(),
+                            phone: f.phone.replace(/\D/g, '').length < 9,
+                            email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()),
+                            address: !f.address.trim(),
+                        };
+                        if (Object.values(this.errors).some(Boolean)) return;
+                        this.submitting = true; this.serverError = '';
+                        try {
+                            const res = await fetch(this.reserveUrl, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content },
+                                body: JSON.stringify({
+                                    service: this.serviceKey, date: this.date, time: this.slot,
+                                    name: f.name.trim(), phone: f.phone.trim(), email: f.email.trim(), address: f.address.trim(), suburb: this.selectedSuburb,
+                                    property_type: this.propertyType,
+                                    bedrooms: this.sizeLabel(this.bedrooms, 5), bathrooms: this.sizeLabel(this.bathrooms, 4), extra_rooms: this.sizeLabel(this.extraRooms, 4),
+                                    booking_type: 'once-off', subtotal: this.subtotal, total: this.total,
+                                }),
+                            });
+                            const json = await res.json().catch(() => ({}));
+                            if (res.ok && json.status === 'ok') { this.done = true; return; }
+                            if (['time_taken', 'full', 'invalid_day'].includes(json.status)) {
+                                this.loadedMonths = []; await this.loadDates();
+                                this.slot = ''; if (json.status !== 'time_taken') this.date = '';
+                                this.serverError = json.status === 'time_taken' ? 'That slot was just booked — please pick another.' : 'That date just filled up — please pick another.';
+                                this.step = 3; return;
+                            }
+                            this.serverError = json.message || 'Something went wrong — please try again, or WhatsApp us on +27 81 527 4711.';
+                        } catch (e) {
+                            this.serverError = 'Something went wrong — please try again, or WhatsApp us on +27 81 527 4711.';
+                        } finally {
+                            this.submitting = false;
                         }
                     },
-                    submitForm() {
-                        this.errors.name = !this.form.name.trim();
-                        this.errors.phone = !this.form.phone.trim();
-                        this.serviceError = !this.form.service;
-                        if (!this.suburbQuery.trim()) {
-                            this.locationStatus = 'required';
-                        } else if (this.locationStatus !== 'valid') {
-                            this.checkLocation();
-                        }
-                        if (this.errors.name || this.errors.phone || this.serviceError || this.locationStatus !== 'valid') {
-                            return;
-                        }
-                        const params = new URLSearchParams({
-                            service: this.form.service,
-                            name: this.form.name,
-                            phone: this.form.phone,
-                            email: this.form.email,
-                            suburb: this.selectedSuburb,
-                        });
-                        window.location.href = '{{ route('booking.show') }}?' + params.toString();
-                    }
                 }" class="bg-[#f6f8fb] rounded-xl p-6 sm:p-7 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.75)] ring-1 ring-white/30">
 
-                    <div>
-                        <div class="mb-1">
-                            <p class="font-display text-[#081d3a] text-[26px] leading-none">Get your instant quote</p>
-                            <p class="hero-form-sub text-[#5b6779] text-[14px] mt-2">Free, with no obligation.</p>
+                    {{-- Done --}}
+                    <div x-show="done" x-cloak class="text-center py-4" role="status" aria-live="polite">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         </div>
+                        <p class="font-display text-[#081d3a] text-[24px] leading-tight">Booking request sent!</p>
+                        <p class="text-[#5b6779] text-[14px] mt-2" x-text="(service ? service.name : '') + ' · ' + whenLabel"></p>
+                        <p class="text-[#081d3a] font-bold text-[20px] mt-1" x-text="money(total)"></p>
+                        <p class="text-[#5b6779] text-[13.5px] mt-3">We'll confirm on WhatsApp shortly, and a confirmation email is on its way to <span class="font-semibold text-[#081d3a]" x-text="form.email"></span>.</p>
+                        <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-5 bg-[#25d366] text-[#081d3a] font-bold px-5 py-3 rounded-full text-[14px] hover:bg-[#20bd5a] transition-colors">WhatsApp us</a>
+                    </div>
 
-                        <div class="border-t border-[#081d3a]/10 my-4"></div>
-
-                        <div class="mb-3">
-                            <label class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Your Suburb <span class="text-rose-500">*</span></label>
-                            <div class="relative">
-                                <input
-                                    type="text"
-                                    x-model="suburbQuery"
-                                    x-on:input="filterSuburbs()"
-                                    x-on:blur="setTimeout(() => { showSuggestions = false }, 200)"
-                                    x-on:keydown.enter.prevent="checkLocation()"
-                                    placeholder="e.g. Milnerton, Parklands..."
-                                    class="w-full bg-white border rounded-lg px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors"
-                                    :class="locationStatus === 'required' ? 'border-red-400' : 'border-[#081d3a]/15'"
-                                >
-                                <div x-show="showSuggestions"
-                                     class="absolute left-0 right-0 top-full mt-1 bg-[#081d3a] border border-white/10 rounded-xl z-50 max-h-48 overflow-y-auto"
-                                     style="display:none;">
-                                    <template x-for="suburb in filteredSuburbs" :key="suburb">
-                                        <div @click="selectSuburb(suburb)"
-                                             class="px-4 py-2.5 text-[14px] text-white/80 hover:bg-white/5 hover:text-[#f6e304] cursor-pointer flex items-center gap-2">
-                                            <svg class="w-3.5 h-3.5 text-[#f6e304]/60 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                                            </svg>
-                                            <span x-text="suburb"></span>
-                                        </div>
-                                    </template>
-                                </div>
+                    <div x-show="!done">
+                        {{-- Header: title, live price, progress --}}
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="font-display text-[#081d3a] text-[24px] sm:text-[26px] leading-none">Get your instant quote</p>
+                                <p class="hero-form-sub text-[#5b6779] text-[13.5px] mt-2">
+                                    <span x-text="'Step ' + step + ' of 4'"></span> &middot; <span x-text="stepNames[step - 1]"></span>
+                                </p>
                             </div>
-
-                            <div x-show="locationStatus === 'required'" class="mt-2 flex items-center gap-1.5 text-red-600 text-[13px]" style="display:none;">
-                                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                                <span>Please enter your suburb</span>
-                            </div>
-                            <div x-show="locationStatus === 'valid'" class="mt-2 flex items-center gap-1.5 text-green-600 text-[13px]" style="display:none;">
-                                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                <span>Great! We service <span x-text="selectedSuburb" class="font-semibold"></span></span>
-                            </div>
-                            <div x-show="locationStatus === 'invalid'" class="mt-2 flex items-center gap-1.5 text-red-600 text-[13px]" style="display:none;">
-                                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                                <span>We don't service <span x-text="suburbQuery || 'that area'" class="font-semibold"></span> yet</span>
-                            </div>
-
-                            <div x-show="locationStatus !== 'valid' && !showSuggestions" class="hero-popular mt-3" style="display:none;">
-                                <p class="text-[#081d3a]/65 text-[12.5px] mb-2">Popular areas</p>
-                                <div class="flex flex-wrap gap-1.5">
-                                    <template x-for="suburb in ['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown']" :key="suburb">
-                                        <button type="button"
-                                                @click="selectSuburb(suburb)"
-                                                class="px-2 py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors"
-                                                x-text="suburb">
-                                        </button>
-                                    </template>
-                                </div>
+                            <div x-show="step > 1" x-cloak class="flex-shrink-0 text-right" aria-live="polite">
+                                <p class="text-[#5b6779] text-[11px] font-semibold uppercase tracking-wider">Your price</p>
+                                <p class="text-[#081d3a] font-extrabold text-[22px] leading-none mt-0.5" x-text="money(total)"></p>
                             </div>
                         </div>
-
-                        <div x-show="locationStatus === 'invalid'"
-                             x-transition:enter="transition ease-out duration-300"
-                             x-transition:enter-start="opacity-0 translate-y-3"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             class="mb-3 p-4 bg-[#081d3a]/5 rounded-lg border border-[#081d3a]/10"
-                             style="display:none;">
-                            <p class="text-[#081d3a] font-semibold text-[14px] mb-1">We're not in <span x-text="suburbQuery || 'your area'" class="font-bold"></span> yet</p>
-                            <p class="text-[#5b6779] text-[12px] mb-3">We're expanding! Join our waitlist to be first.</p>
-                            <div class="flex gap-2">
-                                <input type="email" x-model="waitlistEmail" placeholder="Your email address" class="flex-1 bg-white border border-[#081d3a]/15 rounded-xl px-3 py-2.5 text-[#081d3a] text-[13px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors">
-                                <button type="button" class="px-4 py-2.5 bg-[#f6e304] text-[#081d3a] font-bold rounded-full text-[13px] hover:bg-yellow-300 transition-colors flex-shrink-0">
-                                    Join
-                                </button>
-                            </div>
+                        <div class="flex gap-1 mt-4 mb-4" aria-hidden="true">
+                            <template x-for="n in 4" :key="n">
+                                <span class="h-1 flex-1 rounded-full transition-colors duration-300" :class="n <= step ? 'bg-[#081d3a]' : 'bg-[#081d3a]/12'"></span>
+                            </template>
                         </div>
 
-                        <div class="space-y-2.5">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Full Name <span class="text-rose-500 normal-case tracking-normal">*</span></label>
-                                    <input type="text" x-model="form.name" @input="errors.name = false" placeholder="e.g. Jane Smith" class="w-full bg-white border rounded-lg px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors" :class="errors.name ? 'border-red-400' : 'border-[#081d3a]/15'">
-                                    <p x-show="errors.name" x-cloak class="text-red-600 text-[11.5px] mt-1">Please enter your name</p>
-                                </div>
-                                <div>
-                                    <label class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Phone <span class="text-rose-500 normal-case tracking-normal">*</span></label>
-                                    <input type="tel" x-model="form.phone" @input="errors.phone = false" placeholder="082 xxx xxxx" class="w-full bg-white border rounded-lg px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors" :class="errors.phone ? 'border-red-400' : 'border-[#081d3a]/15'">
-                                    <p x-show="errors.phone" x-cloak class="text-red-600 text-[11.5px] mt-1">Please enter your phone number</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Email</label>
-                                    <input type="email" x-model="form.email" placeholder="you@email.com" class="w-full bg-white border border-[#081d3a]/15 rounded-lg px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors">
-                                </div>
-                                <div>
-                                    <label class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Service <span class="text-rose-500 normal-case tracking-normal">*</span></label>
-                                    <div class="relative" x-data="{
-                                        open: false,
-                                        options: @js($heroServices),
-                                        get label() { const o = this.options.find(o => o.value === form.service); return o ? o.short : ''; },
-                                        pick(o) { form.service = o.value; serviceError = false; this.open = false; this.$nextTick(() => this.$refs.trigger.focus()); }
-                                    }" x-on:keydown.escape="open = false" x-on:click.outside="open = false">
-                                        <button type="button" id="hero-service" x-ref="trigger" aria-haspopup="listbox" :aria-expanded="open" aria-label="Service"
-                                                x-on:click="open = !open"
-                                                class="w-full flex items-center justify-between gap-2 bg-white border rounded-lg px-4 py-3 text-left text-[14px] text-[#081d3a] transition-colors cursor-pointer"
-                                                :class="serviceError ? 'border-red-400' : (open ? 'border-[#f6e304]' : 'border-[#081d3a]/15')">
-                                            <span class="truncate" :class="label ? '' : 'text-[#081d3a]/65'" x-text="label || 'Select one'">Select one</span>
-                                            <svg class="h-4 w-4 flex-shrink-0 text-[#081d3a]/55 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                                        </button>
-                                        <div x-show="open" x-cloak role="listbox" aria-label="Service"
-                                             x-transition:enter="transition ease-out duration-150"
-                                             x-transition:enter-start="opacity-0 -translate-y-1"
-                                             x-transition:enter-end="opacity-100 translate-y-0"
-                                             x-transition:leave="transition ease-in duration-100"
-                                             x-transition:leave-start="opacity-100"
-                                             x-transition:leave-end="opacity-0"
-                                             class="absolute right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-3rem)] rounded-xl bg-white p-1.5 shadow-[0_24px_60px_-16px_rgba(8,29,58,0.45)] ring-1 ring-[#081d3a]/10"
-                                             style="display:none;">
-                                            <template x-for="o in options" :key="o.value">
-                                                <button type="button" role="option" :aria-selected="form.service === o.value" x-on:click="pick(o)"
-                                                        class="flex w-full items-center justify-between gap-4 rounded-lg px-3 py-3 text-left text-[14px] font-semibold text-[#081d3a] transition-colors hover:bg-[#081d3a]/[0.05] focus-visible:bg-[#081d3a]/[0.05] focus-visible:outline-none"
-                                                        :class="form.service === o.value ? 'bg-[#081d3a]/[0.06]' : ''">
-                                                    <span x-text="o.name"></span>
-                                                    <svg x-show="form.service === o.value" class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                                </button>
-                                            </template>
-                                        </div>
+                        {{-- Step 1: where & what --}}
+                        <div x-show="step === 1" x-ref="step1" class="space-y-3">
+                            <div>
+                                <label for="hero-suburb" class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Your suburb <span class="text-rose-500">*</span></label>
+                                <div class="relative">
+                                    <input id="hero-suburb" type="text" x-model="suburbQuery" x-on:input="filterSuburbs()" x-on:blur="setTimeout(() => { showSuggestions = false }, 200)"
+                                           x-on:keydown.enter.prevent="checkLocation()" autocomplete="address-level2" placeholder="e.g. Milnerton, Parklands..."
+                                           class="w-full bg-white border rounded-lg px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors"
+                                           :class="locationStatus === 'required' || locationStatus === 'invalid' ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                    <div x-show="showSuggestions" class="absolute left-0 right-0 top-full mt-1 bg-[#081d3a] border border-white/10 rounded-xl z-50 max-h-48 overflow-y-auto" style="display:none;">
+                                        <template x-for="s in filteredSuburbs" :key="s">
+                                            <div x-on:click="selectSuburb(s)" class="px-4 py-2.5 text-[14px] text-white/80 hover:bg-white/5 hover:text-[#f6e304] cursor-pointer" x-text="s"></div>
+                                        </template>
                                     </div>
-                                    <p x-show="serviceError" x-cloak class="text-red-600 text-[11.5px] mt-1">Please choose a service</p>
                                 </div>
+                                <p x-show="locationStatus === 'required'" x-cloak class="mt-1.5 text-red-600 text-[12.5px]">Please enter your suburb.</p>
+                                <p x-show="locationStatus === 'valid'" x-cloak class="mt-1.5 text-green-600 text-[12.5px]">Great! We service <span class="font-semibold" x-text="selectedSuburb"></span>.</p>
+                                <div x-show="locationStatus === 'invalid'" x-cloak class="mt-2 p-3 bg-[#081d3a]/5 rounded-lg border border-[#081d3a]/10">
+                                    <p class="text-[#081d3a] font-semibold text-[13px]">We're not in <span x-text="suburbQuery || 'your area'"></span> yet</p>
+                                    <p class="text-[#5b6779] text-[12px] mt-0.5">We're expanding — WhatsApp us and we'll let you know when we reach you.</p>
+                                </div>
+                                <div x-show="locationStatus !== 'valid' && locationStatus !== 'invalid' && !showSuggestions" class="hero-popular mt-2 flex flex-wrap gap-1.5">
+                                    <template x-for="s in ['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown']" :key="s">
+                                        <button type="button" x-on:click="selectSuburb(s)" class="px-2 py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors" x-text="s"></button>
+                                    </template>
+                                </div>
+                            </div>
+                            <div>
+                                <p id="hero-service-label" class="block text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Service <span class="text-rose-500">*</span></p>
+                                {{-- Custom listbox (a native select's open list can't be styled). Keyboard: arrows, Enter, Escape. --}}
+                                <div class="relative"
+                                     x-data="{
+                                         open: false,
+                                         active: 0,
+                                         get keys() { return Object.keys(this.services) },
+                                         toggle() { this.open ? this.close() : this.show() },
+                                         show() { this.open = true; this.active = Math.max(0, this.keys.indexOf(this.serviceKey)); this.scrollActive() },
+                                         close(refocus = false) { this.open = false; if (refocus) this.$refs.trigger.focus() },
+                                         move(d) { if (!this.open) return this.show(); this.active = (this.active + d + this.keys.length) % this.keys.length; this.scrollActive() },
+                                         scrollActive() { this.$nextTick(() => this.$refs.list.querySelectorAll('[role=option]')[this.active]?.scrollIntoView({ block: 'nearest' })) },
+                                         choose(key) { this.serviceKey = key; this.errors.service = false; this.close(true) },
+                                     }"
+                                     x-on:keydown.escape.prevent.stop="close(true)"
+                                     x-on:click.outside="close()">
+                                    <button type="button" id="hero-service" x-ref="trigger"
+                                            aria-haspopup="listbox" :aria-expanded="open" aria-labelledby="hero-service-label hero-service"
+                                            x-on:click="toggle()"
+                                            x-on:keydown.arrow-down.prevent="move(1)" x-on:keydown.arrow-up.prevent="move(-1)"
+                                            x-on:keydown.enter.prevent="open ? choose(keys[active]) : show()"
+                                            x-on:keydown.space.prevent="open ? choose(keys[active]) : show()"
+                                            class="w-full flex items-center justify-between gap-3 bg-white border rounded-lg pl-4 pr-3 py-3 text-left transition-colors cursor-pointer focus:outline-none"
+                                            :class="errors.service ? 'border-red-400' : (open ? 'border-[#f6e304] ring-2 ring-[#f6e304]/30' : 'border-[#081d3a]/15 hover:border-[#081d3a]/35')">
+                                        <span class="min-w-0 flex items-baseline gap-2">
+                                            <span class="truncate text-[14px] font-semibold text-[#081d3a]" x-text="service ? service.name : 'Choose a service'"></span>
+                                            <span x-show="service" class="flex-shrink-0 text-[12px] text-[#5b6779]" x-text="service ? 'from ' + money(service.base_price + service.service_fee) : ''"></span>
+                                        </span>
+                                        <svg class="h-4 w-4 flex-shrink-0 text-[#081d3a]/55 transition-transform duration-200" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+                                    <ul x-show="open" x-cloak x-ref="list" role="listbox" aria-labelledby="hero-service-label"
+                                        x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                        class="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-64 overflow-y-auto rounded-xl bg-white p-1.5 shadow-[0_24px_60px_-16px_rgba(8,29,58,0.45)] ring-1 ring-[#081d3a]/10">
+                                        <template x-for="(key, i) in keys" :key="key">
+                                            <li role="option" :aria-selected="key === serviceKey" :id="'hero-service-' + key"
+                                                x-on:click="choose(key)" x-on:mouseenter="active = i"
+                                                class="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 cursor-pointer transition-colors"
+                                                :class="active === i ? 'bg-[#081d3a]/[0.06]' : ''">
+                                                <span class="min-w-0">
+                                                    <span class="block truncate text-[14px] font-semibold text-[#081d3a]" x-text="services[key].name"></span>
+                                                    <span class="block text-[12px] text-[#5b6779]" x-text="'from ' + money(services[key].base_price + services[key].service_fee)"></span>
+                                                </span>
+                                                <svg x-show="key === serviceKey" class="h-4 w-4 flex-shrink-0 text-[#081d3a]" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                                <a href="{{ route('services.show', 'office-commercial-cleaning') }}" class="inline-block mt-1.5 text-[12px] text-[#5b6779] underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Office or commercial space? Get a custom quote</a>
                             </div>
                             <div class="flex gap-1 rounded-full bg-[#081d3a]/[0.07] p-1" role="group" aria-label="Property type">
-                                <button type="button"
-                                        @click="form.propertyType = 'Residential'"
-                                        :aria-pressed="form.propertyType === 'Residential'"
-                                        :class="form.propertyType === 'Residential' ? 'bg-[#081d3a] text-white shadow' : 'text-[#081d3a]/70 hover:text-[#081d3a]'"
-                                        class="flex-1 px-4 py-2.5 rounded-full text-[14px] font-semibold transition-colors">
-                                    Residential
-                                </button>
-                                <button type="button"
-                                        @click="form.propertyType = 'Commercial'"
-                                        :aria-pressed="form.propertyType === 'Commercial'"
-                                        :class="form.propertyType === 'Commercial' ? 'bg-[#081d3a] text-white shadow' : 'text-[#081d3a]/70 hover:text-[#081d3a]'"
-                                        class="flex-1 px-4 py-2.5 rounded-full text-[14px] font-semibold transition-colors">
-                                    Commercial
-                                </button>
+                                <template x-for="t in ['House', 'Apartment / Flat', 'Townhouse']" :key="t">
+                                    <button type="button" x-on:click="propertyType = t" :aria-pressed="propertyType === t"
+                                            :class="propertyType === t ? 'bg-[#081d3a] text-white shadow' : 'text-[#081d3a]/70 hover:text-[#081d3a]'"
+                                            class="flex-1 px-2 py-2 rounded-full text-[13px] font-semibold transition-colors" x-text="t === 'Apartment / Flat' ? 'Apartment' : t"></button>
+                                </template>
                             </div>
-                            <p x-show="errors.name || errors.phone || serviceError || locationStatus === 'required'" x-cloak class="text-red-500 text-[12px] -mt-1">Please fill in the highlighted fields above to continue.</p>
-                            <x-arrow-button block x-on:click="submitForm()">Get my instant quote</x-arrow-button>
-                            <p class="hero-form-note text-center text-[#5b6779] text-[12.5px]">Free inspection. No commitment.</p>
                         </div>
+
+                        {{-- Step 2: size, with the price updating live --}}
+                        <div x-show="step === 2" x-cloak x-ref="step2" class="space-y-2.5">
+                            <template x-for="row in [
+                                { key: 'bedrooms', label: 'Bedrooms', min: 1, max: 5 },
+                                { key: 'bathrooms', label: 'Bathrooms', min: 1, max: 4 },
+                                { key: 'extraRooms', label: 'Extra rooms', hint: 'Living, dining, study…', min: 0, max: 4 },
+                            ]" :key="row.key">
+                                <div class="flex items-center justify-between gap-3 bg-white border border-[#081d3a]/10 rounded-lg px-4 py-2.5">
+                                    <div>
+                                        <p class="text-[#081d3a] text-[14px] font-semibold" x-text="row.label"></p>
+                                        <p x-show="row.hint" class="text-[#5b6779] text-[11.5px]" x-text="row.hint"></p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" x-on:click="$data[row.key] = Math.max(row.min, $data[row.key] - 1)" :disabled="$data[row.key] <= row.min"
+                                                class="w-9 h-9 rounded-full border border-[#081d3a]/15 text-[#081d3a] text-[18px] font-bold leading-none hover:border-[#081d3a] disabled:opacity-30" :aria-label="'Fewer ' + row.label.toLowerCase()">−</button>
+                                        <span class="w-8 text-center text-[#081d3a] text-[16px] font-bold" x-text="sizeLabel($data[row.key], row.max)" aria-live="polite"></span>
+                                        <button type="button" x-on:click="$data[row.key] = Math.min(row.max, $data[row.key] + 1)" :disabled="$data[row.key] >= row.max"
+                                                class="w-9 h-9 rounded-full border border-[#081d3a]/15 text-[#081d3a] text-[18px] font-bold leading-none hover:border-[#081d3a] disabled:opacity-30" :aria-label="'More ' + row.label.toLowerCase()">+</button>
+                                    </div>
+                                </div>
+                            </template>
+                            <p class="text-[#5b6779] text-[12px] pt-1">
+                                <span x-text="service ? service.name : ''"></span> &middot; includes the
+                                <span x-text="service ? money(service.service_fee) : ''"></span> service fee. Your price is confirmed before we start — never without your sign-off.
+                            </p>
+                        </div>
+
+                        {{-- Step 3: real availability --}}
+                        <div x-show="step === 3" x-cloak x-ref="step3">
+                            <p class="text-[#081d3a]/80 text-[13px] mb-1.5 font-semibold">Pick a date <span class="font-normal text-[#5b6779]">(weekends)</span></p>
+                            <p x-show="loadingDates" class="flex items-center gap-2 text-[#5b6779] text-[13px] py-3" role="status"><svg class="animate-spin h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"></circle><path d="M22 12a10 10 0 00-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path></svg> Checking availability…</p>
+                            <div x-show="!loadingDates" class="grid grid-cols-3 gap-1.5">
+                                <template x-for="o in dateOptions" :key="o.iso">
+                                    <button type="button" x-on:click="pickDate(o)" :disabled="o.left < 1" :aria-pressed="date === o.iso"
+                                            class="rounded-lg border px-2 py-2 text-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                            :class="date === o.iso ? 'bg-[#081d3a] border-[#081d3a] text-white' : 'bg-white border-[#081d3a]/12 text-[#081d3a] hover:border-[#081d3a]'">
+                                        <span class="block text-[11px] font-semibold opacity-70" x-text="o.day"></span>
+                                        <span class="block text-[14px] font-bold leading-tight" x-text="o.date"></span>
+                                        <span class="block text-[10.5px] mt-0.5" :class="date === o.iso ? 'text-white/70' : (o.left ? 'text-emerald-700' : 'text-rose-600')" x-text="o.left ? (o.left === 1 ? '1 slot left' : o.left + ' slots') : 'Full'"></span>
+                                    </button>
+                                </template>
+                            </div>
+                            <p class="text-[#081d3a]/80 text-[13px] mt-3 mb-1.5 font-semibold">Pick a time</p>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <template x-for="(s, i) in slotLabels" :key="s">
+                                    <button type="button" x-on:click="slot = s; errors.when = false" :disabled="!date || slotTaken(s)" :aria-pressed="slot === s"
+                                            class="rounded-lg border px-3 py-2.5 text-left transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                            :class="slot === s ? 'bg-[#081d3a] border-[#081d3a] text-white' : 'bg-white border-[#081d3a]/12 text-[#081d3a] hover:border-[#081d3a]'">
+                                        <span class="block text-[13px] font-bold" x-text="i === 0 ? 'Morning' : 'Afternoon'"></span>
+                                        <span class="block text-[11.5px] opacity-75" x-text="date && slotTaken(s) ? 'Booked' : s"></span>
+                                    </button>
+                                </template>
+                            </div>
+                            <p x-show="errors.when" x-cloak class="mt-2 text-red-600 text-[12.5px]">Please pick a date and a time.</p>
+                        </div>
+
+                        {{-- Step 4: contact, then book --}}
+                        <div x-show="step === 4" x-cloak x-ref="step4" class="relative space-y-2.5" :aria-busy="submitting ? 'true' : 'false'">
+                            {{-- Loader: covers the fields while the booking is sent. --}}
+                            <div x-show="submitting" x-cloak x-transition.opacity.duration.150ms
+                                 class="absolute -inset-1 z-10 rounded-lg bg-[#f6f8fb]/85 backdrop-blur-[1px] flex flex-col items-center justify-center gap-3 text-[#081d3a]"
+                                 role="status" aria-live="polite">
+                                <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-15"></circle><path d="M22 12a10 10 0 00-10-10" stroke="#081d3a" stroke-width="3" stroke-linecap="round"></path></svg>
+                                <p class="text-[14px] font-semibold">Booking your clean…</p>
+                                <p class="text-[12px] text-[#5b6779] -mt-2">Checking the slot is still free</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label for="hero-name" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Full name <span class="text-rose-500">*</span></label>
+                                    <input id="hero-name" type="text" x-model="form.name" x-on:input="errors.name = false" autocomplete="name" placeholder="e.g. Jane Smith"
+                                           class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.name ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                </div>
+                                <div>
+                                    <label for="hero-phone" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Phone <span class="text-rose-500">*</span></label>
+                                    <input id="hero-phone" type="tel" x-model="form.phone" x-on:input="errors.phone = false" autocomplete="tel" inputmode="tel" placeholder="082 xxx xxxx"
+                                           class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.phone ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="hero-email" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Email <span class="text-rose-500">*</span></label>
+                                <input id="hero-email" type="email" x-model="form.email" x-on:input="errors.email = false" autocomplete="email" placeholder="you@email.com"
+                                       class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.email ? 'border-red-400' : 'border-[#081d3a]/15'">
+                            </div>
+                            <div>
+                                <label for="hero-address" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Street address <span class="text-rose-500">*</span></label>
+                                <input id="hero-address" type="text" x-model="form.address" x-on:input="errors.address = false" autocomplete="street-address" placeholder="e.g. 12 Beach Road"
+                                       class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.address ? 'border-red-400' : 'border-[#081d3a]/15'">
+                            </div>
+                            <p x-show="errors.name || errors.phone || errors.email || errors.address" x-cloak class="text-red-600 text-[12.5px]">Please fill in the highlighted fields.</p>
+                            <p class="text-[#5b6779] text-[12.5px] bg-white border border-[#081d3a]/10 rounded-lg px-3 py-2">
+                                <span class="font-semibold text-[#081d3a]" x-text="service ? service.name : ''"></span>
+                                &middot; <span x-text="whenLabel"></span> &middot; <span x-text="selectedSuburb"></span>
+                            </p>
+                        </div>
+
+                        <p x-show="serverError" x-cloak x-text="serverError" class="mt-3 text-red-600 text-[12.5px] font-semibold bg-red-50 rounded-lg px-3 py-2" role="alert"></p>
+
+                        {{-- Navigation --}}
+                        <div class="flex items-center gap-2 mt-4">
+                            <button type="button" x-show="step > 1" x-cloak x-on:click="back()" :disabled="submitting"
+                                    class="flex-shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-full border border-[#081d3a]/15 text-[#081d3a] hover:border-[#081d3a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed" aria-label="Back">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                            <div class="flex-1" x-show="step < 4">
+                                <x-arrow-button block x-on:click="next()"><span x-text="step === 1 ? 'See my price' : (step === 2 ? 'Pick a date' : 'Almost done')">See my price</span></x-arrow-button>
+                            </div>
+                            <div class="flex-1" x-show="step === 4" x-cloak>
+                                <x-arrow-button block x-on:click="submit()" x-bind:disabled="submitting" x-bind:aria-busy="submitting ? 'true' : 'false'" class="disabled:opacity-80 disabled:cursor-wait">
+                                    <span class="inline-flex items-center gap-2">
+                                        <span x-show="submitting" x-cloak class="inline-flex"><svg class="animate-spin h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"></circle><path d="M22 12a10 10 0 00-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path></svg></span>
+                                        <span x-text="submitting ? 'Booking…' : 'Book now · ' + money(total)">Book now</span>
+                                    </span>
+                                </x-arrow-button>
+                            </div>
+                        </div>
+                        <p class="hero-form-note text-center text-[#5b6779] text-[12px] mt-3">
+                            <span x-show="step === 4">No payment now. We confirm every booking with you first.</span>
+                            <span x-show="step < 4">Free, no obligation.</span>
+                            <a :href="fullFormLink" class="underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Need add-ons or notes? Full form</a>
+                        </p>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 
