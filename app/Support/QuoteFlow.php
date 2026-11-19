@@ -80,6 +80,7 @@ class QuoteFlow
             'popularSuburbs' => ['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown', 'Parklands'],
             'slotLabels' => Booking::TIME_SLOTS,
             'bookableDays' => Booking::BOOKABLE_DAYS,
+            'closedDates' => (object) Booking::closedDates(),
             'availabilityUrl' => route('booking.availability'),
             'reserveUrl' => route('booking.reserve'),
             'fullFormUrl' => route('booking.show'),

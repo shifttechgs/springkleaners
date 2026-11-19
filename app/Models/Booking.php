@@ -81,7 +81,26 @@ class Booking extends Model
 
     public static function isBookableDay(\DateTimeInterface $date): bool
     {
-        return in_array((int) $date->format('w'), self::BOOKABLE_DAYS, true);
+        return in_array((int) $date->format('w'), self::BOOKABLE_DAYS, true) && ! self::isClosed($date);
+    }
+
+    /** Dates we're closed (config/closed_dates.php), as 'YYYY-MM-DD' => reason. */
+    public static function closedDates(): array
+    {
+        return (array) config('closed_dates', []);
+    }
+
+    public static function isClosed(\DateTimeInterface $date): bool
+    {
+        return array_key_exists($date->format('Y-m-d'), self::closedDates());
+    }
+
+    /** What to tell someone who picked a day we don't take bookings on. */
+    public static function unbookableDayMessage(\DateTimeInterface $date): string
+    {
+        return self::isClosed($date)
+            ? "We're closed on ".$date->format('l j F').'. Please pick another date.'
+            : 'We only take bookings on Saturdays and Sundays — pick a weekend date.';
     }
 
     protected $fillable = [

@@ -60,6 +60,7 @@ class BookingController extends Controller
             'capacity' => Booking::DAILY_CAPACITY,
             'slots' => Booking::TIME_SLOTS,
             'bookable_days' => Booking::BOOKABLE_DAYS,
+            'closed' => (object) Booking::closedDates(),
             'next_available' => $this->nextAvailableDate(),
         ]);
     }
@@ -105,6 +106,9 @@ class BookingController extends Controller
 
         $date = Carbon::parse($data['date']);
 
+        if (Booking::isClosed($date)) {
+            return response()->json(['status' => 'closed', 'message' => Booking::unbookableDayMessage($date)], 422);
+        }
         if ($date->startOfDay()->lt(now()->startOfDay()) || ! Booking::isBookableDay($date)) {
             return response()->json(['status' => 'invalid_day'], 422);
         }

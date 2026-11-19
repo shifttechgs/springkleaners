@@ -17,7 +17,7 @@ document.addEventListener('alpine:init', function () {
             services: cfg.services, serviceKey: cfg.defaultService,
             propertyType: 'House', bedrooms: 2, bathrooms: 1, extraRooms: 0,
             date: '', slot: '',
-            slotLabels: cfg.slotLabels, bookableDays: cfg.bookableDays,
+            slotLabels: cfg.slotLabels, bookableDays: cfg.bookableDays, closedDates: cfg.closedDates || {},
             counts: {}, taken: {}, capacity: 2, loadingDates: false, loadedMonths: [],
             form: { name: '', phone: '', email: '', address: '' },
             photoConsent: false,
@@ -179,6 +179,7 @@ document.addEventListener('alpine:init', function () {
                         const json = await (await fetch(this.cfg.availabilityUrl + '?month=' + m)).json();
                         Object.assign(this.counts, json.counts || {});
                         Object.assign(this.taken, json.times || {});
+                        Object.assign(this.closedDates, json.closed || {});
                         this.capacity = json.capacity || this.capacity;
                         this.loadedMonths.push(m);
                     }
@@ -193,7 +194,9 @@ document.addEventListener('alpine:init', function () {
                     if (!this.bookableDays.includes(d.getDay())) continue;
                     const iso = this.iso(d);
                     const used = Math.max(this.counts[iso] || 0, (this.taken[iso] || []).length);
-                    out.push({ iso, day: d.toLocaleDateString('en-GB', { weekday: 'short' }), date: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }), left: Math.max(0, this.capacity - used) });
+                    // Closed dates (config/closed_dates.php) stay in the list, marked Closed, so nobody wonders where they went.
+                    const closed = Object.prototype.hasOwnProperty.call(this.closedDates, iso);
+                    out.push({ iso, closed, day: d.toLocaleDateString('en-GB', { weekday: 'short' }), date: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }), left: closed ? 0 : Math.max(0, this.capacity - used) });
                 }
                 return out;
             },
@@ -240,10 +243,11 @@ document.addEventListener('alpine:init', function () {
                         this.$nextTick(() => this.keepInView()); return;
                     }
                     this.track('quote_error', { reason: json.status || ('http_' + res.status), step_number: this.step });
-                    if (['time_taken', 'full', 'invalid_day'].includes(json.status)) {
+                    if (['time_taken', 'full', 'invalid_day', 'closed'].includes(json.status)) {
                         this.loadedMonths = []; await this.loadDates();
                         this.slot = ''; if (json.status !== 'time_taken') this.date = '';
-                        this.serverError = json.status === 'time_taken' ? 'That slot was just booked — please pick another.' : 'That date just filled up — please pick another.';
+                        this.serverError = json.status === 'time_taken' ? 'That slot was just booked — please pick another.'
+                            : (json.status === 'closed' ? (json.message || 'We are closed that day. Please pick another date.') : 'That date just filled up — please pick another.');
                         this.dir = -1; this.step = this.indexOf('when'); this.$nextTick(() => this.keepInView()); return;
                     }
                     this.serverError = json.message || 'Something went wrong — please try again, or WhatsApp us on +27 81 527 4711.';

@@ -175,7 +175,7 @@
                             :class="date === o.iso ? 'bg-[#081d3a] border-[#081d3a] text-white' : 'bg-white border-[#081d3a]/12 text-[#081d3a] hover:border-[#081d3a]'">
                         <span class="block text-[11px] font-semibold opacity-70" x-text="o.day"></span>
                         <span class="block text-[14px] font-bold leading-tight" x-text="o.date"></span>
-                        <span class="block text-[10.5px] mt-0.5" :class="date === o.iso ? 'text-white/70' : (o.left ? 'text-emerald-700' : 'text-rose-600')" x-text="o.left ? (o.left === 1 ? '1 slot left' : o.left + ' slots') : 'Full'"></span>
+                        <span class="block text-[10.5px] mt-0.5" :class="date === o.iso ? 'text-white/70' : (o.left ? 'text-emerald-700' : 'text-rose-600')" x-text="o.closed ? 'Closed' : (o.left ? (o.left === 1 ? '1 slot left' : o.left + ' slots') : 'Full')"></span>
                     </button>
                 </template>
             </div>

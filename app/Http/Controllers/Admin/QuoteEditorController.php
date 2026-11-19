@@ -72,7 +72,7 @@ class QuoteEditorController extends Controller
             }
 
             if (! Booking::isBookableDay($newDate)) {
-                throw ValidationException::withMessages(['date' => 'We only take bookings on Saturdays and Sundays — pick a weekend date.']);
+                throw ValidationException::withMessages(['date' => Booking::unbookableDayMessage($newDate)]);
             }
         }
 

@@ -120,7 +120,7 @@ class BookingController extends Controller
         $date = Carbon::parse($data['date']);
 
         if (! Booking::isBookableDay($date)) {
-            return back()->withErrors(['date' => 'We only take bookings on Saturdays and Sundays — pick a weekend date.'])->withInput();
+            return back()->withErrors(['date' => Booking::unbookableDayMessage($date)])->withInput();
         }
 
         // Checked and saved under the same per-date lock as website bookings, so nothing can double-book a slot.

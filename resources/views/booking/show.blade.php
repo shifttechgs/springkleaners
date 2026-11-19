@@ -253,7 +253,10 @@
         isFull(d) { return d ? this.bookedCount(d) >= this.capacity : false; },
         bookableDays: {{ \Illuminate\Support\Js::from(\App\Models\Booking::BOOKABLE_DAYS) }},
         isClosedDay(d) { return !!d && !this.bookableDays.includes(new Date(this.calYear, this.calMonth, d).getDay()); },
-        isSelectable(d) { return !!d && !this.isPast(d) && !this.isClosedDay(d) && !this.isFull(d); },
+        // Holidays / days off (config/closed_dates.php), shown as Closed. (No double quotes in here: this is inside x-data.)
+        closedDates: {{ \Illuminate\Support\Js::from((object) \App\Models\Booking::closedDates()) }},
+        isHoliday(d) { return !!d && Object.prototype.hasOwnProperty.call(this.closedDates, this.dateKey(d)); },
+        isSelectable(d) { return !!d && !this.isPast(d) && !this.isClosedDay(d) && !this.isHoliday(d) && !this.isFull(d); },
         isTimeTaken(t) {
             if (!this.selectedDate) return false;
             return (this.bookedTimes[this.dateISO(this.selectedDate)] || []).includes(t);
@@ -266,6 +269,10 @@
         nextMonth() { this.calMonth++; if (this.calMonth > 11) { this.calMonth = 0; this.calYear++; } this.fetchAvailability(); },
         pickDate(d) {
             if (!d || this.isPast(d)) return;
+            if (this.isHoliday(d)) {
+                this.dateError = 'We are closed on that day. Please choose another date.';
+                return;
+            }
             if (this.isClosedDay(d)) {
                 this.dateError = 'That date is booked — please choose a Saturday or Sunday.';
                 return;
@@ -379,7 +386,11 @@
             .then(({ ok, json }) => {
                 this.checkingDate = false;
                 if (!ok || json.status !== 'ok') {
-                    if (json.status === 'invalid_day') {
+                    if (json.status === 'closed') {
+                        this.dateError = json.message || 'We are closed on that day. Please choose another date.';
+                        this.selectedDate = null;
+                        this.selectedTime = null;
+                    } else if (json.status === 'invalid_day') {
                         this.dateError = 'We only take bookings on Saturdays and Sundays — please choose a weekend date.';
                         this.selectedDate = null;
                         this.selectedTime = null;
@@ -760,9 +771,10 @@
                                                 'cal-full': d && !isPast(d) && isFull(d),
                                                 'cal-selected': isSelected(d)
                                              }"
-                                             :title="d && !isPast(d) && isClosedDay(d) ? 'Booked' : (d && !isPast(d) && isFull(d) ? 'Fully booked' : '')">
+                                             :title="d && !isPast(d) && isHoliday(d) ? 'Closed' : (d && !isPast(d) && isClosedDay(d) ? 'Booked' : (d && !isPast(d) && isFull(d) ? 'Fully booked' : ''))">
                                             <span x-text="d"></span>
-                                            <span x-show="d && !isPast(d) && isClosedDay(d)" class="cal-pill">Booked</span>
+                                            <span x-show="d && !isPast(d) && isHoliday(d)" class="cal-pill">Closed</span>
+                                            <span x-show="d && !isPast(d) && isClosedDay(d) && !isHoliday(d)" class="cal-pill">Booked</span>
                                         </div>
                                     </div>
                                 </template>

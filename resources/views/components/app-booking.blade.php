@@ -140,7 +140,7 @@
                             :class="date === o.iso ? 'border-[#081d3a] bg-[#081d3a] text-white' : 'border-transparent bg-white text-[#081d3a]'">
                         <span class="block text-[12px] font-semibold opacity-70" x-text="o.day"></span>
                         <span class="block text-[16px] font-bold leading-tight" x-text="o.date"></span>
-                        <span class="mt-1 block text-[11px]" :class="date === o.iso ? 'text-white/75' : (o.left ? 'text-emerald-700' : 'text-rose-600')" x-text="o.left ? (o.left === 1 ? '1 slot left' : o.left + ' slots') : 'Full'"></span>
+                        <span class="mt-1 block text-[11px]" :class="date === o.iso ? 'text-white/75' : (o.left ? 'text-emerald-700' : 'text-rose-600')" x-text="o.closed ? 'Closed' : (o.left ? (o.left === 1 ? '1 slot left' : o.left + ' slots') : 'Full')"></span>
                     </button>
                 </template>
             </div>
