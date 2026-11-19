@@ -15,7 +15,7 @@
             <h1 class="text-4xl sm:text-5xl font-extrabold text-white leading-[1.08] tracking-tight mb-4">
                 Privacy Policy
             </h1>
-            <p class="text-white/50 text-[13px]">Last updated: July 2026</p>
+            <p class="text-white/50 text-[13px]">Last updated: November 2026</p>
         </div>
     </section>
 
@@ -43,7 +43,7 @@
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">3. How we share your information</h2>
                 <p class="text-[14px] leading-relaxed text-[#5b6779] mb-6">
-                    We do not sell or rent your personal information to third parties. Your details are only accessible to SpringKleaners staff who need them to fulfil your booking. Where a quote or invoice is generated, that document is only shared with you directly.
+                    We do not sell or rent your personal information to third parties. Your details are only accessible to SpringKleaners staff who need them to fulfil your booking. Where a quote or invoice is generated, that document is only shared with you directly. Google processes website usage data for us, as set out in section 5.
                 </p>
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">4. WhatsApp communication</h2>
@@ -52,8 +52,20 @@
                 </p>
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">5. Cookies &amp; analytics</h2>
+                <p class="text-[14px] leading-relaxed text-[#5b6779] mb-3">
+                    We use Google Analytics to see how people use this site: which pages get visited, what kind of device people are on, roughly which city they're in, and how far they get through our quote form. It shows us which pages need fixing and where booking gets stuck.
+                </p>
+                <p class="text-[14px] leading-relaxed text-[#5b6779] mb-3">
+                    Google Analytics never gets your name, phone number, email, street address or anything you type into our forms. On the quote form we only record the step you reached, the service you picked, the property type and the price shown.
+                </p>
+                <p class="text-[14px] leading-relaxed text-[#5b6779] mb-3">
+                    Google Analytics puts cookies in your browser (their names start with <code class="text-[13px]">_ga</code>) so it can tell one visit from another. Google processes this data for us and may store it outside South Africa. We don't use it for advertising and we don't sell it.
+                </p>
+                <p class="text-[14px] leading-relaxed text-[#5b6779] mb-3">
+                    The site also sets two cookies it needs to work. One keeps your session going while you book, the other protects our forms from being misused. Neither tracks you.
+                </p>
                 <p class="text-[14px] leading-relaxed text-[#5b6779] mb-6">
-                    This site does not currently use third-party advertising cookies or analytics trackers. If that changes, this policy will be updated accordingly.
+                    To switch Google Analytics off, block cookies in your browser settings or install Google's <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" class="text-[#081d3a] underline decoration-[#081d3a]/30 underline-offset-2 hover:decoration-[#081d3a]">opt-out add-on</a>.
                 </p>
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">6. Data storage &amp; security</h2>
