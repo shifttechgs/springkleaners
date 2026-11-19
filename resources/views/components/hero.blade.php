@@ -174,6 +174,19 @@
                         this.go(this.step + 1);
                     },
                     back() { if (this.step > 1) this.go(this.step - 1) },
+                    // Close the success card: back to a fresh step 1 for another booking. Availability is fetched again
+                    // so the slot just booked shows as taken.
+                    reset() {
+                        Object.assign(this, {
+                            done: false, step: 1, serverError: '', errors: {},
+                            suburbQuery: '', selectedSuburb: '', locationStatus: null, showSuggestions: false,
+                            propertyType: 'House', bedrooms: 2, bathrooms: 1, extraRooms: 0,
+                            date: '', slot: '', loadedMonths: [], counts: {}, taken: {},
+                            form: { name: '', phone: '', email: '', address: '' }, photoConsent: false,
+                            started: false, reached: [1],
+                        });
+                        this.$nextTick(() => { this.keepInView(); this.$refs.title?.focus({ preventScroll: true }); });
+                    },
                     go(n) {
                         this.step = n;
                         // Count each step once per visit, so going Back and forward again doesn't inflate the funnel.
@@ -286,7 +299,11 @@
                 }" x-on:focusin="start()" x-on:pointerdown="start()" class="bg-[#f6f8fb] rounded-xl p-6 sm:p-7 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.75)] ring-1 ring-white/30">
 
                     {{-- Done --}}
-                    <div x-show="done" x-cloak class="text-center py-4" role="status" aria-live="polite">
+                    <div x-show="done" x-cloak class="relative text-center py-4" role="status" aria-live="polite">
+                        <button type="button" x-on:click="reset()" aria-label="Close"
+                                class="absolute -top-2 -right-2 grid h-10 w-10 place-items-center rounded-full text-[#081d3a]/60 hover:bg-[#081d3a]/[0.06] hover:text-[#081d3a] focus-visible:outline-2 focus-visible:outline-[#081d3a] transition-colors">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+                        </button>
                         <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
                             <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         </div>
@@ -301,7 +318,7 @@
                         {{-- Header: title, live price, progress --}}
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0">
-                                <p class="font-display text-[#081d3a] text-[24px] sm:text-[26px] leading-none" x-text="step > 1 && window.innerWidth < 640 ? 'Your quote' : 'Get your instant quote'">Get your instant quote</p>
+                                <p x-ref="title" tabindex="-1" class="font-display text-[#081d3a] text-[24px] sm:text-[26px] leading-none focus:outline-none" x-text="step > 1 && window.innerWidth < 640 ? 'Your quote' : 'Get your instant quote'">Get your instant quote</p>
                                 <p class="hero-form-sub text-[#5b6779] text-[13.5px] mt-2">
                                     <span x-text="'Step ' + step + ' of 4'"></span> &middot; <span x-text="stepNames[step - 1]"></span>
                                 </p>
