@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "test:e2e": "playwright test"
+        "test:e2e": "playwright test",
+        "og-images": "node scripts/og-images.cjs"
     },
     "devDependencies": {
         "@playwright/test": "^1.61.1",

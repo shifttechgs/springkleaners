@@ -77,6 +77,20 @@ class SitewideQaTest extends TestCase
         }
     }
 
+    public function test_every_public_page_has_a_link_preview_image_that_messaging_apps_can_show(): void
+    {
+        foreach (self::allPublicUrls() as [$url]) {
+            $html = $this->get($url)->assertStatus(200)->getContent();
+
+            $this->assertMatchesRegularExpression('#<meta property="og:image" content="[^"]+\.jpg"#', $html, "og:image on {$url} must be a JPG (WhatsApp/Facebook don't show AVIF/WebP)");
+            preg_match('#<meta property="og:image" content="[^"]*?(/images/og/[^"]+)"#', $html, $m);
+            $this->assertNotEmpty($m, "og:image on {$url} should be one of our preview cards");
+            $this->assertFileExists(public_path(ltrim($m[1], '/')), "Preview card missing for {$url}");
+            $this->assertStringContainsString('<meta property="og:image:width" content="1200">', $html);
+            $this->assertMatchesRegularExpression('#<meta property="og:image:alt" content="[^"]{10,}"#', $html, "og:image:alt missing on {$url}");
+        }
+    }
+
     public function test_every_whatsapp_link_opens_with_a_message_already_typed(): void
     {
         foreach ([...array_values(self::allPublicUrls()), ['/get-my-quote']] as [$url]) {

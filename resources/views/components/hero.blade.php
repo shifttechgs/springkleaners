@@ -20,7 +20,7 @@
          browser pick the smallest file, the same one the app hero shows, so phones don't download a big hidden photo. --}}
     {{-- Background slides. Each photo fades into the near-black base (mask on .hero-photo) and drifts slowly while on
          screen; the next one arrives through horizontal stripes. Decorative, so hidden from screen readers. --}}
-    <div class="absolute inset-x-0 top-0 -z-30 h-[100svh] lg:inset-0 lg:h-full" data-hero-slider aria-hidden="true">
+    <div class="absolute inset-x-0 top-0 -z-30 h-[100svh] lg:inset-0 lg:h-full" data-hero-slider @if ($heroHasSlideshow) data-slideshow @endif aria-hidden="true">
         @foreach ($heroSlides as $i => $slide)
             <div class="hero-slide {{ $i === 0 ? 'is-on' : '' }}" style="--dim: {{ $slide['dim'] }}; --dim-m: {{ $slide['dimMobile'] }};" data-label="{{ $slide['label'] }}">
                 <div class="hero-slide-zoom">

@@ -41,11 +41,20 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')">
     <meta property="og:description" content="@yield('description', 'SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town\'s Northern Suburbs. Fully insured, vetted staff, free inspection.')">
-    <meta property="og:image" content="@yield('og_image', url('/images/works/hero/hero2_cleaning.avif'))">
+    {{-- Link previews (WhatsApp, Facebook, LinkedIn, X): 1200x630 JPG cards from public/images/og, made by
+         `npm run og-images`. JPG on purpose: WhatsApp and Facebook don't show AVIF/WebP previews. Pages can set
+         their own with @section('og_image') / @section('og_image_alt'). --}}
+    <meta property="og:image" content="@yield('og_image', url('/images/og/default.jpg'))">
+    <meta property="og:image:secure_url" content="@yield('og_image', url('/images/og/default.jpg'))">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="@yield('og_image_alt', 'Two SpringKleaners team members cleaning a bathroom vanity in Cape Town')">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')">
     <meta name="twitter:description" content="@yield('description', 'SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town\'s Northern Suburbs. Fully insured, vetted staff, free inspection.')">
-    <meta name="twitter:image" content="@yield('og_image', url('/images/works/hero/hero2_cleaning.avif'))">
+    <meta name="twitter:image" content="@yield('og_image', url('/images/og/default.jpg'))">
+    <meta name="twitter:image:alt" content="@yield('og_image_alt', 'Two SpringKleaners team members cleaning a bathroom vanity in Cape Town')">
 
     @php
         $localBusinessLd = [
@@ -130,15 +139,20 @@
     <script defer src="/js/odometer.min.js"></script>
 
     <script>
+        // Scroll reveals only animate sections further down, so they start once the browser is idle: run together
+        // with Alpine's start-up they made one long task that blocked the page (PageSpeed "Total Blocking Time").
         document.addEventListener('DOMContentLoaded', function () {
-            if (typeof WOW !== 'undefined') new WOW({ offset: 80, mobile: true }).init();
+            var start = function () { if (typeof WOW !== 'undefined') new WOW({ offset: 80, mobile: true }).init(); };
+            if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1000 }); else setTimeout(start, 200);
         });
 
         (function () {
             var nav = document.getElementById('mainNav');
             function sync() { if (nav) nav.classList.toggle('nav-scrolled', window.scrollY > 80); }
             window.addEventListener('scroll', sync, { passive: true });
-            sync();
+            // First check on the first frame, not right away: reading the scroll position while the page is still
+            // loading forces a full layout mid-parse (~100-200 ms of blocking on the homepage).
+            requestAnimationFrame(sync);
         })();
 
         // Phones: the floating WhatsApp/Quote bar steps aside while it would get in the way — when a quote form

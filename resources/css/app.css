@@ -231,8 +231,10 @@
 .hero-slide.is-on { visibility: visible; z-index: 2; }
 .hero-slide.is-prev { visibility: visible; z-index: 1; }
 .hero-slide-zoom { position: absolute; inset: 0; overflow: hidden; }
-.hero-slide.is-on .hero-slide-zoom,
-.hero-slide.is-prev .hero-slide-zoom {
+/* Drift only while the slideshow runs (2+ slides): with a single photo it kept the screen moving for 9.5s, and
+   PageSpeed's Speed Index counts that as the page never finishing. */
+[data-hero-slider][data-slideshow] .hero-slide.is-on .hero-slide-zoom,
+[data-hero-slider][data-slideshow] .hero-slide.is-prev .hero-slide-zoom {
     animation: hero-drift 9.5s linear forwards;
     will-change: transform;
 }
@@ -305,16 +307,17 @@
 .hero-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
 .hero-line > span {
     display: block;
-    animation: hero-rise 0.95s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
-.hero-line:nth-child(1) > span { animation-delay: 0.3s; }
-.hero-line:nth-child(2) > span { animation-delay: 0.42s; }
-.hero-line:nth-child(3) > span { animation-delay: 0.54s; }
+.hero-line:nth-child(1) > span { animation-delay: 0.05s; }
+.hero-line:nth-child(2) > span { animation-delay: 0.12s; }
+.hero-line:nth-child(3) > span { animation-delay: 0.19s; }
 @keyframes hero-rise {
     from { transform: translate3d(0, 105%, 0); }
     to { transform: none; }
 }
-.hero-settle { animation: hero-settle 0.8s ease-out 0.75s backwards; }
+/* Short and early: Speed Index counts every moment the first screen still looks unfinished. */
+.hero-settle { animation: hero-settle 0.5s ease-out 0.2s backwards; }
 @keyframes hero-settle {
     from { opacity: 0; }
     to { opacity: 1; }

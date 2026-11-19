@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('title', $content['meta_title'])
 @section('description', $content['meta_description'])
+@if (file_exists(public_path("images/og/service-{$slug}.jpg")))
+    @section('og_image', url("images/og/service-{$slug}.jpg"))
+    @section('og_image_alt', ($content['hero_alt'] ?? $content['label']).', SpringKleaners '.$content['label'].' in Cape Town')
+@endif
 @section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for {$content['label']}.")
 @section('content')
     @php

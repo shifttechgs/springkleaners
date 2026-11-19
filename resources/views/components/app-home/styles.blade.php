@@ -31,7 +31,13 @@ document.addEventListener('alpine:init', function () {
                 const r = document.getElementById('app-services')?.getBoundingClientRect();
                 this.section = r && r.top < window.innerHeight * 0.45 && r.bottom > 120 ? 'services' : 'home';
             },
-            openQuote(detail = {}) { this.sheet = 'quote'; this.$nextTick(() => window.dispatchEvent(new CustomEvent('open-quote', { detail }))); },
+            openQuote(detail = {}) {
+                // The booking flow starts on first use, which keeps page start-up short.
+                const flow = document.querySelector('[data-booking-flow][x-ignore]');
+                if (flow) { flow.removeAttribute('x-ignore'); delete flow._x_ignore; delete flow._x_ignoreSelf; Alpine.initTree(flow); }
+                this.sheet = 'quote';
+                this.$nextTick(() => window.dispatchEvent(new CustomEvent('open-quote', { detail })));
+            },
             close() { this.sheet = null; this.dragY = 0; },
             dragBegin(e) { this.dragStart = e.touches[0].clientY; },
             dragMove(e) { if (this.dragStart !== null) this.dragY = Math.max(0, e.touches[0].clientY - this.dragStart); },
