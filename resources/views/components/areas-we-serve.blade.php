@@ -27,7 +27,7 @@
                         all: @js(config('served_suburbs')),
                         pages: @js($pageUrls),
                         quote: @js(route('booking.show')),
-                        whatsapp: 'https://wa.me/27815274711?text=',
+                        whatsapp: @js(\App\Support\WhatsApp::base()),
                         get query() { return this.q.trim(); },
                         get exact() { return this.all.find(s => s.toLowerCase() === this.query.toLowerCase()) || null; },
                         get matches() {
@@ -42,7 +42,7 @@
                             return this.query.length >= 3 ? 'no' : 'idle';
                         },
                         get quoteUrl() { return this.quote + '?suburb=' + encodeURIComponent(this.exact || this.query); },
-                        get askUrl() { return this.whatsapp + encodeURIComponent('Hi SpringKleaners! Do you service ' + this.query + '?'); }
+                        get askUrl() { return this.whatsapp + encodeURIComponent('Hi SpringKleaners, do you clean in ' + this.query + '? Please let me know.'); }
                     }">
                     <label for="suburb-check" class="mb-2 block text-[13px] font-semibold text-[#081d3a]/80">Your suburb</label>
                     <input id="suburb-check" type="text" x-model="q" autocomplete="off" placeholder="e.g. Sandown, Century City&hellip;"

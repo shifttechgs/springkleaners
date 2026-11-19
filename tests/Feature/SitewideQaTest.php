@@ -77,6 +77,21 @@ class SitewideQaTest extends TestCase
         }
     }
 
+    public function test_every_whatsapp_link_opens_with_a_message_already_typed(): void
+    {
+        foreach ([...array_values(self::allPublicUrls()), ['/get-my-quote']] as [$url]) {
+            $html = $this->get($url)->assertStatus(200)->getContent();
+
+            preg_match_all('#href="(https://wa\.me/27815274711[^"]*)"#i', $html, $links);
+
+            foreach ($links[1] as $link) {
+                $this->assertMatchesRegularExpression('#\?text=Hi%20SpringKleaners#', $link, "WhatsApp link without a message on {$url}: {$link}");
+                // The message must reach WhatsApp as plain text, not HTML entities like &#039;.
+                $this->assertStringNotContainsString('%26%23', $link, "WhatsApp message has HTML entities on {$url}: {$link}");
+            }
+        }
+    }
+
     public function test_every_public_page_emits_only_well_formed_json_ld(): void
     {
         foreach (self::allPublicUrls() as [$url]) {

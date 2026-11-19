@@ -33,7 +33,7 @@
             </p>
             <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
                 <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
-                <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
+                <x-arrow-button variant="outline" href="{{ \App\Support\WhatsApp::link() }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
         </div>
     </section>

@@ -111,7 +111,7 @@
     @yield('content')
 
     <div class="mobile-bar fixed bottom-3 inset-x-3 z-50 lg:hidden flex gap-2" data-mobile-bar>
-        <a href="https://wa.me/27815274711"
+        <a href="{{ \App\Support\WhatsApp::link(trim(html_entity_decode($__env->yieldContent('whatsapp_message'), ENT_QUOTES)) ?: null) }}"
            target="_blank"
            rel="noopener noreferrer"
            class="flex-1 flex items-center justify-center gap-2 rounded-full bg-[#25d366] text-[#081d3a] font-bold py-3.5 text-[14px] tracking-tight shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)]">

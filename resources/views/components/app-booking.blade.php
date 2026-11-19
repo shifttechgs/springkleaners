@@ -121,7 +121,7 @@
                 </template>
             </div>
             <p x-show="find.trim().length > 2 && !suburbs.some(x => x.toLowerCase().includes(find.trim().toLowerCase()))" x-cloak class="mt-3 rounded-xl bg-white p-3 text-[13.5px] text-[#5b6779]">
-                We're not in <b class="text-[#081d3a]" x-text="find.trim()"></b> yet. <a href="https://wa.me/27815274711" class="font-semibold text-[#081d3a] underline">WhatsApp us</a> and we'll tell you when we are.
+                We're not in <b class="text-[#081d3a]" x-text="find.trim()"></b> yet. <a :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, do you clean in ' + find.trim() + '? Please let me know when you do.')" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#081d3a] underline">WhatsApp us</a> and we'll tell you when we are.
             </p>
             <p x-show="locationStatus === 'required'" x-cloak class="mt-3 text-[13px] text-red-600">Pick your suburb to carry on.</p>
         </section>
@@ -219,7 +219,7 @@
         </template>
         <template x-if="done">
             <div class="flex w-full gap-2">
-                <a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="press flex-1 rounded-full bg-[#25d366] py-3.5 text-center text-[15px] font-bold text-[#081d3a]">WhatsApp us</a>
+                <a :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, I just booked ' + (service ? service.name : 'a clean') + ' for ' + whenLabel + ' in ' + selectedSuburb + '. My name is ' + form.name.trim() + '.')" target="_blank" rel="noopener noreferrer" class="press flex-1 rounded-full bg-[#25d366] py-3.5 text-center text-[15px] font-bold text-[#081d3a]">WhatsApp us</a>
                 <button type="button" x-on:click="$dispatch('close-sheet')" class="press flex-1 rounded-full border border-[#081d3a]/15 py-3.5 text-[15px] font-bold text-[#081d3a]">Done</button>
             </div>
         </template>

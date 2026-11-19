@@ -13,7 +13,7 @@
             <span class="grid h-14 w-14 place-items-center rounded-full bg-[#f6e304] shadow-[0_6px_16px_-6px_rgba(8,29,58,0.5)] ring-4 ring-white transition-transform" :class="tab === 'book' && 'scale-105'">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
             </span>Book</button></li>
-        <li><a href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 text-[#5b6779]">
+        <li><a href="{{ \App\Support\WhatsApp::link() }}" target="_blank" rel="noopener noreferrer" class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 text-[#5b6779]">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 01-12.6 7.4L3 20.5l1.6-5.2A8.5 8.5 0 1121 11.5z"/></svg>WhatsApp</a></li>
         <li><button type="button" x-on:click="sheet = 'more'" class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 transition-colors" :class="tab === 'more' ? 'text-[#081d3a]' : 'text-[#5b6779]'">
             <span class="absolute top-0 h-[3px] w-7 rounded-b-full bg-[#081d3a] transition-opacity" :class="tab === 'more' ? 'opacity-100' : 'opacity-0'" aria-hidden="true"></span>

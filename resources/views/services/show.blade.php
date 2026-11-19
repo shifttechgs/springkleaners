@@ -1,12 +1,13 @@
 @extends('layouts.app')
 @section('title', $content['meta_title'])
 @section('description', $content['meta_description'])
+@section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for {$content['label']}.")
 @section('content')
     @php
         $pricingMode = $content['pricing_mode'] ?? 'wizard';
         $isCustomQuote = $pricingMode === 'custom';
         $isQuoteMode = in_array($pricingMode, ['quote', 'custom'], true);
-        $quoteWhatsappUrl = 'https://wa.me/27815274711?text='.rawurlencode("Hi, I'd like a quote for {$content['label']}.");
+        $quoteWhatsappUrl = \App\Support\WhatsApp::forService($content['label']);
 
         $serviceJsonLd = [
             '@context' => 'https://schema.org',
@@ -83,7 +84,7 @@
                         <x-arrow-button variant="outline" href="mailto:bookings@springkleaners.co.za" class="flex-shrink-0">Email Us</x-arrow-button>
                         @else
                         <x-arrow-button href="{{ route('booking.show', ['service' => $slug]) }}" class="flex-shrink-0">Book This Service</x-arrow-button>
-                        <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
+                        <x-arrow-button variant="outline" href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
                         @endif
                     </div>
                     <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />

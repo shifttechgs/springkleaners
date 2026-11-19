@@ -276,7 +276,7 @@
                         </div>
                         <div>
                             <p class="text-[11px] text-[#adb5c4] uppercase tracking-widest mb-0.5" style="font-family:'Plus Jakarta Sans',sans-serif;">WhatsApp / Call</p>
-                            <a href="https://wa.me/27815274711" target="_blank"
+                            <a href="{{ \App\Support\WhatsApp::link() }}" target="_blank"
                                class="text-[#081d3a] font-semibold text-[14.5px] hover:text-[#f6e304] transition-colors"
                                style="font-family:'Plus Jakarta Sans',sans-serif;">+27 81 527 4711</a>
                         </div>

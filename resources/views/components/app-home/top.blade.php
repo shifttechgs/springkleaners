@@ -115,5 +115,5 @@
         <p class="text-[14px]"><b>Yes</b>, we clean in <span x-text="match"></span>.</p>
         <button type="button" x-on:click="openQuote({ suburb: match })" class="press flex-shrink-0 rounded-full bg-[#f6e304] px-4 py-2.5 text-[14px] font-bold text-[#081d3a]">Book</button>
     </div>
-    <p x-show="q.trim().length > 2 && !match && !hints.length" x-cloak class="mt-4 text-[14px] text-white/80">Not yet, but we're growing. <a href="https://wa.me/27815274711" class="font-semibold text-[#f6e304] underline underline-offset-2">WhatsApp us</a> and we'll tell you when we reach you.</p>
+    <p x-show="q.trim().length > 2 && !match && !hints.length" x-cloak class="mt-4 text-[14px] text-white/80">Not yet, but we're growing. <a :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, do you clean in ' + q.trim() + '? Please let me know when you do.')" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#f6e304] underline underline-offset-2">WhatsApp us</a> and we'll tell you when we reach you.</p>
 </section>

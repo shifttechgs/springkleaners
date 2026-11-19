@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <a href="https://wa.me/27815274711"
+                <a href="{{ \App\Support\WhatsApp::link() }}"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl transition-colors mt-2">

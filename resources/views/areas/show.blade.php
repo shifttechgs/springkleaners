@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Cleaning Services in '.$location['name'].' | Cape Town Northern Suburbs | SpringKleaners')
 @section('description', $location['meta_description'])
+@section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for a clean in {$location['name']}.")
 @section('content')
     @php
         $serviceJsonLd = [
@@ -52,7 +53,7 @@
             </p>
             <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
                 <x-arrow-button href="{{ route('booking.show', ['suburb' => $location['name']]) }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
-                <x-arrow-button variant="outline" href="https://wa.me/27815274711" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
+                <x-arrow-button variant="outline" href="{{ \App\Support\WhatsApp::forSuburb($location['name']) }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
             <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
         </div>
@@ -90,7 +91,7 @@
                             Book in {{ $location['name'] }}
                         </a>
                         @else
-                        <a href="https://wa.me/27815274711?text={{ rawurlencode('Hi, I\'d like a quote for '.$svc['name'].' in '.$location['name'].'.') }}" target="_blank" rel="noopener noreferrer" class="text-center bg-[#081d3a] text-[#f6e304] font-semibold py-2.5 rounded-full hover:bg-[#0d2a4a] transition-all text-[13px]">
+                        <a href="{{ \App\Support\WhatsApp::link("Hi SpringKleaners, I'd like a quote for {$svc['name']} in {$location['name']}.") }}" target="_blank" rel="noopener noreferrer" class="text-center bg-[#081d3a] text-[#f6e304] font-semibold py-2.5 rounded-full hover:bg-[#0d2a4a] transition-all text-[13px]">
                             Get a Quote
                         </a>
                         @endif
