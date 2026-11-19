@@ -164,6 +164,20 @@
     backdrop-filter: blur(20px) saturate(180%);
 }
 #mainNav.nav-scrolled .nav-menu { margin-inline: 0; }
+/* Phones and tablets: the header is the floating pill from the moment the page opens, not only after scrolling. */
+@media (max-width: 1023px) {
+    #mainNav { padding-inline: 0.75rem; }
+    #mainNav .nav-bar {
+        padding-inline: 1rem;
+        border-color: rgba(255, 255, 255, 0.1);
+        border-radius: 2.5rem;
+        background-color: rgba(13, 27, 51, 0.55);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 8px 40px rgba(0, 0, 0, 0.35);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+    }
+    #mainNav .nav-menu { margin-inline: 0; }
+}
 @media (min-width: 640px) {
     #mainNav.nav-scrolled { padding-inline: 1rem; }
     #mainNav.nav-scrolled .nav-bar { padding-inline: 1.25rem; }
@@ -432,14 +446,14 @@
 /* Phones: fit the whole intro (headline to slide counter) above the floating WhatsApp/Quote bar.
    The quote form follows directly below, one tap away via the hero button. */
 @media (max-width: 1023px) {
-    .hero-compact { padding-top: 6rem; }
+    .hero-compact { padding-top: 7rem; } /* clears the floating pill header */
     .hero-compact #hero-badge { margin-bottom: 1rem; }
     .hero-compact #hero-headline { margin-bottom: 1rem; }
     .hero-compact #hero-sub { margin-bottom: 1.5rem; font-size: 17px; }
     .hero-compact #hero-sub + div { margin-bottom: 1.5rem; }
 }
 @media (max-width: 1023px) and (max-height: 780px) {
-    .hero-compact { padding-top: 5.25rem; }
+    .hero-compact { padding-top: 6.5rem; }
     .hero-compact #hero-sub { margin-bottom: 1.25rem; font-size: 15px; line-height: 1.55; }
 }
 

@@ -25,9 +25,11 @@ class HeroQuoteFormTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
         $state = $this->heroState($html);
 
-        // The whole component made it into the attribute (a stray quote would cut it short).
+        // The hero card runs the shared booking logic (partials/quote-flow-script), which is on the page.
+        $this->assertStringStartsWith('quoteFlow(', $state);
+        $this->assertStringContainsString("Alpine.data('quoteFlow'", $html);
         foreach (['dateOptions', 'submit()', 'loadDates', 'fullFormLink'] as $piece) {
-            $this->assertStringContainsString($piece, $state, "Hero x-data is missing {$piece}");
+            $this->assertStringContainsString($piece, $html, "Booking logic is missing {$piece}");
         }
 
         // Bookable services travel with their pricing so the price updates without a round trip.
@@ -54,5 +56,21 @@ class HeroQuoteFormTest extends TestCase
         $booking = Booking::sole();
         $this->assertSame(['5+', '4+', '1', Booking::AFTERNOON_SLOT, 'Milnerton'], [$booking->bedrooms, $booking->bathrooms, $booking->extra_rooms, $booking->time, $booking->suburb]);
         $this->assertEquals(1910.0, (float) $booking->total);
+    }
+
+    public function test_homepage_serves_both_layouts_from_one_url(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        // Phones: the app layout (tiles, booking sheet, tab bar) with the shared booking logic in app layout.
+        $this->assertStringContainsString('id="app-services"', $html);
+        $this->assertStringContainsString('aria-label="App"', $html);
+        $this->assertSame(2, substr_count($html, 'x-data="quoteFlow('), 'Expected the hero card and the phone booking sheet');
+        $this->assertStringContainsString("Where's the clean?", $html);
+        // Computers: the classic hero card. And every content section is still in the HTML for search engines.
+        $this->assertStringContainsString('id="hero-form"', $html);
+        foreach (['id="services"', 'id="pricing"', 'id="faq"', 'id="testimonials"', 'id="how-it-works"', 'id="why-us"'] as $section) {
+            $this->assertStringContainsString($section, $html, "Homepage HTML is missing {$section}");
+        }
     }
 }

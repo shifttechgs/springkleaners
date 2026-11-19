@@ -33,21 +33,41 @@
     <script type="application/ld+json">{!! json_encode($organizationLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <script type="application/ld+json">{!! json_encode($websiteLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
-    @include('components.navbar')
-    @include('components.hero')
-    @include('components.marquee')
-    @include('components.who-we-help')
-    @include('components.services')
-    @include('components.how-it-works')
-    @include('components.why-us')
-    @include('components.testimonials')
-    <x-before-after-gallery />
-    @include('components.pricing')
-    @include('components.areas-we-serve')
-    @include('components.faq')
-    @include('components.blog-teaser')
-    @include('components.final-cta')
-{{--    @include('components.cta')--}}
-    @include('components.footer')
+    {{-- One page, one URL for every device. Below 1024px the top of the page is the app layout (tile grid, booking
+         sheet, tab bar); computers get the classic hero and sections. Nothing is served differently by device, and
+         every section stays in the HTML, so search engines (which index the phone view) still see all the content:
+         the phone view hides only sections it replaces with its own version, and shows the content sections
+         (services, gallery, pricing, areas, FAQ, footer) in their normal phone layout. --}}
+    @include('components.app-home.styles')
+    <div x-data="appShell()" x-on:scroll.window.passive="onScroll()"
+         x-on:keydown.escape.window="close()" x-on:close-sheet="close()">
+
+        <div class="max-lg:hidden">@include('components.navbar')</div>
+        <div class="max-lg:hidden">@include('components.hero')</div>
+        <div class="lg:hidden">@include('components.app-home.top')</div>
+
+        <div class="max-lg:hidden">
+            @include('components.marquee')
+            @include('components.who-we-help')
+        </div>
+        @include('components.services')
+        <div class="max-lg:hidden">
+            @include('components.how-it-works')
+            @include('components.why-us')
+            @include('components.testimonials')
+        </div>
+        <x-before-after-gallery />
+        @include('components.pricing')
+        @include('components.areas-we-serve')
+        @include('components.faq')
+        <div class="max-lg:hidden">
+            @include('components.blog-teaser')
+            @include('components.final-cta')
+        </div>
+        {{--    @include('components.cta')--}}
+        <div class="max-lg:pb-20">@include('components.footer')</div>
+
+        <div class="lg:hidden">@include('components.app-home.chrome')</div>
+    </div>
 
 @endsection

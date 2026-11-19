@@ -120,7 +120,7 @@
             @php
                 $areaFaqs = [
                     ['q' => 'Do you actually service '.$location['name'].'?', 'a' => 'Yes — '.$location['name'].' is one of our regularly serviced areas across Cape Town\'s Northern Suburbs. Enter your address when booking and we\'ll confirm scheduling.'],
-                    ['q' => 'How do you calculate the final price?', 'a' => 'We don\'t charge a fixed rate because every property is different. After you contact us, we arrange a free, no-obligation site inspection, then provide a detailed, itemised quote you approve before we start.'],
+                    ['q' => 'How do you calculate the final price?', 'a' => 'You see your price straight away when you book, worked out from the service you pick and the size of your place. It\'s a real price, not a teaser. We confirm it with a free check of your property, in person or from the details you give us, and you approve the final, itemised quote before we start. No surprises on the day.'],
                     ['q' => 'Can I get a same-week booking?', 'a' => 'In most cases, yes. Message us on WhatsApp with your address in '.$location['name'].' and we\'ll check availability immediately.'],
                     ['q' => 'Are your cleaning teams insured?', 'a' => 'Yes. SpringKleaners is fully insured, and every team member is background-checked before joining us.'],
                 ];

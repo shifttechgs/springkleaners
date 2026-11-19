@@ -32,7 +32,7 @@
 
                 @php
                 $faqs = [
-                    ['q' => 'How do you calculate the final price?', 'a' => 'We don\'t charge a fixed rate because every property is different. After you contact us, we arrange a free, no-obligation site inspection. We assess the size, condition, and scope of the clean, then provide a detailed, itemised quote. You approve it before we start — no surprises.'],
+                    ['q' => 'How do you calculate the final price?', 'a' => 'You see your price straight away when you book, worked out from the service you pick and the size of your place. It\'s a real price, not a teaser. We confirm it with a free check of your property, in person or from the details you give us, and you approve the final, itemised quote before we start. No surprises on the day.'],
                     ['q' => 'Which areas in Cape Town do you service?', 'a' => 'We currently service Cape Town\'s Northern Suburbs, including Milnerton, Sunningdale, Blouberg, Parklands, Century City, Table View, Big Bay, Bloubergstrand, West Beach, Monte Vista, Edgemead, Bothasig, Richwood, Burgundy Estate, Flamingo Vlei, and surrounding areas.'],
                     ['q' => 'Are your cleaning teams insured?', 'a' => 'Yes. SpringKleaners is fully insured. All our team members are covered by public liability insurance, so you\'re protected throughout the cleaning process. We also background-check every team member before they join us.'],
                     ['q' => 'Do you supply your own cleaning equipment?', 'a' => 'Yes. Our teams arrive fully equipped with professional-grade, eco-friendly cleaning products and all necessary equipment. You don\'t need to provide anything.'],

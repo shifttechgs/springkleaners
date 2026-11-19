@@ -60,7 +60,9 @@ for (const vp of viewports) {
 test.describe('Homepage section-by-section (iPhone SE viewport)', () => {
     test.use({ viewport: { width: 375, height: 667 } });
 
-    const sections = ['#services', '#why-us', '#areas', '#testimonials', '#pricing', '#faq'];
+    // Phones get the app layout on the homepage: its tile grid, then the content sections shown on phones.
+    // (#why-us and #testimonials are desktop sections; the app shows its own versions.)
+    const sections = ['#app-services', '#services', '#pricing', '#areas', '#faq'];
 
     test('scroll through each homepage section and screenshot', async ({ page }) => {
         await page.goto('/', { waitUntil: 'networkidle' });
@@ -80,8 +82,9 @@ test.describe('Homepage section-by-section (iPhone SE viewport)', () => {
 test.describe('Mobile interaction checks (iPhone 12 viewport)', () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
+    // The homepage on phones has the app tab bar instead; every other page keeps the navbar menu.
     test('navbar hamburger menu opens and shows links', async ({ page }) => {
-        await page.goto('/');
+        await page.goto('/about');
         const hamburger = page.locator('button[aria-label="Toggle menu"]');
         await expect(hamburger).toBeVisible();
         await hamburger.click();
@@ -91,8 +94,9 @@ test.describe('Mobile interaction checks (iPhone 12 viewport)', () => {
         await expect(page.locator('text=Get My Instant Quote').last()).toBeVisible();
     });
 
+    // Other pages keep the floating WhatsApp/Quote bar; the homepage replaces it with the app tab bar (below).
     test('mobile sticky WhatsApp/quote bar is visible and not covering content', async ({ page }) => {
-        await page.goto('/');
+        await page.goto('/about');
         // Floating pills inset from the bottom edge (WhatsApp + Get My Instant Quote)
         const stickyBar = page.locator('div.fixed.z-50.lg\\:hidden').filter({ has: page.getByText('WhatsApp Us') });
         await expect(stickyBar).toBeVisible();
@@ -133,11 +137,21 @@ test.describe('Mobile interaction checks (iPhone 12 viewport)', () => {
         expect(overflow1).toBeLessThanOrEqual(5);
     });
 
-    test('homepage tap targets: hero form + nav are reachable without zoom', async ({ page }) => {
+    test('homepage app layout: tiles, tab bar at the bottom, booking sheet opens', async ({ page }) => {
         await page.goto('/');
-        const heroForm = page.locator('#hero-form');
-        await expect(heroForm).toBeVisible();
-        const box = await heroForm.boundingBox();
-        console.log('Hero form box:', JSON.stringify(box));
+        await expect(page.locator('#app-services')).toBeVisible();
+        await expect(page.locator('#hero-form')).toBeHidden();       // the desktop card is computers-only
+        await expect(page.locator('[data-mobile-bar]')).toBeHidden(); // replaced by the tab bar
+
+        const tabBar = page.locator('nav[aria-label="App"]');
+        await expect(tabBar).toBeVisible();
+        const box = await tabBar.boundingBox();
+        expect(box.y + box.height).toBeLessThanOrEqual(844);
+        expect(box.y + box.height).toBeGreaterThan(844 - 4);
+
+        await tabBar.getByRole('button', { name: 'Book' }).click();
+        const sheet = page.getByRole('dialog', { name: 'Book a clean' });
+        await expect(sheet.getByText('What needs cleaning?')).toBeVisible();
+        await page.screenshot({ path: 'test-results/mobile/home-booking-sheet.png' });
     });
 });
