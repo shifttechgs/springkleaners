@@ -36,7 +36,7 @@
             <div class="min-w-0">
                 <p x-ref="title" tabindex="-1" class="font-display text-[#081d3a] text-[24px] sm:text-[26px] leading-none focus:outline-none" x-text="step > 1 && window.innerWidth < 640 ? 'Your quote' : 'Get your instant quote'">Get your instant quote</p>
                 <p class="hero-form-sub text-[#5b6779] text-[13.5px] mt-2">
-                    <span x-text="'Step ' + step + ' of 4'"></span> &middot; <span x-text="stepNames[step - 1]"></span>
+                    <span x-text="'Step ' + step + ' of 4'">Step 1 of 4</span> &middot; <span x-text="stepNames[step - 1]">{{ $quoteFlow['stepNames'][0] }}</span>
                 </p>
             </div>
             <div x-show="step > 1" x-cloak class="flex-shrink-0 text-right" aria-live="polite">
@@ -45,9 +45,9 @@
             </div>
         </div>
         <div class="flex gap-1 mt-4 mb-4" aria-hidden="true">
-            <template x-for="n in 4" :key="n">
-                <span class="h-1 flex-1 rounded-full transition-colors duration-300" :class="n <= step ? 'bg-[#081d3a]' : 'bg-[#081d3a]/12'"></span>
-            </template>
+            @for ($n = 1; $n <= 4; $n++)
+                <span class="h-1 flex-1 rounded-full transition-colors duration-300" :class="{{ $n }} <= step ? 'bg-[#081d3a]' : 'bg-[#081d3a]/12'"></span>
+            @endfor
         </div>
 
         {{-- Step 1: where & what --}}
@@ -72,9 +72,9 @@
                     <p class="text-[#5b6779] text-[12px] mt-0.5">We're expanding — WhatsApp us and we'll let you know when we reach you.</p>
                 </div>
                 <div x-show="locationStatus !== 'valid' && locationStatus !== 'invalid' && !showSuggestions" class="hero-popular mt-2 flex flex-wrap gap-1.5">
-                    <template x-for="s in ['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown']" :key="s">
-                        <button type="button" x-on:pointerdown.prevent="pickSuburb(s)" x-on:click="pickSuburb(s)" class="px-3 py-1.5 lg:px-2 lg:py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[12.5px] lg:text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors" x-text="s"></button>
-                    </template>
+                    @foreach (['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown'] as $chip)
+                        <button type="button" x-on:pointerdown.prevent="pickSuburb(@js($chip))" x-on:click="pickSuburb(@js($chip))" class="px-3 py-1.5 lg:px-2 lg:py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[12.5px] lg:text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors">{{ $chip }}</button>
+                    @endforeach
                 </div>
             </div>
             <div>
@@ -103,8 +103,8 @@
                             class="w-full flex items-center justify-between gap-3 bg-white border rounded-lg pl-4 pr-3 py-3 text-left transition-colors cursor-pointer focus:outline-none"
                             :class="errors.service ? 'border-red-400' : (open ? 'border-[#f6e304] ring-2 ring-[#f6e304]/30' : 'border-[#081d3a]/15 hover:border-[#081d3a]/35')">
                         <span class="min-w-0 flex items-baseline gap-2">
-                            <span class="truncate text-[14px] font-semibold text-[#081d3a]" x-text="service ? service.name : 'Choose a service'"></span>
-                            <span x-show="service" class="flex-shrink-0 text-[12px] text-[#5b6779]" x-text="service ? 'from ' + money(service.base_price + service.service_fee) : ''"></span>
+                            <span class="truncate text-[14px] font-semibold text-[#081d3a]" x-text="service ? service.name : 'Choose a service'">{{ $quoteFlow['services'][$quoteFlow['defaultService']]['name'] ?? 'Choose a service' }}</span>
+                            <span x-show="service" class="flex-shrink-0 text-[12px] text-[#5b6779]" x-text="service ? 'from ' + money(service.base_price + service.service_fee) : ''">@if ($svc0 = $quoteFlow['services'][$quoteFlow['defaultService']] ?? null)from R{{ number_format($svc0['base_price'] + $svc0['service_fee']) }}@endif</span>
                         </span>
                         <svg class="h-4 w-4 flex-shrink-0 text-[#081d3a]/55 transition-transform duration-200" :class="open && 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </button>
@@ -129,11 +129,11 @@
                 <a href="{{ route('services.show', 'office-commercial-cleaning') }}" class="inline-block mt-1.5 text-[12px] text-[#5b6779] underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Office or commercial space? Get a custom quote</a>
             </div>
             <div class="flex gap-1 rounded-full bg-[#081d3a]/[0.07] p-1" role="group" aria-label="Property type">
-                <template x-for="t in ['House', 'Apartment / Flat', 'Townhouse']" :key="t">
-                    <button type="button" x-on:click="propertyType = t" :aria-pressed="propertyType === t"
-                            :class="propertyType === t ? 'bg-[#081d3a] text-white shadow' : 'text-[#081d3a]/70 hover:text-[#081d3a]'"
-                            class="flex-1 px-2 py-2 rounded-full text-[13px] font-semibold transition-colors" x-text="t === 'Apartment / Flat' ? 'Apartment' : t"></button>
-                </template>
+                @foreach (['House' => 'House', 'Apartment / Flat' => 'Apartment', 'Townhouse' => 'Townhouse'] as $type => $label)
+                    <button type="button" x-on:click="propertyType = @js($type)" :aria-pressed="propertyType === @js($type)" aria-pressed="{{ $type === 'House' ? 'true' : 'false' }}"
+                            :class="propertyType === @js($type) ? 'bg-[#081d3a] text-white shadow' : 'text-[#081d3a]/70 hover:text-[#081d3a]'"
+                            class="flex-1 px-2 py-2 rounded-full text-[13px] font-semibold transition-colors">{{ $label }}</button>
+                @endforeach
             </div>
         </div>
 
@@ -254,7 +254,7 @@
             </div>
         </div>
         <p class="hero-form-note text-center text-[#5b6779] text-[12px] mt-3">
-            <span x-show="step === 4">No payment now. We confirm every booking with you first.</span>
+            <span x-show="step === 4" x-cloak>No payment now. We confirm every booking with you first.</span>
             <span x-show="step < 4">Free, no obligation.</span>
             <a :href="fullFormLink" x-on:click="track('quote_full_form', { step_number: step, service: serviceKey })" class="underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Need add-ons or notes? Full form</a>
         </p>
