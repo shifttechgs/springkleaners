@@ -107,6 +107,25 @@ class UpcomingJobsTest extends TestCase
         $this->assertStringContainsString('jobsIn(slot)', $state, 'Calendar x-data attribute was cut short');
     }
 
+    public function test_calendar_marks_closed_dates(): void
+    {
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-19 10:00'));
+
+        $res = $this->actingAs($this->admin)->get(route('admin.dashboard', ['month' => '2026-12']))->assertOk();
+        $html = $res->getContent();
+
+        $this->assertStringContainsString('aria-label="Sat 26 Dec: closed"', $html);
+        $this->assertStringContainsString('aria-label="Sun 27 Dec: closed"', $html);
+        $this->assertStringNotContainsString('aria-label="Sat 19 Dec: closed"', $html);
+
+        // The day panel knows why, and its Alpine state is intact.
+        $dom = new \DOMDocument;
+        @$dom->loadHTML($html);
+        $state = (new \DOMXPath($dom))->evaluate('string(//div[contains(@x-data, "openDay")]/@x-data)');
+        $this->assertStringContainsString('closedReason', $state);
+        $this->assertStringContainsString('jobsIn(slot)', $state, 'Calendar x-data attribute was cut short');
+    }
+
     public function test_calendar_month_switching_is_safe(): void
     {
         $this->travelTo(\Illuminate\Support\Carbon::parse('2026-01-31 10:00'));

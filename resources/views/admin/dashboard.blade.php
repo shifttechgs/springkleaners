@@ -249,11 +249,13 @@
         </div>
 
         {{-- Calendar. Click any day to see its jobs (and which slots are free) without leaving the dashboard. --}}
+        @php $closedDates = \App\Models\Booking::closedDates(); @endphp
         <div class="card p-4 flex flex-col lg:min-h-0 max-lg:order-first"
              x-data="{
                  days: {{ \Illuminate\Support\Js::from($calendarDays) }},
                  today: {{ \Illuminate\Support\Js::from(now()->toDateString()) }},
                  bookableDays: {{ \Illuminate\Support\Js::from(\App\Models\Booking::BOOKABLE_DAYS) }},
+                 closedDates: {{ \Illuminate\Support\Js::from((object) $closedDates) }},
                  slotLabels: {{ \Illuminate\Support\Js::from(['am' => \App\Models\Booking::MORNING_SLOT, 'pm' => \App\Models\Booking::AFTERNOON_SLOT]) }},
                  listUrl: {{ \Illuminate\Support\Js::from(route('admin.bookings.index')) }},
                  createUrl: {{ \Illuminate\Support\Js::from(route('admin.bookings.create')) }},
@@ -263,7 +265,8 @@
                  get day() { return this.open ? (this.days[this.open] || { jobs: [] }) : null },
                  get label() { return this.open ? new Date(this.open + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '' },
                  get isPast() { return this.open && this.open < this.today },
-                 get isBookable() { return this.open && !this.isPast && this.bookableDays.includes(new Date(this.open + 'T00:00:00').getDay()) },
+                 get closedReason() { return this.open && Object.prototype.hasOwnProperty.call(this.closedDates, this.open) ? this.closedDates[this.open] : null },
+                 get isBookable() { return this.open && !this.isPast && !this.closedReason && this.bookableDays.includes(new Date(this.open + 'T00:00:00').getDay()) },
                  jobsIn(slot) { return this.day ? this.day.jobs.filter(j => j.slot === slot) : [] },
              }"
              x-on:keydown.escape.window="close()">
@@ -320,11 +323,21 @@
                         $cellDate = $calendarMonth->copy()->startOfMonth()->addDays($day - 1);
                         $dateStr = $cellDate->toDateString();
                         $isWeekend = in_array($cellDate->dayOfWeek, [0, 6], true);
+                        $isClosed = array_key_exists($dateStr, $closedDates); // config/closed_dates.php
                         $dayData = $calendarDays[$dateStr] ?? null;
                         $isToday = $dateStr === $todayStr;
                     @endphp
 
-                    @if ($dayData)
+                    @if ($isClosed && ! $dayData)
+                        {{-- Closed (holiday / day off): greyed, labelled, no "add booking". --}}
+                        <button type="button" x-on:click="openDay('{{ $dateStr }}')"
+                             aria-label="{{ $cellDate->format('D j M') }}: closed" title="{{ $cellDate->format('D j M') }}: {{ $closedDates[$dateStr] }}"
+                             class="rounded-md flex flex-col items-center justify-center gap-[2px] hover:ring-2 hover:ring-navy/40 transition-all"
+                             style="{{ $isToday ? 'background:#081d3a;' : 'background:#eef0f4;' }}">
+                            <span class="text-[11px] max-lg:text-[14px] leading-none {{ $isToday ? 'text-white font-semibold' : 'text-label line-through decoration-label/50' }}">{{ $day }}</span>
+                            <span class="text-[8.5px] max-lg:text-[10px] font-semibold uppercase tracking-wide leading-none {{ $isToday ? 'text-white/80' : 'text-label' }}">Closed</span>
+                        </button>
+                    @elseif ($dayData)
                         @php
                             $tones = ['confirmed' => '#12b76a', 'waiting' => '#f79009', 'done' => '#98a2b3'];
                             $tip = $cellDate->format('D j M').":\n".collect($dayData['jobs'])->map(fn ($j) => $j['time'].' · '.$j['name'].' · '.$j['status'])->implode("\n");
@@ -362,6 +375,7 @@
                 <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#12b76a;"></span>Confirmed</span>
                 <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#f79009;"></span>Awaiting</span>
                 <span class="flex items-center gap-1.5"><span class="block h-[3px] w-[10px] rounded-full" style="background:#98a2b3;"></span>Done</span>
+                <span class="flex items-center gap-1.5"><span class="block h-[10px] w-[10px] rounded-sm" style="background:#eef0f4;"></span>Closed</span>
                 <span class="ml-auto">Bars: AM | PM</span>
             </div>
 
@@ -409,12 +423,13 @@
                                         </a>
                                     </template>
                                     <div x-show="jobsIn(slot).length === 0" class="flex items-center justify-between gap-3 border border-dashed border-line rounded-xl px-3.5 py-3">
-                                        <span class="text-muted text-[13px]" x-text="isPast ? 'No job' : 'Free'"></span>
+                                        <span class="text-muted text-[13px]" x-text="isPast ? 'No job' : (closedReason ? 'Closed' : 'Free')"></span>
                                         <a x-show="isBookable" :href="createUrl" class="text-navy text-[12.5px] font-semibold hover:opacity-70">+ Add booking</a>
                                     </div>
                                 </div>
                             </template>
-                            <p x-show="!isPast && !isBookable" class="text-label text-[12px]">Weekdays aren't open for bookings.</p>
+                            <p x-show="!isPast && closedReason" class="text-label text-[12px]"><span class="font-semibold text-ink">Closed:</span> <span x-text="closedReason"></span>. Clients can't book this day. To reopen it, remove it from config/closed_dates.php.</p>
+                            <p x-show="!isPast && !isBookable && !closedReason" class="text-label text-[12px]">Weekdays aren't open for bookings.</p>
                         </div>
 
                         <div class="px-5 pb-5" x-show="day && day.jobs.length">
