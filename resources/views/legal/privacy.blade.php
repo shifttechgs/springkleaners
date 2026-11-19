@@ -34,7 +34,7 @@
                     <li>Your property address or suburb, and details about the property (size, number of bedrooms/bathrooms, access instructions)</li>
                     <li>Details of the service requested, scheduling preferences, and any notes you provide</li>
                     <li>Messages you send us via WhatsApp, phone, or the booking form</li>
-                    <li>Before and after photos of the rooms we clean, only if you tick the box for it when you book. We use them for our records and to show our work online. They never show people, house numbers, documents or anything that shows whose home it is. If you change your mind, tell us and we'll stop taking them and delete the ones we have.</li>
+                    <li>Before and after photos of the rooms we clean, only if you tick the box for it when you book. We use them as proof of the work and to showcase it online. They never show people, house numbers or anything with your name on it. If you change your mind, tell us and we'll stop taking them and delete the ones we have.</li>
                 </ul>
 
                 <h2 class="text-xl font-extrabold text-[#081d3a] mt-10 mb-3">2. How we use your information</h2>

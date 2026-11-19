@@ -96,7 +96,7 @@ class ServiceSnapshot
     public static function photoConsentLabel(Booking $booking): string
     {
         return $booking->photo_consent
-            ? 'Yes, for our records and to show online (nothing that identifies you)'
+            ? 'Yes, as proof of the work and to showcase it (nothing that identifies you)'
             : 'No, we won\'t take any';
     }
 

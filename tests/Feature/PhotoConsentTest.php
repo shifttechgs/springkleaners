@@ -76,20 +76,20 @@ class PhotoConsentTest extends TestCase
 
         $this->get(route('quote.show', $yes->accepted_token))->assertOk()
             ->assertSee('Before &amp; after photos', false)
-            ->assertSee('Yes, for our records and to show online');
+            ->assertSee('Yes, as proof of the work and to showcase it');
         $this->get(route('quote.show', $no->accepted_token))->assertOk()
             ->assertSee('No, we won&#039;t take any', false);
 
         $pdf = view('pdf.quote', ['booking' => $yes])->render();
         $this->assertStringContainsString('Before &amp; after photos', $pdf);
-        $this->assertStringContainsString('Yes, for our records and to show online', $pdf);
+        $this->assertStringContainsString('Yes, as proof of the work and to showcase it', $pdf);
     }
 
     public function test_emails_state_what_was_agreed(): void
     {
         $booking = $this->quotedBooking(true);
 
-        $this->assertStringContainsString('Yes, for our records and to show online', (new BookingRequestReceivedMail($booking))->render());
+        $this->assertStringContainsString('Yes, as proof of the work and to showcase it', (new BookingRequestReceivedMail($booking))->render());
         $this->assertStringContainsString('Yes, before &amp; after allowed', (new NewBookingAlertMail($booking))->render());
     }
 
@@ -97,8 +97,8 @@ class PhotoConsentTest extends TestCase
     {
         foreach (['/', '/book'] as $url) {
             $this->get($url)->assertOk()
-                ->assertSee('Yes, you may take before &amp; after photos', false)
-                ->assertSee('Optional, and you can change your mind any time on WhatsApp.');
+                ->assertSee('Yes, take before &amp; after photos of my clean', false)
+                ->assertSee('proof of the work we did for you');
         }
     }
 }
