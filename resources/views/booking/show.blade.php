@@ -140,7 +140,8 @@
         suburbQuery: '', filteredSuburbs: [], showSuggestions: false, selectedSuburb: '', locationStatus: null,
         form: {
             name: '', phone: '', email: '', propertyType: 'House', bedrooms: '2', bathrooms: '1', extraRooms: '0',
-            lastCleaned: '', floorTypes: [], pets: false, notes: '', address: '', accessInstructions: '', parking: ''
+            lastCleaned: '', floorTypes: [], pets: false, notes: '', address: '', accessInstructions: '', parking: '',
+            photoConsent: false
         },
         floorTypeOptions: ['Carpet', 'Tile', 'Hardwood', 'Laminate', 'Vinyl', 'Epoxy'],
         toggleFloorType(type) {
@@ -365,6 +366,7 @@
                     notes: this.form.notes,
                     access_instructions: this.form.accessInstructions,
                     parking: this.form.parking,
+                    photo_consent: this.form.photoConsent,
                     addons: this.selectedAddons,
                     addon_quantities: this.unitAddonQuantities,
                     booking_type: this.bookingType,
@@ -840,6 +842,7 @@
                                 <span class="text-[#8a94a6]">Bathrooms</span><span class="text-[#081d3a] font-semibold" x-text="form.bathrooms"></span>
                                 <span class="text-[#8a94a6]">Flooring</span><span class="text-[#081d3a] font-semibold" x-text="form.floorTypes.length ? form.floorTypes.join(', ') : 'Not specified'"></span>
                                 <span class="text-[#8a94a6]">Pets on premises</span><span class="text-[#081d3a] font-semibold" x-text="form.pets ? 'Yes' : 'No'"></span>
+                                <span class="text-[#8a94a6]">Before &amp; after photos</span><span class="text-[#081d3a] font-semibold" x-text="form.photoConsent ? 'Yes' : 'No'"></span>
                             </div>
                         </div>
 
@@ -867,6 +870,8 @@
                                 </template>
                             </ul>
                         </div>
+
+                        <x-photo-consent model="form.photoConsent" id="book-photo-consent" class="rounded-2xl border-[#edf0f5] p-5" />
 
                     </div>
 

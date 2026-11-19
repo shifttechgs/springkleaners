@@ -90,6 +90,16 @@ class ServiceSnapshot
      *
      * @return array<int, array{label: string, value: string}>
      */
+    /**
+     * What the client agreed to about before & after photos, worded the same on the quote page, the PDFs and emails.
+     */
+    public static function photoConsentLabel(Booking $booking): string
+    {
+        return $booking->photo_consent
+            ? 'Yes, for our records and to show online (nothing that identifies you)'
+            : 'No, we won\'t take any';
+    }
+
     public static function jobDetails(Booking $booking): array
     {
         $floorTypes = collect($booking->floor_types ?? [])->filter();
@@ -102,6 +112,7 @@ class ServiceSnapshot
             ['label' => 'Flooring', 'value' => $floorTypes->isNotEmpty() ? $floorTypes->join(', ') : 'N/A'],
             ['label' => 'Last Cleaned', 'value' => $booking->last_cleaned ?: 'N/A'],
             ['label' => 'Pets on site', 'value' => $booking->pets ? 'Yes' : 'No'],
+            ['label' => 'Before & after photos', 'value' => static::photoConsentLabel($booking)],
         ];
 
         $hours = static::for($booking)['avg_hours'] ?? null;

@@ -88,6 +88,7 @@ class BookingController extends Controller
             'notes' => 'nullable|string|max:2000',
             'access_instructions' => 'nullable|string|max:1000',
             'parking' => 'nullable|string|max:255',
+            'photo_consent' => 'nullable|boolean',
             'addons' => 'nullable|array',
             'addons.*' => 'string|max:50',
             'addon_quantities' => 'nullable|array',
@@ -99,6 +100,8 @@ class BookingController extends Controller
         ]);
 
         $data = [...$data, ...Services::normaliseAddonSelection($data['addons'] ?? [], $data['addon_quantities'] ?? [])];
+        // Before & after photos only with an explicit tick; anything else (missing, null, false) means no.
+        $data['photo_consent'] = (bool) ($data['photo_consent'] ?? false);
 
         $date = Carbon::parse($data['date']);
 

@@ -52,6 +52,10 @@
                                 <td style="font-size:13px; color:#081d3a; font-weight:600; text-align:right; padding:4px 0;">R{{ number_format((float) $booking->total, 2) }}</td>
                             </tr>
                             @endif
+                            <tr>
+                                <td style="font-size:12px; color:#8898aa; padding:4px 0;">Before &amp; after photos</td>
+                                <td style="font-size:13px; color:#081d3a; font-weight:600; text-align:right; padding:4px 0;">{{ \App\Support\ServiceSnapshot::photoConsentLabel($booking) }}</td>
+                            </tr>
                         </table>
                     </td>
                 </tr>

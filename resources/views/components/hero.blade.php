@@ -118,6 +118,7 @@
                     bookableDays: @js(\App\Models\Booking::BOOKABLE_DAYS),
                     counts: {}, taken: {}, capacity: 2, loadingDates: false, loadedMonths: [],
                     form: { name: '', phone: '', email: '', address: '' },
+                    photoConsent: false,
                     errors: {},
                     availabilityUrl: @js(route('booking.availability')),
                     reserveUrl: @js(route('booking.reserve')),
@@ -256,7 +257,7 @@
                                 body: JSON.stringify({
                                     service: this.serviceKey, date: this.date, time: this.slot,
                                     name: f.name.trim(), phone: f.phone.trim(), email: f.email.trim(), address: f.address.trim(), suburb: this.selectedSuburb,
-                                    property_type: this.propertyType,
+                                    property_type: this.propertyType, photo_consent: this.photoConsent,
                                     bedrooms: this.sizeLabel(this.bedrooms, 5), bathrooms: this.sizeLabel(this.bathrooms, 4), extra_rooms: this.sizeLabel(this.extraRooms, 4),
                                     booking_type: 'once-off', subtotal: this.subtotal, total: this.total,
                                 }),
@@ -492,6 +493,7 @@
                                        class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[16px] lg:text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.address ? 'border-red-400' : 'border-[#081d3a]/15'">
                             </div>
                             <p x-show="errors.name || errors.phone || errors.email || errors.address" x-cloak class="text-red-600 text-[12.5px]">Please fill in the highlighted fields.</p>
+                            <x-photo-consent model="photoConsent" id="hero-photo-consent" />
                             <p class="text-[#5b6779] text-[12.5px] bg-white border border-[#081d3a]/10 rounded-lg px-3 py-2">
                                 <span class="font-semibold text-[#081d3a]" x-text="service ? service.name : ''"></span>
                                 &middot; <span x-text="whenLabel"></span> &middot; <span x-text="selectedSuburb"></span>

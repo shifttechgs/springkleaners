@@ -87,7 +87,7 @@ class Booking extends Model
     protected $fillable = [
         'client_id', 'service', 'date', 'time', 'name', 'phone', 'address', 'suburb',
         'property_type', 'bedrooms', 'bathrooms', 'extra_rooms', 'last_cleaned',
-        'floor_types', 'pets', 'notes', 'access_instructions', 'parking',
+        'floor_types', 'pets', 'notes', 'access_instructions', 'parking', 'photo_consent',
         'addons', 'addon_quantities', 'service_snapshot', 'booking_type', 'frequency', 'subtotal', 'total',
         'status', 'quoted_price', 'admin_notes', 'accepted_token',
         'quote_sent_at', 'accepted_at', 'quote_items', 'quote_edited_at',
@@ -102,6 +102,7 @@ class Booking extends Model
         'addon_quantities' => 'array',
         'service_snapshot' => 'array',
         'pets' => 'boolean',
+        'photo_consent' => 'boolean',
         'subtotal' => 'decimal:2',
         'total' => 'decimal:2',
         'quoted_price' => 'decimal:2',

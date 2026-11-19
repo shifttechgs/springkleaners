@@ -74,6 +74,10 @@
             <p class="text-[#5b6779] text-[11px] uppercase tracking-wider font-semibold mb-1">Flooring</p>
             <p class="text-[#081d3a] font-medium">{{ $floorTypes->isNotEmpty() ? $floorTypes->join(', ') : 'N/A' }}</p>
         </div>
+        <div class="col-span-2 sm:col-span-3">
+            <p class="text-[#5b6779] text-[11px] uppercase tracking-wider font-semibold mb-1">Before &amp; after photos</p>
+            <p class="text-[#081d3a] font-medium">{{ \App\Support\ServiceSnapshot::photoConsentLabel($booking) }}</p>
+        </div>
     </div>
 
     @if ($customLines)

@@ -50,6 +50,10 @@
                                 <td style="font-size:13px; color:#081d3a; font-weight:600; text-align:right; padding:4px 0;">{{ $booking->suburb }}</td>
                             </tr>
                             @endif
+                            <tr>
+                                <td style="font-size:12px; color:#8898aa; padding:4px 0;">Photos</td>
+                                <td style="font-size:13px; color:#081d3a; font-weight:600; text-align:right; padding:4px 0;">{{ $booking->photo_consent ? 'Yes, before & after allowed' : 'No photos' }}</td>
+                            </tr>
                         </table>
                     </td>
                 </tr>
