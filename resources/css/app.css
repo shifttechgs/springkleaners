@@ -442,3 +442,43 @@
     .hero-compact { padding-top: 5.25rem; }
     .hero-compact #hero-sub { margin-bottom: 1.25rem; font-size: 15px; line-height: 1.55; }
 }
+
+/* Floating WhatsApp/Quote bar on phones: slides away while a quote form is on screen or a field has focus
+   (toggled by the script in layouts/app.blade.php). */
+.mobile-bar { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease; }
+.mobile-bar.is-hidden { transform: translateY(calc(100% + 1rem)); opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .mobile-bar { transition: none; } }
+
+/* Text link with the same round arrow chip as .btn-arrow (yellow chip, navy arrow; the arrow swaps on hover),
+   for secondary links on dark backgrounds that should match the buttons next to them. */
+.link-chip { display: inline-flex; align-items: center; gap: 0.75rem; --chip: 2.25rem; }
+.link-chip--sm { --chip: 1.875rem; gap: 0.625rem; }
+.link-chip .link-chip__chip { --chip-bg: #f6e304; --chip-fg: #081d3a; }
+.link-chip--sm .btn-arrow__icon { width: 0.9rem; height: 0.9rem; }
+.link-chip:hover .link-chip__chip, .link-chip:focus-visible .link-chip__chip { background-color: #fff; color: #081d3a; }
+.link-chip:hover .btn-arrow__icon--out, .link-chip:focus-visible .btn-arrow__icon--out { transform: translate(150%, -150%); }
+.link-chip:hover .btn-arrow__icon--in, .link-chip:focus-visible .btn-arrow__icon--in { transform: translate(0, 0); }
+/* Down-pointing variant (links that scroll further down the page): the arrow drops out and a new one drops in. */
+.link-chip--down .btn-arrow__icon--in { transform: translate(0, -150%); }
+.link-chip--down:hover .btn-arrow__icon--out, .link-chip--down:focus-visible .btn-arrow__icon--out { transform: translate(0, 150%); }
+/* Phones: a white outline chip, so it doesn't compete with the yellow quote button right above it. */
+@media (max-width: 1023px) {
+    .link-chip .link-chip__chip { background-color: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.75); }
+    .link-chip:hover .link-chip__chip, .link-chip:focus-visible .link-chip__chip { background-color: #fff; color: #081d3a; box-shadow: inset 0 0 0 1.5px #fff; }
+}
+.link-chip:focus-visible { outline: 2px solid #f6e304; outline-offset: 4px; border-radius: 9999px; }
+@media (min-width: 1024px) and (max-height: 860px) {
+    .hero-compact .hero-facts { margin-top: 1.25rem; padding-top: 0.75rem; }
+}
+
+/* Hero text legibility on desktop: straight linear fades towards the near-black base, strongest bottom-left
+   behind the headline and fact row. Phones already show the photo darker (--dim-m), so no scrim there. */
+.hero-scrim { position: absolute; inset: 0; z-index: 3; pointer-events: none; display: none; }
+@media (min-width: 1024px) {
+    .hero-scrim {
+        display: block;
+        background:
+            linear-gradient(to top, rgba(23, 23, 26, 0.72) 0%, rgba(23, 23, 26, 0.4) 30%, rgba(23, 23, 26, 0) 62%),
+            linear-gradient(to right, rgba(23, 23, 26, 0.5) 0%, rgba(23, 23, 26, 0.25) 40%, rgba(23, 23, 26, 0) 62%);
+    }
+}

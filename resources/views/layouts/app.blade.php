@@ -110,7 +110,7 @@
 
     @yield('content')
 
-    <div class="fixed bottom-3 inset-x-3 z-50 lg:hidden flex gap-2">
+    <div class="mobile-bar fixed bottom-3 inset-x-3 z-50 lg:hidden flex gap-2" data-mobile-bar>
         <a href="https://wa.me/27815274711"
            target="_blank"
            rel="noopener noreferrer"
@@ -120,7 +120,7 @@
             </svg>
             WhatsApp Us
         </a>
-        <a href="{{ route('booking.show') }}"
+        <a href="{{ route('booking.show') }}" data-mobile-bar-quote
            class="flex-1 flex items-center justify-center gap-2 rounded-full bg-[#f6e304] text-[#081d3a] font-bold py-3.5 text-[14px] tracking-tight shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)]">
             Get My Instant Quote
         </a>
@@ -139,6 +139,41 @@
             function sync() { if (nav) nav.classList.toggle('nav-scrolled', window.scrollY > 80); }
             window.addEventListener('scroll', sync, { passive: true });
             sync();
+        })();
+
+        // Phones: the floating WhatsApp/Quote bar steps aside while it would get in the way — when a quote form
+        // marked [data-hide-mobile-bar] is on screen (it would cover the fields and the Book button) and while
+        // someone is typing (on Android it would ride up on top of the keyboard). Where there is such a form,
+        // its Quote button jumps back to it instead of leaving the page.
+        (function () {
+            var bar = document.querySelector('[data-mobile-bar]');
+            if (!bar) return;
+            var forms = document.querySelectorAll('[data-hide-mobile-bar]');
+            var visible = 0, typing = false;
+            function sync() { bar.classList.toggle('is-hidden', visible > 0 || typing); }
+            if (forms.length) {
+                var quote = bar.querySelector('[data-mobile-bar-quote]');
+                if (quote && forms[0].id) quote.setAttribute('href', '#' + forms[0].id);
+                if ('IntersectionObserver' in window) {
+                    var io = new IntersectionObserver(function (entries) {
+                        entries.forEach(function (e) {
+                            var on = e.isIntersecting && e.intersectionRect.height > window.innerHeight * 0.45;
+                            if (on !== !!e.target._barOn) { e.target._barOn = on; visible += on ? 1 : -1; }
+                        });
+                        sync();
+                    }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+                    forms.forEach(function (f) { io.observe(f); });
+                }
+            }
+            var textual = /^(text|tel|email|number|search|url|password|date|)$/;
+            document.addEventListener('focusin', function (e) {
+                var t = e.target;
+                typing = t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || (t.tagName === 'INPUT' && textual.test(t.type || ''));
+                sync();
+            });
+            document.addEventListener('focusout', function () {
+                setTimeout(function () { if (!document.activeElement || document.activeElement === document.body) { typing = false; sync(); } }, 50);
+            });
         })();
 
         document.addEventListener('DOMContentLoaded', function () {

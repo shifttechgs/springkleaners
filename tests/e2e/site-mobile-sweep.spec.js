@@ -88,6 +88,8 @@ test('hero slide controls fit on small phones for every slide label', async ({ b
         const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
         const page = await context.newPage();
         await page.goto('/', { waitUntil: 'load' });
+        // The strip (label, counter, pause) only renders when 2+ slides are enabled.
+        if (!(await page.locator('[data-hero-pause]').count())) { await context.close(); continue; }
         for (const label of ['Deep Cleaning', 'Move-in Ready', 'Post Construction']) {
             const right = await page.evaluate((text) => {
                 document.querySelector('[data-hero-label]').textContent = text;

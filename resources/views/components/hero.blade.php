@@ -33,7 +33,7 @@
 @endphp
 {{-- overflow: clip (with overflow-hidden as the fallback) so the zooming background can never make the hero
      scroll sideways inside itself — e.g. when a field in the quote card gets focus. --}}
-<section class="hero-compact relative isolate flex items-end lg:items-center min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-10" style="overflow: clip;">
+<section class="hero-compact relative isolate flex items-end min-h-[100svh] overflow-hidden bg-[#17171a] pt-28 pb-10 lg:pt-32 lg:pb-16" style="overflow: clip;">
 
     {{-- Background slides. Each photo fades into the near-black base (mask on .hero-photo) and drifts slowly while on
          screen; the next one arrives through horizontal stripes. Decorative, so hidden from screen readers. --}}
@@ -51,18 +51,24 @@
                 </div>
             </div>
         @endforeach
+        {{-- Desktop: a plain linear fade (no glow, no spotlight) that darkens only the lower-left, where the white
+             text sits, so the bright kitchen stays bright at the top right. --}}
+        <div class="hero-scrim" aria-hidden="true"></div>
     </div>
 
     <div class="section-wrap w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-end">
 
             <div class="lg:col-span-7 lg:pb-3">
-                <p id="hero-badge" class="hero-settle mb-7 flex items-center gap-3 text-[14px] font-medium text-white/80">
-                    <svg class="h-4 w-[88px] flex-shrink-0 text-[#f6e304]" viewBox="0 0 88 16" fill="currentColor" role="img" aria-label="Rated 4.9 out of 5">
+                {{-- Proof first: the rating and the number of cleans sit right above the headline, where they're read. --}}
+                <p id="hero-badge" class="hero-settle mb-7 flex flex-wrap items-center gap-x-2.5 sm:gap-x-3 gap-y-1.5 text-[13px] sm:text-[14px] font-medium text-white">
+                    <svg class="h-[13px] w-[72px] sm:h-4 sm:w-[88px] flex-shrink-0 text-[#f6e304]" viewBox="0 0 88 16" fill="currentColor" role="img" aria-label="Rated 4.9 out of 5">
                         <defs><path id="hero-star" d="M8 .6l2.2 4.9 5.3.5-4 3.6 1.2 5.3L8 12.2 3.3 14.9l1.2-5.3-4-3.6 5.3-.5z"/></defs>
                         <use href="#hero-star"/><use href="#hero-star" x="18"/><use href="#hero-star" x="36"/><use href="#hero-star" x="54"/><use href="#hero-star" x="72"/>
                     </svg>
-                    4.9 from our Google reviews
+                    <span><span class="font-bold">4.9</span> on Google</span>
+                    <span class="h-3.5 w-px bg-white/40" aria-hidden="true"></span>
+                    <span><span class="font-bold">500+</span> cleans done</span>
                 </p>
 
                 <h1 id="hero-headline" class="font-display text-white text-[40px] sm:text-[58px] lg:text-[62px] xl:text-[76px] 2xl:text-[84px] min-[2400px]:text-[100px] leading-[1.04] mb-8">
@@ -71,17 +77,17 @@
                     <span class="hero-line"><span>cleaned properly.</span></span>
                 </h1>
 
-                <p id="hero-sub" class="hero-settle max-w-[34rem] lg:max-w-[38rem] 2xl:max-w-[44rem] text-[17px] lg:text-[19px] 2xl:text-[21px] leading-relaxed text-white/75 mb-9 lg:mb-0">
+                <p id="hero-sub" class="hero-settle max-w-[34rem] lg:max-w-[38rem] 2xl:max-w-[44rem] text-[17px] lg:text-[19px] 2xl:text-[21px] leading-relaxed text-white/90 mb-9 lg:mb-0">
                     Deep cleaning, end-of-tenancy and post-construction cleaning for homes and businesses, with your price before you book.
                 </p>
 
                 <div class="hero-settle flex flex-wrap items-center gap-x-6 gap-y-3 mb-10 lg:hidden">
                     <x-arrow-button href="#hero-form">Get my instant quote</x-arrow-button>
-                    <a href="#services" class="link-arrow text-[15px] font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-[#f6e304]">See our services<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+                    <a href="#services" class="link-chip link-chip--down text-[15px] font-semibold text-white">See our services<span class="btn-arrow__chip link-chip__chip" aria-hidden="true"><svg class="btn-arrow__icon btn-arrow__icon--out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg><svg class="btn-arrow__icon btn-arrow__icon--in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span></a>
                 </div>
             </div>
 
-            <div class="lg:col-span-5" id="hero-form">
+            <div class="lg:col-span-5 scroll-mt-24 lg:scroll-mt-0" id="hero-form" data-hide-mobile-bar>
                 @if (empty($heroServices))
                     <div class="bg-[#f6f8fb] rounded-xl p-6 sm:p-7 ring-1 ring-white/30">
                         <p class="font-display text-[#081d3a] text-[26px] leading-none mb-3">Get your instant quote</p>
@@ -117,6 +123,14 @@
                     reserveUrl: @js(route('booking.reserve')),
                     fullFormUrl: @js(route('booking.show')),
                     stepNames: ['Your clean', 'Size & price', 'Date & time', 'Your details'],
+                    started: false, reached: [1],
+
+                    // Analytics (GA4, via the gtag already on every page): a funnel of quote_start → quote_step 2/3/4
+                    // → generate_lead, plus where people drop out. Never sends name, phone, email, address or typed text.
+                    track(name, params = {}) {
+                        try { if (typeof window.gtag === 'function') window.gtag('event', name, Object.assign({ form_location: 'hero' }, params)); } catch (e) {}
+                    },
+                    start() { if (this.started) return; this.started = true; this.track('quote_start', { service: this.serviceKey }); },
 
                     get service() { return this.services[this.serviceKey] || null },
                     get subtotal() {
@@ -142,7 +156,7 @@
                         this.showSuggestions = false;
                         if (!this.suburbQuery.trim()) { this.locationStatus = 'required'; return; }
                         const m = this.suburbs.find(s => s.toLowerCase() === this.suburbQuery.trim().toLowerCase());
-                        if (m) { this.selectSuburb(m); } else { this.locationStatus = 'invalid'; }
+                        if (m) { this.selectSuburb(m); } else { this.locationStatus = 'invalid'; this.track('quote_out_of_area'); }
                     },
 
                     next() {
@@ -161,8 +175,24 @@
                     back() { if (this.step > 1) this.go(this.step - 1) },
                     go(n) {
                         this.step = n;
+                        // Count each step once per visit, so going Back and forward again doesn't inflate the funnel.
+                        if (!this.reached.includes(n)) {
+                            this.reached.push(n);
+                            this.track('quote_step', { step_number: n, step_name: this.stepNames[n - 1], service: this.serviceKey, property_type: this.propertyType, value: Math.round(this.total), currency: 'ZAR' });
+                        }
                         if (n === 3) this.loadDates();
-                        this.$nextTick(() => this.$refs['step' + n]?.querySelector('input, button, select')?.focus({ preventScroll: true }));
+                        this.$nextTick(() => {
+                            this.keepInView();
+                            // No auto-focus on touch screens: focusing a text field would pop the keyboard up unasked.
+                            if (!window.matchMedia('(pointer: coarse)').matches) this.$refs['step' + n]?.querySelector('input, button, select')?.focus({ preventScroll: true });
+                        });
+                    },
+                    // Phones: after a step change the card's top (title, progress, price) can sit under the floating
+                    // navbar, so bring it back into view.
+                    keepInView() {
+                        if (window.innerWidth >= 1024) return;
+                        const top = this.$root.getBoundingClientRect().top;
+                        if (top < 88 || top > window.innerHeight * 0.5) window.scrollTo({ top: window.scrollY + top - 96, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
                     },
 
                     // Next bookable dates, with how many slots are left on each.
@@ -232,21 +262,27 @@
                                 }),
                             });
                             const json = await res.json().catch(() => ({}));
-                            if (res.ok && json.status === 'ok') { this.done = true; return; }
+                            if (res.ok && json.status === 'ok') {
+                                this.done = true;
+                                this.track('generate_lead', { service: this.serviceKey, property_type: this.propertyType, value: Math.round(this.total), currency: 'ZAR' });
+                                this.$nextTick(() => this.keepInView()); return;
+                            }
+                            this.track('quote_error', { reason: json.status || ('http_' + res.status), step_number: this.step });
                             if (['time_taken', 'full', 'invalid_day'].includes(json.status)) {
                                 this.loadedMonths = []; await this.loadDates();
                                 this.slot = ''; if (json.status !== 'time_taken') this.date = '';
                                 this.serverError = json.status === 'time_taken' ? 'That slot was just booked — please pick another.' : 'That date just filled up — please pick another.';
-                                this.step = 3; return;
+                                this.step = 3; this.$nextTick(() => this.keepInView()); return;
                             }
                             this.serverError = json.message || 'Something went wrong — please try again, or WhatsApp us on +27 81 527 4711.';
                         } catch (e) {
+                            this.track('quote_error', { reason: 'network', step_number: this.step });
                             this.serverError = 'Something went wrong — please try again, or WhatsApp us on +27 81 527 4711.';
                         } finally {
                             this.submitting = false;
                         }
                     },
-                }" class="bg-[#f6f8fb] rounded-xl p-6 sm:p-7 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.75)] ring-1 ring-white/30">
+                }" x-on:focusin="start()" x-on:pointerdown="start()" class="bg-[#f6f8fb] rounded-xl p-6 sm:p-7 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.75)] ring-1 ring-white/30">
 
                     {{-- Done --}}
                     <div x-show="done" x-cloak class="text-center py-4" role="status" aria-live="polite">
@@ -264,7 +300,7 @@
                         {{-- Header: title, live price, progress --}}
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0">
-                                <p class="font-display text-[#081d3a] text-[24px] sm:text-[26px] leading-none">Get your instant quote</p>
+                                <p class="font-display text-[#081d3a] text-[24px] sm:text-[26px] leading-none" x-text="step > 1 && window.innerWidth < 640 ? 'Your quote' : 'Get your instant quote'">Get your instant quote</p>
                                 <p class="hero-form-sub text-[#5b6779] text-[13.5px] mt-2">
                                     <span x-text="'Step ' + step + ' of 4'"></span> &middot; <span x-text="stepNames[step - 1]"></span>
                                 </p>
@@ -287,7 +323,7 @@
                                 <div class="relative">
                                     <input id="hero-suburb" type="text" x-model="suburbQuery" x-on:input="filterSuburbs()" x-on:blur="setTimeout(() => { showSuggestions = false }, 200)"
                                            x-on:keydown.enter.prevent="checkLocation()" autocomplete="address-level2" placeholder="e.g. Milnerton, Parklands..."
-                                           class="w-full bg-white border rounded-lg px-4 py-3 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors"
+                                           class="w-full bg-white border rounded-lg px-4 py-3 text-[#081d3a] text-[16px] lg:text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none transition-colors"
                                            :class="locationStatus === 'required' || locationStatus === 'invalid' ? 'border-red-400' : 'border-[#081d3a]/15'">
                                     <div x-show="showSuggestions" class="absolute left-0 right-0 top-full mt-1 bg-[#081d3a] border border-white/10 rounded-xl z-50 max-h-48 overflow-y-auto" style="display:none;">
                                         <template x-for="s in filteredSuburbs" :key="s">
@@ -303,7 +339,7 @@
                                 </div>
                                 <div x-show="locationStatus !== 'valid' && locationStatus !== 'invalid' && !showSuggestions" class="hero-popular mt-2 flex flex-wrap gap-1.5">
                                     <template x-for="s in ['Milnerton', 'Blouberg', 'Table View', 'Century City', 'Sandown']" :key="s">
-                                        <button type="button" x-on:click="selectSuburb(s)" class="px-2 py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors" x-text="s"></button>
+                                        <button type="button" x-on:click="selectSuburb(s)" class="px-3 py-1.5 lg:px-2 lg:py-1 bg-[#081d3a]/5 border border-[#081d3a]/10 rounded-full text-[12.5px] lg:text-[11px] text-[#081d3a]/70 hover:bg-[#f6e304] hover:border-[#f6e304] hover:text-[#081d3a] transition-colors" x-text="s"></button>
                                     </template>
                                 </div>
                             </div>
@@ -381,10 +417,10 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <button type="button" x-on:click="$data[row.key] = Math.max(row.min, $data[row.key] - 1)" :disabled="$data[row.key] <= row.min"
-                                                class="w-9 h-9 rounded-full border border-[#081d3a]/15 text-[#081d3a] text-[18px] font-bold leading-none hover:border-[#081d3a] disabled:opacity-30" :aria-label="'Fewer ' + row.label.toLowerCase()">−</button>
+                                                class="w-11 h-11 lg:w-9 lg:h-9 rounded-full border border-[#081d3a]/15 text-[#081d3a] text-[18px] font-bold leading-none hover:border-[#081d3a] disabled:opacity-30" :aria-label="'Fewer ' + row.label.toLowerCase()">−</button>
                                         <span class="w-8 text-center text-[#081d3a] text-[16px] font-bold" x-text="sizeLabel($data[row.key], row.max)" aria-live="polite"></span>
                                         <button type="button" x-on:click="$data[row.key] = Math.min(row.max, $data[row.key] + 1)" :disabled="$data[row.key] >= row.max"
-                                                class="w-9 h-9 rounded-full border border-[#081d3a]/15 text-[#081d3a] text-[18px] font-bold leading-none hover:border-[#081d3a] disabled:opacity-30" :aria-label="'More ' + row.label.toLowerCase()">+</button>
+                                                class="w-11 h-11 lg:w-9 lg:h-9 rounded-full border border-[#081d3a]/15 text-[#081d3a] text-[18px] font-bold leading-none hover:border-[#081d3a] disabled:opacity-30" :aria-label="'More ' + row.label.toLowerCase()">+</button>
                                     </div>
                                 </div>
                             </template>
@@ -436,24 +472,24 @@
                             <div class="grid grid-cols-2 gap-2.5">
                                 <div>
                                     <label for="hero-name" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Full name <span class="text-rose-500">*</span></label>
-                                    <input id="hero-name" type="text" x-model="form.name" x-on:input="errors.name = false" autocomplete="name" placeholder="e.g. Jane Smith"
-                                           class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.name ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                    <input id="hero-name" type="text" x-model="form.name" x-on:input="errors.name = false" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="Jane Smith"
+                                           class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[16px] lg:text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.name ? 'border-red-400' : 'border-[#081d3a]/15'">
                                 </div>
                                 <div>
                                     <label for="hero-phone" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Phone <span class="text-rose-500">*</span></label>
-                                    <input id="hero-phone" type="tel" x-model="form.phone" x-on:input="errors.phone = false" autocomplete="tel" inputmode="tel" placeholder="082 xxx xxxx"
-                                           class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.phone ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                    <input id="hero-phone" type="tel" x-model="form.phone" x-on:input="errors.phone = false" autocomplete="tel" inputmode="tel" enterkeyhint="next" placeholder="082 xxx xxxx"
+                                           class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[16px] lg:text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.phone ? 'border-red-400' : 'border-[#081d3a]/15'">
                                 </div>
                             </div>
                             <div>
                                 <label for="hero-email" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Email <span class="text-rose-500">*</span></label>
-                                <input id="hero-email" type="email" x-model="form.email" x-on:input="errors.email = false" autocomplete="email" placeholder="you@email.com"
-                                       class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.email ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                <input id="hero-email" type="email" x-model="form.email" x-on:input="errors.email = false" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" placeholder="you@email.com"
+                                       class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[16px] lg:text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.email ? 'border-red-400' : 'border-[#081d3a]/15'">
                             </div>
                             <div>
                                 <label for="hero-address" class="block text-[#081d3a]/80 text-[13px] mb-1 font-semibold">Street address <span class="text-rose-500">*</span></label>
-                                <input id="hero-address" type="text" x-model="form.address" x-on:input="errors.address = false" autocomplete="street-address" placeholder="e.g. 12 Beach Road"
-                                       class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.address ? 'border-red-400' : 'border-[#081d3a]/15'">
+                                <input id="hero-address" type="text" x-model="form.address" x-on:input="errors.address = false" autocomplete="street-address" enterkeyhint="done" placeholder="e.g. 12 Beach Road"
+                                       class="w-full bg-white border rounded-lg px-3.5 py-2.5 text-[#081d3a] text-[16px] lg:text-[14px] placeholder-[#081d3a]/35 focus:border-[#f6e304] focus:outline-none" :class="errors.address ? 'border-red-400' : 'border-[#081d3a]/15'">
                             </div>
                             <p x-show="errors.name || errors.phone || errors.email || errors.address" x-cloak class="text-red-600 text-[12.5px]">Please fill in the highlighted fields.</p>
                             <p class="text-[#5b6779] text-[12.5px] bg-white border border-[#081d3a]/10 rounded-lg px-3 py-2">
@@ -485,7 +521,7 @@
                         <p class="hero-form-note text-center text-[#5b6779] text-[12px] mt-3">
                             <span x-show="step === 4">No payment now. We confirm every booking with you first.</span>
                             <span x-show="step < 4">Free, no obligation.</span>
-                            <a :href="fullFormLink" class="underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Need add-ons or notes? Full form</a>
+                            <a :href="fullFormLink" x-on:click="track('quote_full_form', { step_number: step, service: serviceKey })" class="underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Need add-ons or notes? Full form</a>
                         </p>
                     </div>
                 </div>
@@ -493,13 +529,29 @@
             </div>
         </div>
 
+        {{-- Fact row: plain facts under a hairline, the way editorial heroes close. Text only, no icons or chips.
+             Every claim here is stated elsewhere on the site (about page, reviews) — keep it that way. Shown when
+             there is a single background photo; with 2+ slides the slide strip below takes this spot instead. --}}
+        @if (! $heroHasSlideshow)
+        <div class="hero-facts hero-settle mt-8 lg:mt-10 border-t border-white/15 pt-4 text-[12.5px] sm:text-[13px] text-white/85">
+            <ul class="grid grid-cols-3 items-center lg:flex lg:whitespace-nowrap">
+                <li class="pr-2 sm:pr-5 lg:pl-0"><span class="lg:hidden">Vetted &amp; insured</span><span class="hidden lg:inline">Background-checked, insured team</span></li>
+                <li class="border-l border-white/25 px-2 sm:px-5 text-center lg:text-left"><span class="lg:hidden">Weekends</span><span class="hidden lg:inline">Saturday &amp; Sunday bookings</span></li>
+                <li class="border-l border-white/25 px-2 sm:px-5 text-center lg:text-left">No upfront payment</li>
+                <li class="hidden lg:block lg:ml-auto">
+                    <a href="#services" class="link-chip link-chip--down link-chip--sm font-semibold text-white">Our services<span class="btn-arrow__chip link-chip__chip" aria-hidden="true"><svg class="btn-arrow__icon btn-arrow__icon--out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg><svg class="btn-arrow__icon btn-arrow__icon--in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span></a>
+                </li>
+            </ul>
+        </div>
+        @endif
+
         {{-- Slide label + counter, full width under the copy and the form. The line between the numbers fills while
-             a slide is on screen and drives the autoplay. --}}
+             a slide is on screen and drives the autoplay. Only shown with 2+ slides: with one, it's just a label. --}}
+        @if ($heroHasSlideshow)
         <div class="hero-strip hero-settle mt-8 lg:mt-10 flex items-center gap-3 sm:gap-4 whitespace-nowrap border-t border-white/15 pt-4 text-[13px] text-white/80">
             <span class="hidden min-[400px]:inline font-medium text-white">Cape Town</span>
             <span class="hidden min-[400px]:inline h-3.5 w-px bg-white/35" aria-hidden="true"></span>
             <span class="hero-roll" data-hero-label>{{ $heroSlides[0]['label'] }}</span>
-            @if ($heroHasSlideshow)
             <span class="ml-2 sm:ml-4 flex items-center gap-3 tabular-nums" aria-hidden="true">
                 <span data-hero-count>01</span>
                 <span class="relative h-px w-12 overflow-hidden bg-white/25"><span class="hero-progress" data-hero-progress></span></span>
@@ -516,8 +568,8 @@
                     <svg class="hero-pause__icon-play h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
                 </button>
             </span>
-            @endif
         </div>
+        @endif
     </div>
 </section>
 
