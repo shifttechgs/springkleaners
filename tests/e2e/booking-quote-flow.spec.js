@@ -33,8 +33,10 @@ test.describe('Booking to accepted quote', () => {
         await suburbInput.fill('Milnerton');
         await suburbInput.press('Enter');
 
-        // Interior windows add-on
-        await page.locator('.addon-card').filter({ hasText: 'Interior windows' }).click();
+        // Windows add-on (priced per window since 2026-11-18): select it, then set how many
+        await page.locator('.addon-card').filter({ hasText: 'Windows (inside & out)' }).click();
+        await page.getByLabel('Number of windows').fill('6');
+        await page.getByLabel('Number of windows').press('Tab');
 
         await page.locator('div[x-show="step === 1"]').getByRole('button', { name: 'Continue' }).click();
 
@@ -73,7 +75,7 @@ test.describe('Booking to accepted quote', () => {
         // wizard button label renders with an en dash ("3–6 months ago").
         await expect(page.getByText('3-6 months ago')).toBeVisible();
         await expect(page.getByText('Playwright test booking')).toBeVisible();
-        await expect(page.getByText('Interior windows')).toBeVisible();
+        await expect(page.getByText('Windows (inside & out)').first()).toBeVisible();
 
         // ── Admin: send a quote ──
         const quotedPriceInput = page.locator('form[action*="send-quote"] input[type="number"][name="quoted_price"]').locator('visible=true');
