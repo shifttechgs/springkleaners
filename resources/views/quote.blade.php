@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('no_app_shell', '1')
 
 @section('title', 'Get My Quote — SpringKleaners | Free Cleaning Estimate Cape Town')
 @section('robots', 'noindex, follow')

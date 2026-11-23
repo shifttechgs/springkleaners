@@ -47,7 +47,7 @@
     @include('components.navbar')
 
     {{-- Hero --}}
-    <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
+    <section class="app-hero bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="section-wrap relative z-10 max-w-3xl">
             <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
@@ -60,7 +60,7 @@
             <p class="text-white/60 text-[16px] leading-relaxed mb-8">
                 SpringKleaners provides deep cleaning, end-of-tenancy, post-construction, office &amp; commercial and specialist cleaning services (carpet, upholstery, window and more) across {{ $totalAreas }} suburbs spanning the Northern Suburbs, Milnerton, Blaauwberg and the Atlantic Seaboard — every service priced upfront, booked online, and confirmed with a free inspection.
             </p>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 app-hero-actions">
                 <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
                 <x-arrow-button variant="outline" :href="\App\Support\WhatsApp::link('Hi SpringKleaners, do you clean in my suburb? My suburb is ')" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
@@ -69,7 +69,7 @@
     </section>
 
     {{-- Area clusters --}}
-    <section class="bg-white section-py">
+    <section class="app-panel bg-white section-py">
         <div class="section-wrap">
             @foreach ($clusters as $clusterName => $clusterAreas)
             @if ($clusterAreas->isNotEmpty())

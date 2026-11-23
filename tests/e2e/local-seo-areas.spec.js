@@ -95,23 +95,35 @@ test.describe('New area pages', () => {
     });
 });
 
-test.describe('Phone: the sticky quote button keeps context', () => {
+test.describe('Phone: the tab bar Book sheet keeps the page context', () => {
     test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
-    test('on an area page it carries the suburb into booking', async ({ page }) => {
-        await page.goto('/areas/goodwood');
-        const quote = page.locator('[data-mobile-bar-quote]');
-        await expect(quote).toBeVisible();
-        await quote.click();
-        await expect(page).toHaveURL(/\/book\?suburb=Goodwood/);
-        await expect(page.getByPlaceholder('e.g. Milnerton, Table View...')).toHaveValue('Goodwood');
+    // What the booking sheet's flow has selected (the app sheet, components/app-booking), and whether it's on screen.
+    const sheetState = (page) => page.evaluate(() => {
+        const flow = document.querySelector('[data-booking-flow] [x-data^="quoteFlow"]');
+        const d = window.Alpine.$data(flow);
+        const r = document.querySelector('.app-sheet').getBoundingClientRect();
+        return { suburb: d.selectedSuburb, service: d.serviceKey, onScreen: r.top > 0 && r.bottom <= window.innerHeight };
     });
 
-    test('on a bookable service page it carries the service into booking', async ({ page }) => {
+    test('on an area page it opens with the suburb chosen', async ({ page }) => {
+        await page.goto('/areas/goodwood');
+        await page.getByRole('navigation', { name: 'App' }).getByRole('button', { name: 'Book' }).tap();
+        await expect(page.getByRole('dialog', { name: 'Book a clean' })).toBeVisible();
+        await page.waitForTimeout(500);
+        const s = await sheetState(page);
+        expect(s.onScreen).toBe(true);
+        expect(s.suburb).toBe('Goodwood');
+    });
+
+    test('on a bookable service page it opens on that service', async ({ page }) => {
         await page.goto('/services/end-of-tenancy');
-        await page.locator('[data-mobile-bar-quote]').click();
-        await expect(page).toHaveURL(/\/book\?service=end-of-tenancy/);
-        await expect(page.getByRole('heading', { level: 1 })).toHaveText('End-of-Tenancy Cleaning');
+        await page.getByRole('navigation', { name: 'App' }).getByRole('button', { name: 'Book' }).tap();
+        await expect(page.getByRole('dialog', { name: 'Book a clean' })).toBeVisible();
+        await page.waitForTimeout(500);
+        const s = await sheetState(page);
+        expect(s.onScreen).toBe(true);
+        expect(s.service).toBe('end-of-tenancy');
     });
 });
 

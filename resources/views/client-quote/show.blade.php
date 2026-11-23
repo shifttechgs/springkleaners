@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('no_app_shell', '1')
 
 @section('title', 'Your Quote — SpringKleaners')
 @section('description', 'View and confirm your SpringKleaners cleaning quote.')

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('no_app_shell', '1')
 
 @section('title', 'Your Invoice — SpringKleaners')
 @section('description', 'View and download your SpringKleaners invoice.')

@@ -6,8 +6,10 @@
     @section('og_image_alt', ($content['hero_alt'] ?? $content['label']).', SpringKleaners '.$content['label'].' in Cape Town')
 @endif
 @section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for {$content['label']}.")
+@section('app_tab', 'services')
 @if (($content['pricing_mode'] ?? 'wizard') === 'wizard' && ($service['bookable'] ?? false))
     @section('book_url', route('booking.show', ['service' => $slug]))
+    @section('book_service', $slug)
 @endif
 @section('content')
     @php
@@ -68,7 +70,7 @@
     @include('components.navbar')
 
     {{-- Hero --}}
-    <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
+    <section class="app-hero bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="section-wrap relative z-10">
             <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
@@ -85,7 +87,7 @@
                     <p class="text-white/60 text-[16px] leading-relaxed max-w-xl mb-8">
                         {{ $content['intro'] }}
                     </p>
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-4 {{ $isQuoteMode ? '' : 'app-hero-actions' }}">
                         @if ($isQuoteMode)
                         <x-arrow-button href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">{{ $content['cta_label'] ?? 'Request a Quote' }}</x-arrow-button>
                         <x-arrow-button variant="outline" href="mailto:bookings@springkleaners.co.za" class="flex-shrink-0">Email Us</x-arrow-button>
@@ -106,7 +108,7 @@
     </section>
 
     {{-- What's included + pricing card --}}
-    <section class="bg-white section-py">
+    <section class="app-panel bg-white section-py">
         <div class="section-wrap">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
                 <div class="lg:col-span-7 wow fadeInUp" data-wow-duration="0.7s">

@@ -43,7 +43,7 @@
     <div x-data="{ tab: ['pricing','trust','services','areas','comparison'].includes(window.location.hash.slice(1)) ? window.location.hash.slice(1) : 'pricing' }">
 
         {{-- Hero --}}
-        <section class="bg-[#081d3a] pt-36 pb-14 lg:pt-44 lg:pb-16 relative overflow-hidden">
+        <section class="app-hero bg-[#081d3a] pt-36 pb-14 lg:pt-44 lg:pb-16 relative overflow-hidden">
             <div class="section-wrap relative z-10 max-w-3xl">
                 <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                     <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>

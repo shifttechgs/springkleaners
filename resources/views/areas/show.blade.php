@@ -2,6 +2,7 @@
 @section('title', 'Cleaning Services in '.$location['name'].', Cape Town | SpringKleaners')
 @section('description', $location['meta_description'])
 @section('book_url', route('booking.show', ['suburb' => $location['name']]))
+@section('book_suburb', $location['name'])
 @section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for a clean in {$location['name']}.")
 @section('content')
     @php
@@ -34,7 +35,7 @@
     @include('components.navbar')
 
     {{-- Hero --}}
-    <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
+    <section class="app-hero bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="section-wrap relative z-10 max-w-3xl">
             <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
@@ -52,7 +53,7 @@
             <p class="text-white/60 text-[13px] mb-8">
                 {{ $location['property_note'] }}
             </p>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 app-hero-actions">
                 <x-arrow-button href="{{ route('booking.show', ['suburb' => $location['name']]) }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
                 <x-arrow-button variant="outline" href="{{ \App\Support\WhatsApp::forSuburb($location['name']) }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
@@ -61,7 +62,7 @@
     </section>
 
     {{-- Services in this area --}}
-    <section class="bg-white section-py">
+    <section class="app-panel bg-white section-py">
         <div class="section-wrap">
             <div class="text-center max-w-2xl mx-auto mb-12 wow fadeInUp" data-wow-duration="0.7s">
                 <div class="w-8 h-[2px] bg-[#f6e304] mb-3 mx-auto"></div>

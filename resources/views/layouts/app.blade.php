@@ -1,3 +1,9 @@
+@php
+    // Phones: inner pages get the app shell (tab bar, booking and More sheets), like the homepage. Rendered before
+    // <head> so the styles and scripts it pushes reach the stacks below. Opt out with @section('no_app_shell'):
+    // the homepage (it has its own), the booking page and quote/invoice links.
+    $appShellHtml = $__env->hasSection('no_app_shell') ? '' : view('components.app-shell')->render();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,6 +140,8 @@
             Get My Instant Quote
         </a>
     </div>
+
+    {!! $appShellHtml !!}
 
     <script defer src="/js/wow.min.js"></script>
     <script defer src="/js/odometer.min.js"></script>

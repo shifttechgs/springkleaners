@@ -82,28 +82,39 @@ test.describe('Homepage section-by-section (iPhone SE viewport)', () => {
 test.describe('Mobile interaction checks (iPhone 12 viewport)', () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
-    // The homepage on phones has the app tab bar instead; every other page keeps the navbar menu.
-    test('navbar hamburger menu opens and shows links', async ({ page }) => {
+    // Inner pages on phones use the app shell (tab bar + More sheet) like the homepage; the menu lives in More.
+    test('More tab opens the menu sheet with the main links', async ({ page }) => {
         await page.goto('/about');
-        const hamburger = page.locator('button[aria-label="Toggle menu"]');
-        await expect(hamburger).toBeVisible();
-        await hamburger.click();
-        await page.waitForTimeout(300);
-        await page.screenshot({ path: 'test-results/mobile/nav-menu-open.png' });
-        // The mobile menu should now show top-level links
-        await expect(page.locator('text=Get My Instant Quote').last()).toBeVisible();
+        await expect(page.locator('button[aria-label="Toggle menu"]')).toBeHidden();
+        const tabbar = page.getByRole('navigation', { name: 'App' });
+        await tabbar.getByRole('button', { name: 'More' }).click();
+        const more = page.getByRole('dialog', { name: 'More' });
+        await expect(more).toBeVisible();
+        for (const name of ['About us', 'Areas we serve', 'How-To Guides', 'FAQ']) {
+            await expect(more.getByRole('link', { name })).toBeVisible();
+        }
+        await page.screenshot({ path: 'test-results/mobile/more-sheet-open.png' });
     });
 
-    // Other pages keep the floating WhatsApp/Quote bar; the homepage replaces it with the app tab bar (below).
-    test('mobile sticky WhatsApp/quote bar is visible and not covering content', async ({ page }) => {
+    test('tab bar sits on the bottom edge and the page end is not hidden behind it', async ({ page }) => {
         await page.goto('/about');
-        // Floating pills inset from the bottom edge (WhatsApp + Get My Instant Quote)
-        const stickyBar = page.locator('div.fixed.z-50.lg\\:hidden').filter({ has: page.getByText('WhatsApp Us') });
-        await expect(stickyBar).toBeVisible();
-        const box = await stickyBar.boundingBox();
-        console.log('Sticky bar box:', JSON.stringify(box));
-        expect(box.y + box.height).toBeGreaterThan(844 - 24);
-        expect(box.y + box.height).toBeLessThanOrEqual(844);
+        await expect(page.locator('[data-mobile-bar]')).toBeHidden();
+        const tabbar = page.getByRole('navigation', { name: 'App' });
+        await expect(tabbar).toBeVisible();
+        const box = await tabbar.boundingBox();
+        expect(box.y + box.height).toBeGreaterThan(844 - 4);
+        expect(box.y + box.height).toBeLessThanOrEqual(844 + 1);
+        // Scrolled to the very end, the footer's last line sits above the tab bar.
+        await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+        await page.waitForTimeout(300);
+        const footerBottom = await page.locator('footer').evaluate((f) => f.getBoundingClientRect().bottom);
+        expect(footerBottom).toBeLessThanOrEqual(box.y + 2);
+    });
+
+    test('booking and quote pages keep the menu and floating buttons (no tab bar)', async ({ page }) => {
+        await page.goto('/book');
+        await expect(page.locator('button[aria-label="Toggle menu"]')).toBeVisible();
+        await expect(page.getByRole('navigation', { name: 'App' })).toHaveCount(0);
     });
 
     test('booking wizard: service picker + calendar render without overflow', async ({ page }) => {

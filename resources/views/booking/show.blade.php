@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('no_app_shell', '1')
 
 @section('title', 'Book Your Clean Online — SpringKleaners Cape Town')
 @section('description', 'Book Deep Cleaning, End-of-Tenancy or Post Construction cleaning online in minutes. Instant estimate, transparent pricing, no hidden fees.')

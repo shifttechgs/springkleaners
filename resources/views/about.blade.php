@@ -18,7 +18,7 @@
     @include('components.navbar')
 
     {{-- Hero --}}
-    <section class="bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
+    <section class="app-hero bg-[#081d3a] pt-36 pb-16 lg:pt-44 lg:pb-20 relative overflow-hidden">
         <div class="section-wrap relative z-10 max-w-3xl">
             <div class="flex items-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
@@ -31,7 +31,7 @@
             <p class="text-white/60 text-[16px] leading-relaxed mb-8">
                 SpringKleaners is a registered South African company (reg. {{ \App\Support\Company::regNo() }}) operating across Cape Town's Northern Suburbs. We built this business around one idea: quote honestly, show up on time, and clean like it's our own home.
             </p>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 app-hero-actions">
                 <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
                 <x-arrow-button variant="outline" href="{{ \App\Support\WhatsApp::link() }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
@@ -39,7 +39,7 @@
     </section>
 
     {{-- Stats --}}
-    <section class="bg-white section-py !py-16">
+    <section class="app-panel bg-white section-py !py-16">
         <div class="section-wrap">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 wow fadeInUp" data-wow-duration="0.7s">
                 <div class="text-center lg:text-left">

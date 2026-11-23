@@ -1,15 +1,18 @@
-{{-- Phone homepage, app chrome: the tab bar and the bottom sheets (booking, more). Shown below 1024px only. --}}
+{{-- Phone app chrome: the tab bar and the bottom sheets (booking, more). Shown below 1024px only. Used by the
+     homepage and, through components/app-shell, by inner pages ($inner: Home and Services link back to the
+     homepage; $book: what the Book sheet opens with, e.g. ['suburb' => 'Bellville']). --}}
+@php($inner = $inner ?? false)
 {{-- Tab bar: one icon family (1.8 stroke, rounded). The tab for where you are turns navy with a bar above it;
      Book is active while the booking sheet is open, More while its sheet is open. --}}
 <nav class="tab-safe fixed inset-x-0 bottom-0 z-40 border-t border-[#081d3a]/10 bg-white/95 backdrop-blur" aria-label="App">
     <ul class="grid grid-cols-5 items-end text-[11px] font-semibold">
-        <li><a href="#" x-on:click.prevent="window.scrollTo({ top: 0, behavior: 'smooth' })" class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 transition-colors" :class="tab === 'home' ? 'text-[#081d3a]' : 'text-[#5b6779]'" :aria-current="tab === 'home' ? 'page' : null">
+        <li><a href="{{ $inner ? '/' : '#' }}" @unless ($inner) x-on:click.prevent="window.scrollTo({ top: 0, behavior: 'smooth' })" @endunless class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 transition-colors" :class="tab === 'home' ? 'text-[#081d3a]' : 'text-[#5b6779]'" :aria-current="tab === 'home' ? 'page' : null">
             <span class="absolute top-0 h-[3px] w-7 rounded-b-full bg-[#081d3a] transition-opacity" :class="tab === 'home' ? 'opacity-100' : 'opacity-0'" aria-hidden="true"></span>
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9z"/></svg>Home</a></li>
-        <li><a href="#app-services" class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 transition-colors" :class="tab === 'services' ? 'text-[#081d3a]' : 'text-[#5b6779]'" :aria-current="tab === 'services' ? 'page' : null">
+        <li><a href="{{ $inner ? '/#app-services' : '#app-services' }}" class="press relative flex w-full flex-col items-center gap-0.5 pb-1 pt-2 transition-colors" :class="tab === 'services' ? 'text-[#081d3a]' : 'text-[#5b6779]'" :aria-current="tab === 'services' ? 'page' : null">
             <span class="absolute top-0 h-[3px] w-7 rounded-b-full bg-[#081d3a] transition-opacity" :class="tab === 'services' ? 'opacity-100' : 'opacity-0'" aria-hidden="true"></span>
             <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Services</a></li>
-        <li class="flex justify-center"><button type="button" x-on:click="openQuote()" class="press -mt-6 flex flex-col items-center gap-0.5 pb-1 text-[#081d3a]">
+        <li class="flex justify-center"><button type="button" x-on:click="openQuote(@js((object) ($book ?? [])))" class="press -mt-6 flex flex-col items-center gap-0.5 pb-1 text-[#081d3a]">
             <span class="grid h-14 w-14 place-items-center rounded-full bg-[#f6e304] shadow-[0_6px_16px_-6px_rgba(8,29,58,0.5)] ring-4 ring-white transition-transform" :class="tab === 'book' && 'scale-105'">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
             </span>Book</button></li>
@@ -43,7 +46,7 @@
         <div class="h-full" data-booking-flow x-ignore>@include('components.app-booking')</div>
     </div>
     <nav class="flex-1 overflow-y-auto px-4 pb-8 tab-safe" x-show="sheet === 'more'" aria-label="More">
-        @foreach ([['About us', '/about'], ['Pricing', '/#pricing'], ['Areas we serve', route('areas.index')], ['How-To Guides', route('blog.index')], ['Full booking form', route('booking.show')]] as [$label, $href])
+        @foreach ([['About us', '/about'], ['Pricing', '/#pricing'], ['Areas we serve', route('areas.index')], ['How-To Guides', route('blog.index')], ['FAQ', route('faq')], ['Full booking form', route('booking.show')]] as [$label, $href])
             <a href="{{ $href }}" class="press flex items-center justify-between border-b border-[#081d3a]/10 py-4 text-[16px] font-semibold text-[#081d3a]">{{ $label }}
                 <svg class="h-4 w-4 text-[#081d3a]/40" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></a>
         @endforeach
