@@ -26,7 +26,7 @@ return [
         'end-of-tenancy' => [
             'slug' => 'end-of-tenancy',
             'name' => 'End-of-Tenancy Cleaning',
-            'tagline' => 'Move-in/move-out cleaning to landlord and letting-agent standard.',
+            'tagline' => 'Move-out cleaning to landlord and letting-agent standard.',
             'icon' => 'eot',
             'base_price' => 1200,
             'included_bedrooms' => 2,

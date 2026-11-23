@@ -81,6 +81,11 @@ class LocalSeoAccuracyTest extends TestCase
 
         $this->assertStringNotContainsString('Move-In', $this->title($html));
         $this->assertStringContainsString('Move-Out', $this->title($html));
+
+        // The service-card tagline (from the database) shouldn't claim move-in either.
+        $service = \App\Models\Service::where('slug', 'end-of-tenancy')->first();
+        $this->assertSame('End-of-Tenancy Cleaning', $service->name);
+        $this->assertSame('Move-out cleaning to landlord and letting-agent standard.', $service->tagline);
     }
 
     public function test_no_page_claims_every_day_booking_while_bookings_are_weekend_only(): void
