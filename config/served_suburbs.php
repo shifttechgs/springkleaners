@@ -34,4 +34,10 @@ return [
     'Ravensmead',
     'Sea Point',
     'Green Point',
+    'Durbanville',
+    'Bellville',
+    'Parow',
+    'Goodwood',
+    'Brackenfell',
+    'Plattekloof',
 ];

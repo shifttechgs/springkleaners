@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Areas We Serve | Cape Town Cleaning Services by Suburb | SpringKleaners')
-@section('description', 'SpringKleaners provides deep cleaning, end-of-tenancy, post-construction and specialist cleaning services across 19 Cape Town suburbs — Northern Suburbs, Blaauwberg and the Atlantic Seaboard. Find your area and book online.')
+@section('description', 'Deep cleaning, end-of-tenancy, post-construction and specialist cleaning across '.count(config('locations')).' Cape Town suburbs: the Northern Suburbs, Milnerton, Blaauwberg and the Atlantic Seaboard.')
 @section('content')
     @php
         $allAreas = $clusters->collapse();
@@ -58,7 +58,7 @@
                 Cleaning services across {{ $totalAreas }} Cape Town suburbs.
             </h1>
             <p class="text-white/60 text-[16px] leading-relaxed mb-8 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
-                SpringKleaners provides deep cleaning, end-of-tenancy, post-construction, office &amp; commercial and specialist cleaning services (carpet, upholstery, window and more) across {{ $totalAreas }} suburbs spanning the Northern Suburbs, Blaauwberg and the Atlantic Seaboard — every service priced upfront, booked online, and confirmed with a free inspection.
+                SpringKleaners provides deep cleaning, end-of-tenancy, post-construction, office &amp; commercial and specialist cleaning services (carpet, upholstery, window and more) across {{ $totalAreas }} suburbs spanning the Northern Suburbs, Milnerton, Blaauwberg and the Atlantic Seaboard — every service priced upfront, booked online, and confirmed with a free inspection.
             </p>
             <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
                 <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>

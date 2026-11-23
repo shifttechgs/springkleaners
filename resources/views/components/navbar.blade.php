@@ -1,3 +1,5 @@
+{{-- Quote buttons follow the page's context: area pages pass ?suburb=, bookable service pages ?service= (via @section('book_url')). --}}
+@php($navBookUrl = html_entity_decode(trim($__env->yieldContent('book_url')), ENT_QUOTES) ?: route('booking.show'))
 <nav id="mainNav" class="fixed top-0 inset-x-0 z-50" x-data="{ open: false }">
     <div class="nav-bar max-w-7xl mx-auto">
         <div class="flex items-center justify-between h-[72px] lg:h-20 lg:gap-4">
@@ -104,7 +106,7 @@
                     <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-.826 1.677l-.916.458a1 1 0 00-.464 1.30 12.05 12.05 0 005.52 5.52 1 1 0 001.30-.464l.458-.916a1.5 1.5 0 011.677-.826l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-7.18 0-13-5.82-13-13V3.5z"/></svg>
                     <span class="hidden xl:inline">+27 81 527 4711</span>
                 </a>
-                <x-arrow-button size="sm" :href="route('booking.show')" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
+                <x-arrow-button size="sm" :href="$navBookUrl" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
             </div>
 
             <button @click="open = !open" class="lg:hidden justify-self-end p-2 rounded-lg text-white hover:bg-white/10 transition-colors duration-200" aria-label="Toggle menu">
@@ -158,7 +160,7 @@
             <a href="{{ route('about') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">About</a>
             <a href="{{ route('faq') }}" @click="open = false" class="block py-3 px-4 rounded-lg text-white/80 hover:bg-white/5 hover:text-[#f6e304] text-[17px] transition-colors">FAQ</a>
             <div class="flex flex-col gap-2 mt-4 pt-4 border-t border-white/10">
-                <x-arrow-button block :href="route('booking.show')" x-on:click="open = false">Get My Instant Quote</x-arrow-button>
+                <x-arrow-button block :href="$navBookUrl" x-on:click="open = false">Get My Instant Quote</x-arrow-button>
             </div>
         </div>
     </div>

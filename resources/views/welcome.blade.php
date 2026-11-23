@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')
+@section('title', 'SpringKleaners | Cleaning Services, Cape Town Northern Suburbs')
+@section('description', 'Insured, background-checked cleaners for homes, rentals and offices across the Cape Town Northern Suburbs and Blouberg. See your price and book online.')
 @section('content')
     @php
         $organizationLd = [

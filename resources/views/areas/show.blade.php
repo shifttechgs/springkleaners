@@ -1,6 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Cleaning Services in '.$location['name'].' | Cape Town Northern Suburbs | SpringKleaners')
+@section('title', 'Cleaning Services in '.$location['name'].', Cape Town | SpringKleaners')
 @section('description', $location['meta_description'])
+@section('book_url', route('booking.show', ['suburb' => $location['name']]))
 @section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for a clean in {$location['name']}.")
 @section('content')
     @php
@@ -119,8 +120,17 @@
                 </h2>
             </div>
             @php
+                $areaRegion = $location['region'] ?? 'Cape Town';
+                $onlineServices = collect($services)
+                    ->filter(fn ($svc, $svcSlug) => (config('service_pages.'.$svcSlug.'.pricing_mode') ?? 'wizard') === 'wizard')
+                    ->pluck('name');
+                $quoteServices = collect($services)
+                    ->filter(fn ($svc, $svcSlug) => (config('service_pages.'.$svcSlug.'.pricing_mode') ?? 'wizard') !== 'wizard')
+                    ->pluck('name');
+
                 $areaFaqs = [
-                    ['q' => 'Do you actually service '.$location['name'].'?', 'a' => 'Yes — '.$location['name'].' is one of our regularly serviced areas across Cape Town\'s Northern Suburbs. Enter your address when booking and we\'ll confirm scheduling.'],
+                    ['q' => 'Do you actually service '.$location['name'].'?', 'a' => 'Yes. '.$location['name'].' is one of the areas we regularly clean in '.$areaRegion.'. Enter your address when booking and we\'ll confirm scheduling.'],
+                    ['q' => 'Which cleaning services can I book online in '.$location['name'].'?', 'a' => 'You can see your price and book these online: '.$onlineServices->join(', ', ' and ').'.'.($quoteServices->isNotEmpty() ? ' '.$quoteServices->join(', ', ' and ').' are quoted to your property, so message us on WhatsApp with your address in '.$location['name'].' and what you need cleaned.' : '')],
                     ['q' => 'How do you calculate the final price?', 'a' => 'You see your price straight away when you book, worked out from the service you pick and the size of your place. It\'s a real price, not a teaser. We confirm it with a free check of your property, in person or from the details you give us, and you approve the final, itemised quote before we start. No surprises on the day.'],
                     ['q' => 'Can I get a same-week booking?', 'a' => 'In most cases, yes. Message us on WhatsApp with your address in '.$location['name'].' and we\'ll check availability immediately.'],
                     ['q' => 'Are your cleaning teams insured?', 'a' => 'Yes. SpringKleaners is fully insured, and every team member is background-checked before joining us.'],
@@ -166,7 +176,7 @@
     {{-- Other areas --}}
     <section class="bg-[#f8f9fc] section-py !py-16">
         <div class="section-wrap">
-            <h2 class="text-2xl lg:text-3xl font-extrabold text-navy tracking-tight mb-10">Other areas we serve</h2>
+            <h2 class="text-2xl lg:text-3xl font-extrabold text-navy tracking-tight mb-10">Nearby areas we also serve</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 @foreach ($otherLocations as $otherSlug => $other)
                 <a href="{{ route('areas.show', $otherSlug) }}" class="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-5 py-4 hover:border-[#f6e304] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">

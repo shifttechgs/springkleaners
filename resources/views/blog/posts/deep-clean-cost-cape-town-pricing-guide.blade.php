@@ -25,7 +25,7 @@
     Book your free inspection at a time when the home looks like it normally does — no need to tidy up beforehand. Mention any specific problem areas (a neglected oven, pet hair, mould in a bathroom) so the quote reflects the real scope from day one, with no surprise add-ons on cleaning day.
 </p>
 
-<x-blog.cta heading="Want an accurate number for your home?" text="Book a free inspection — no obligation, no guesswork." />
+<x-blog.cta service="deep-cleaning" heading="Want an accurate number for your home?" text="Book a free inspection — no obligation, no guesswork." />
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">Is a deep clean worth it?</h2>
 <p class="text-muted text-[15.5px] leading-[1.85] mb-5">

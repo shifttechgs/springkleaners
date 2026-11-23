@@ -40,12 +40,12 @@ return [
     ],
 
     'end-of-tenancy' => [
-        'meta_title' => 'End-of-Tenancy Cleaning Cape Town | Move-In/Move-Out | SpringKleaners',
-        'meta_description' => 'End-of-tenancy cleaning to landlord & letting-agent standard across Cape Town\'s Northern Suburbs. Help protect your deposit. Free inspection, from R1,200. Book online.',
+        'meta_title' => 'End-of-Tenancy & Move-Out Cleaning Cape Town | SpringKleaners',
+        'meta_description' => 'End-of-tenancy and move-out cleaning to the standard landlords and letting agents check. Helps protect your deposit. From R1,200, free inspection. Book online.',
         'label' => 'End-of-Tenancy Cleaning',
         'h1_line1' => 'End-of-Tenancy Cleaning',
         'h1_line2' => 'in Cape Town\'s Northern Suburbs',
-        'intro' => 'Move-in and move-out cleaning to the standard landlords and letting agents actually check for. We cover everything in a deep clean, plus walls, windows, tracks and a full condition checklist — built to help tenants protect their deposit and help landlords hand over a move-in ready property.',
+        'intro' => 'Move-out cleaning to the standard landlords and letting agents actually check for. We cover everything in a deep clean, plus walls, windows, tracks and a full condition checklist — built to help tenants protect their deposit and help landlords hand over a move-in ready property.',
         'included' => [
             'Everything in a Deep Clean, plus:',
             'Walls wiped & marks removed',
@@ -67,7 +67,7 @@ return [
     ],
 
     'post-construction' => [
-        'meta_title' => 'Post-Construction Cleaning Cape Town | Builders Clean | SpringKleaners',
+        'meta_title' => 'Post-Construction & Builders Cleaning Cape Town | SpringKleaners',
         'meta_description' => 'Post-construction & builders cleaning for new builds and renovations across Cape Town\'s Northern Suburbs. Dust, debris & paint cleanup to move-in ready. From R1,800.',
         'label' => 'Post Construction Cleaning',
         'h1_line1' => 'Post-Construction Cleaning',
@@ -94,12 +94,12 @@ return [
     ],
 
     'office-commercial-cleaning' => [
-        'meta_title' => 'Office & Commercial Cleaning Cape Town | Northern Suburbs | SpringKleaners',
+        'meta_title' => 'Office & Commercial Cleaning Cape Town | SpringKleaners',
         'meta_description' => 'Office and commercial cleaning across Cape Town\'s Northern Suburbs, priced per m². Century City, Montague Gardens & Parklands office parks. From R10/m², R850 minimum call-out.',
         'label' => 'Office & Commercial Cleaning',
         'h1_line1' => 'Office & Commercial Cleaning',
         'h1_line2' => 'in Cape Town\'s Northern Suburbs',
-        'intro' => 'Reception areas, open-plan floors, boardrooms and staff kitchens that stay presentable for clients and comfortable for your team. We work around your business hours — early mornings, evenings, or weekends, whatever suits your team — and coordinate directly with building management for after-hours access in body-corporate blocks and multi-tenant office parks across Century City, Montague Gardens and Parklands.',
+        'intro' => 'Reception areas, open-plan floors, boardrooms and staff kitchens that stay presentable for clients and comfortable for your team. We clean on Saturdays and Sundays, outside your working week, and coordinate directly with building management for after-hours access in body-corporate blocks and multi-tenant office parks across Century City, Montague Gardens and Parklands.',
         'included' => [
             'Workstations & desks wiped down',
             'Reception, boardroom & meeting rooms',
@@ -125,14 +125,14 @@ return [
         'cta_label' => 'Request a Quote',
         'faqs' => [
             ['q' => 'How is office cleaning priced?', 'a' => 'R10 per m² per visit, with an R850 minimum call-out for smaller units. We measure your actual floor area during a free walkthrough so the quote is exact, not estimated. Multi-floor or multi-tenant buildings get a custom monthly contract quote instead, since per-m² pricing stops scaling cleanly at that size.'],
-            ['q' => 'Can you clean outside business hours?', 'a' => 'Yes — we schedule around your business hours, whether that\'s early morning, evenings, or over the weekend, so your team never works around us. We coordinate access with building management or body corporates ahead of time for secure office parks.'],
+            ['q' => 'Can you clean outside business hours?', 'a' => 'Yes. We currently clean offices on Saturdays and Sundays, so the work is done outside your working week and your team never works around us. We coordinate access with building management or body corporates ahead of time for secure office parks.'],
             ['q' => 'Do we need a long-term contract?', 'a' => 'No. We quote per visit or per month, whichever suits your business — there\'s no minimum-term lock-in for standard office cleaning. Multi-floor or multi-tenant contracts are quoted individually based on scope.'],
             ['q' => 'What size offices do you service?', 'a' => 'From single-office professional practices through to multi-room commercial units in Century City, Montague Gardens and the wider Northern Suburbs. Larger multi-floor or multi-tenant buildings are welcome too — those just move to a custom quote rather than the standard per-m² rate.'],
         ],
     ],
 
     'recurring-house-cleaning' => [
-        'meta_title' => 'Recurring House Cleaning Cape Town | Northern Suburbs | SpringKleaners',
+        'meta_title' => 'Recurring & Weekly House Cleaning Cape Town | SpringKleaners',
         'meta_description' => 'Weekly & bi-weekly recurring house cleaning across Cape Town\'s Northern Suburbs. A lighter maintenance clean between Deep Cleans, from R750/visit. Book online.',
         'label' => 'Recurring House Cleaning',
         'h1_line1' => 'Recurring House Cleaning',
@@ -267,8 +267,8 @@ return [
     ],
 
     'airbnb-turnover-cleaning' => [
-        'meta_title' => 'Airbnb & Short-Let Turnover Cleaning Cape Town | Northern Suburbs | SpringKleaners',
-        'meta_description' => 'Fast, photo-ready turnover cleaning for Airbnb & short-let hosts in Cape Town\'s Northern Suburbs. From R900/turnover, every-day changeovers. Book online.',
+        'meta_title' => 'Airbnb & Short-Let Cleaning Cape Town | SpringKleaners',
+        'meta_description' => 'Fast, photo-ready turnover cleaning for Airbnb & short-let hosts in Cape Town\'s Northern Suburbs. From R900 per turnover, weekend changeovers. Book online.',
         'label' => 'Airbnb & Short-Let Turnover Cleaning',
         'h1_line1' => 'Airbnb & Short-Let',
         'h1_line2' => 'Turnover Cleaning',
@@ -281,7 +281,7 @@ return [
             'Damage/missing-item check reported to host',
             'Photo-ready staging before you re-list',
         ],
-        'ideal_for' => 'Airbnb and short-let hosts in the Northern Suburbs with guest changeovers on any day of the week, who need a consistent, photo-ready reset without managing the clean themselves.',
+        'ideal_for' => 'Airbnb and short-let hosts with weekend guest changeovers who need a consistent, photo-ready reset without managing the clean themselves.',
         'blog_categories' => ['Tips'],
         'hero_image' => '/images/works/service-pages/airbnb-turnover-cleaning.avif',
         'hero_alt' => 'SpringKleaners team member wiping down kitchen cabinets',
@@ -362,7 +362,7 @@ return [
     ],
 
     'fridge-appliance-cleaning' => [
-        'meta_title' => 'Fridge & Appliance Cleaning Cape Town | Northern Suburbs | SpringKleaners',
+        'meta_title' => 'Fridge & Appliance Cleaning Cape Town | SpringKleaners',
         'meta_description' => 'Interior fridge, freezer and appliance cleaning across Cape Town\'s Northern Suburbs. Shelf & drawer removal, odour treatment. Get a custom quote.',
         'label' => 'Fridge & Appliance Cleaning',
         'h1_line1' => 'Fridge & Appliance',
@@ -396,7 +396,7 @@ return [
     ],
 
     'blind-curtain-cleaning' => [
-        'meta_title' => 'Blind & Curtain Cleaning Cape Town | Northern Suburbs | SpringKleaners',
+        'meta_title' => 'Blind & Curtain Cleaning Cape Town | SpringKleaners',
         'meta_description' => 'Blind & curtain cleaning across Cape Town\'s Northern Suburbs — on-site dusting and deep cleaning for venetian, vertical blinds and fabric curtains. Get a custom quote.',
         'label' => 'Blind & Curtain Cleaning',
         'h1_line1' => 'Blind & Curtain',

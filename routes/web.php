@@ -58,7 +58,7 @@ Route::get('/book', [BookingController::class, 'show'])->name('booking.show');
 
 // Legacy per-service URLs — redirect into the single booking page with ?service=.
 Route::get('/book/{service}', function (string $service) {
-    return redirect()->route('booking.show', ['service' => $service]);
+    return redirect()->route('booking.show', ['service' => $service], 301);
 });
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
@@ -89,11 +89,14 @@ Route::get('/robots.txt', function () {
 Route::get('/llms.txt', function () {
     $base = rtrim(config('app.url'), '/');
     $areaCount = count(config('locations'));
+    // Read from the real booking rules so this never claims days we don't take bookings on.
+    $dayNames = [0 => 'Sundays', 1 => 'Mondays', 2 => 'Tuesdays', 3 => 'Wednesdays', 4 => 'Thursdays', 5 => 'Fridays', 6 => 'Saturdays'];
+    $bookingDays = collect(\App\Models\Booking::BOOKABLE_DAYS)->map(fn ($d) => $dayNames[$d])->join(', ', ' and ');
 
     $lines = [
         '# SpringKleaners',
         '',
-        '> Fully insured, background-checked residential and commercial cleaning company based in Parklands, Cape Town, serving the Northern Suburbs and Atlantic Seaboard. Published starting prices, free on-site inspections, and same-week booking every day of the week — not just weekends.',
+        '> Fully insured, background-checked residential and commercial cleaning company based in Parklands, Cape Town, serving the Cape Town Northern Suburbs, Milnerton, the Blaauwberg coast (Table View, Blouberg, Bloubergstrand, Big Bay) and parts of the Atlantic Seaboard. Published starting prices, free on-site inspections, and online booking for '.$bookingDays.'.',
         '',
         'Registration 2021/363748/07. Contact: bookings@springkleaners.co.za, +27 81 527 4711.',
         '',
@@ -110,7 +113,7 @@ Route::get('/llms.txt', function () {
         '',
         '## Areas served',
         '',
-        "- [All {$areaCount} areas]({$base}/areas): Cleaning services across Cape Town's Northern Suburbs and Atlantic Seaboard, area by area.",
+        "- [All {$areaCount} areas]({$base}/areas): Cleaning services across the Northern Suburbs, Milnerton, the Blaauwberg coast and the Atlantic Seaboard, area by area.",
         '',
         '## Guides',
         '',

@@ -16,7 +16,7 @@
 ]" />
 
 <x-blog.callout label="Scheduled around your business, not during it">
-    Office cleaning doesn't need to disrupt a working day — most contracts are cleaned over weekends or before/after business hours, so staff arrive to a finished job rather than working around one.
+    Office cleaning doesn't need to disrupt a working day — we clean offices on Saturdays and Sundays, so staff arrive to a finished job rather than working around one.
 </x-blog.callout>
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">Getting started is simpler than most businesses assume</h2>

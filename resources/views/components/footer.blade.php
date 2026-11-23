@@ -67,25 +67,10 @@
             <div>
                 <h2 class="text-white font-bold text-[15px] mb-5"><a href="{{ route('areas.index') }}" class="hover:text-[#f6e304] transition-colors">Areas We Service</a></h2>
                 <p class="text-white/60 text-[13px] leading-loose">
-                    <a href="{{ route('areas.show', 'milnerton') }}" class="hover:text-[#f6e304] transition-colors">Milnerton</a> ·
-                    <a href="{{ route('areas.show', 'sunningdale') }}" class="hover:text-[#f6e304] transition-colors">Sunningdale</a> ·
-                    <a href="{{ route('areas.show', 'blouberg') }}" class="hover:text-[#f6e304] transition-colors">Blouberg</a> ·
-                    <a href="{{ route('areas.show', 'parklands') }}" class="hover:text-[#f6e304] transition-colors">Parklands</a> ·
-                    <a href="{{ route('areas.show', 'century-city') }}" class="hover:text-[#f6e304] transition-colors">Century City</a> ·
-                    <a href="{{ route('areas.show', 'table-view') }}" class="hover:text-[#f6e304] transition-colors">Table View</a> ·
-                    <a href="{{ route('areas.show', 'big-bay') }}" class="hover:text-[#f6e304] transition-colors">Big Bay</a> ·
-                    <a href="{{ route('areas.show', 'bloubergstrand') }}" class="hover:text-[#f6e304] transition-colors">Bloubergstrand</a> ·
-                    <a href="{{ route('areas.show', 'sea-point') }}" class="hover:text-[#f6e304] transition-colors">Sea Point</a> ·
-                    <a href="{{ route('areas.show', 'green-point') }}" class="hover:text-[#f6e304] transition-colors">Green Point</a> ·
-                    <a href="{{ route('areas.show', 'west-beach') }}" class="hover:text-[#f6e304] transition-colors">West Beach</a> ·
-                    <a href="{{ route('areas.show', 'monte-vista') }}" class="hover:text-[#f6e304] transition-colors">Monte Vista</a> ·
-                    <a href="{{ route('areas.show', 'edgemead') }}" class="hover:text-[#f6e304] transition-colors">Edgemead</a> ·
-                    <a href="{{ route('areas.show', 'bothasig') }}" class="hover:text-[#f6e304] transition-colors">Bothasig</a> ·
-                    <a href="{{ route('areas.show', 'montague-gardens') }}" class="hover:text-[#f6e304] transition-colors">Montague Gardens</a> ·
-                    <a href="{{ route('areas.show', 'paarden-eiland') }}" class="hover:text-[#f6e304] transition-colors">Paarden Eiland</a> ·
-                    <a href="{{ route('areas.show', 'richwood') }}" class="hover:text-[#f6e304] transition-colors">Richwood</a> ·
-                    <a href="{{ route('areas.show', 'burgundy-estate') }}" class="hover:text-[#f6e304] transition-colors">Burgundy Estate</a> ·
-                    <a href="{{ route('areas.show', 'flamingo-vlei') }}" class="hover:text-[#f6e304] transition-colors">Flamingo Vlei</a> &amp; surrounding areas
+                    @foreach (config('locations') as $footerSlug => $footerArea)
+                    <a href="{{ route('areas.show', $footerSlug) }}" class="hover:text-[#f6e304] transition-colors">{{ $footerArea['name'] }}</a>{{ $loop->last ? '' : ' ·' }}
+                    @endforeach
+                    &amp; surrounding areas
                 </p>
             </div>
 

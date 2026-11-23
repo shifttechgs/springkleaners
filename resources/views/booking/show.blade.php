@@ -128,15 +128,7 @@
         selectedService: {{ Illuminate\Support\Js::from($selectedSlug) }},
         get service() { return this.services[this.selectedService]; },
         addonsList: {{ Illuminate\Support\Js::from($addons) }},
-        suburbs: [
-            'Milnerton','Sunningdale','Blouberg','Parklands','Century City',
-            'Table View','Big Bay','Bloubergstrand','West Beach','Monte Vista',
-            'Edgemead','Bothasig','Richwood','Burgundy Estate','Flamingo Vlei',
-            'Sandown','Sunset Beach','Parklands North','Waves Edge','Montague Gardens',
-            'Blouberg Rise','Summer Greens','Rugby','Paarden Eiland','Marconi Beam',
-            'Dunoon','Joe Slovo Park','Penhill','Kerria','Ravensmead',
-            'Sea Point','Green Point'
-        ],
+        suburbs: {{ Illuminate\Support\Js::from(config('served_suburbs')) }},
         suburbQuery: '', filteredSuburbs: [], showSuggestions: false, selectedSuburb: '', locationStatus: null,
         form: {
             name: '', phone: '', email: '', propertyType: 'House', bedrooms: '2', bathrooms: '1', extraRooms: '0',

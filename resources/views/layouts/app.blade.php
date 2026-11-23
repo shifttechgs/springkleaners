@@ -27,9 +27,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="@yield('description', 'SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town\'s Northern Suburbs. Fully insured, vetted staff, free inspection.')">
+    <meta name="description" content="@yield('description', 'Insured, background-checked cleaners for homes, rentals and offices across the Cape Town Northern Suburbs and Blouberg. See your price and book online.')">
     <meta name="robots" content="@yield('robots', 'index, follow')">
-    <title>@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')</title>
+    <title>@yield('title', 'SpringKleaners | Cleaning Services, Cape Town Northern Suburbs')</title>
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/fav.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/images/fav-512.png">
@@ -39,8 +39,8 @@
     <meta property="og:site_name" content="SpringKleaners">
     <meta property="og:locale" content="en_ZA">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')">
-    <meta property="og:description" content="@yield('description', 'SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town\'s Northern Suburbs. Fully insured, vetted staff, free inspection.')">
+    <meta property="og:title" content="@yield('title', 'SpringKleaners | Cleaning Services, Cape Town Northern Suburbs')">
+    <meta property="og:description" content="@yield('description', 'Insured, background-checked cleaners for homes, rentals and offices across the Cape Town Northern Suburbs and Blouberg. See your price and book online.')">
     {{-- Link previews (WhatsApp, Facebook, LinkedIn, X): 1200x630 JPG cards from public/images/og, made by
          `npm run og-images`. JPG on purpose: WhatsApp and Facebook don't show AVIF/WebP previews. Pages can set
          their own with @section('og_image') / @section('og_image_alt'). --}}
@@ -51,8 +51,8 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="@yield('og_image_alt', 'Two SpringKleaners team members cleaning a bathroom vanity in Cape Town')">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'SpringKleaners | Premium Cleaning — Cape Town Northern Suburbs')">
-    <meta name="twitter:description" content="@yield('description', 'SpringKleaners — Premium deep cleaning, end-of-tenancy and post-construction cleaning services across Cape Town\'s Northern Suburbs. Fully insured, vetted staff, free inspection.')">
+    <meta name="twitter:title" content="@yield('title', 'SpringKleaners | Cleaning Services, Cape Town Northern Suburbs')">
+    <meta name="twitter:description" content="@yield('description', 'Insured, background-checked cleaners for homes, rentals and offices across the Cape Town Northern Suburbs and Blouberg. See your price and book online.')">
     <meta name="twitter:image" content="@yield('og_image', url('/images/og/default.jpg'))">
     <meta name="twitter:image:alt" content="@yield('og_image_alt', 'Two SpringKleaners team members cleaning a bathroom vanity in Cape Town')">
 
@@ -69,7 +69,7 @@
             'telephone' => '+27815274711',
             'email' => 'bookings@springkleaners.co.za',
             'image' => url('/images/works/1.png'),
-            'priceRange' => 'R950 - R1800',
+            'priceRange' => 'R750 - R1800',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => '1 Stepney Rd',
@@ -129,7 +129,7 @@
             </svg>
             WhatsApp Us
         </a>
-        <a href="{{ route('booking.show') }}" data-mobile-bar-quote
+        <a href="@yield('book_url', route('booking.show'))" data-mobile-bar-quote
            class="flex-1 flex items-center justify-center gap-2 rounded-full bg-[#f6e304] text-[#081d3a] font-bold py-3.5 text-[14px] tracking-tight shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)]">
             Get My Instant Quote
         </a>

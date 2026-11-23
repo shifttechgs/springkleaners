@@ -20,7 +20,7 @@
     Two identical apartments can need very different amounts of work depending on how they were maintained during the tenancy. We confirm the exact scope — and the exact price — with a free inspection before you commit, so the number you're quoted is the number you pay.
 </p>
 
-<x-blog.cta heading="Get an accurate end-of-tenancy quote" text="Free inspection, itemised quote, book online in minutes." />
+<x-blog.cta service="end-of-tenancy" heading="Get an accurate end-of-tenancy quote" text="Free inspection, itemised quote, book online in minutes." />
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">Protect your deposit before you book</h2>
 <p class="text-muted text-[15.5px] leading-[1.85] mb-5">

@@ -315,14 +315,7 @@
             {{-- ══ RIGHT: FORM ══ --}}
             <div class="lg:col-span-7 au d3"
                  x-data="{
-                    suburbs: [
-                        'Milnerton','Sunningdale','Blouberg','Parklands','Century City',
-                        'Table View','Big Bay','Bloubergstrand','West Beach','Monte Vista',
-                        'Edgemead','Bothasig','Richwood','Burgundy Estate','Flamingo Vlei',
-                        'Sandown','Sunset Beach','Parklands North','Waves Edge','Montague Gardens',
-                        'Blouberg Rise','Summer Greens','Rugby','Paarden Eiland','Marconi Beam',
-                        'Dunoon','Joe Slovo Park','Penhill','Kerria','Ravensmead'
-                    ],
+                    suburbs: {{ Illuminate\Support\Js::from(config('served_suburbs')) }},
                     suburbQuery: '', filteredSuburbs: [], showSuggestions: false,
                     selectedSuburb: '', locationStatus: null,
                     waitlistEmail: '', submitted: false,

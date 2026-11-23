@@ -6,6 +6,9 @@
     @section('og_image_alt', ($content['hero_alt'] ?? $content['label']).', SpringKleaners '.$content['label'].' in Cape Town')
 @endif
 @section('whatsapp_message', "Hi SpringKleaners, I'd like a quote for {$content['label']}.")
+@if (($content['pricing_mode'] ?? 'wizard') === 'wizard' && ($service['bookable'] ?? false))
+    @section('book_url', route('booking.show', ['service' => $slug]))
+@endif
 @section('content')
     @php
         $pricingMode = $content['pricing_mode'] ?? 'wizard';

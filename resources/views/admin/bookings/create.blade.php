@@ -410,7 +410,7 @@
                                 <label class="fl">Suburb</label>
                                 <input type="text" name="suburb" x-model="suburb" list="suburbs-list" class="fi">
                                 <datalist id="suburbs-list">
-                                    @foreach (['Milnerton','Sunningdale','Blouberg','Parklands','Century City','Table View','Big Bay','Bloubergstrand','West Beach','Monte Vista','Edgemead','Bothasig','Richwood','Burgundy Estate','Flamingo Vlei','Sandown','Sunset Beach','Parklands North','Waves Edge','Montague Gardens','Blouber Rise','Summer Greens','Rugby','Paarden Eiland','Marconi Beam','Dunoon','Joe Slovo Park','Penhill','Kerria','Ravensmead'] as $s)
+                                    @foreach (config('served_suburbs') as $s)
                                         <option value="{{ $s }}">
                                     @endforeach
                                 </datalist>
