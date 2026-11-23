@@ -191,9 +191,9 @@
 [x-cloak] { display: none !important; }
 
 /* ── Hero ─────────────────────────────────────────────────────────────
-   One orchestrated moment: a squeegee wipe clears the film off the photo while the
-   headline rises out of its line. Everything is transform/opacity (composited), needs no
-   JS, and the image + text paint immediately so LCP is never gated on the animation. */
+   The first screen paints complete with no entrance animation (PageSpeed Speed Index counts
+   every moment it still looks unfinished); motion lives in the slideshow and in the scroll
+   reveals further down the page. */
 @font-face {
     font-family: 'Geist';
     font-style: normal;
@@ -305,26 +305,10 @@
 .hero-pause.is-paused .hero-pause__icon-play { display: block; }
 
 .hero-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
-.hero-line > span {
-    display: block;
-    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-.hero-line:nth-child(1) > span { animation-delay: 0.05s; }
-.hero-line:nth-child(2) > span { animation-delay: 0.12s; }
-.hero-line:nth-child(3) > span { animation-delay: 0.19s; }
-@keyframes hero-rise {
-    from { transform: translate3d(0, 105%, 0); }
-    to { transform: none; }
-}
-/* Short and early: Speed Index counts every moment the first screen still looks unfinished. */
-.hero-settle { animation: hero-settle 0.5s ease-out 0.2s backwards; }
-@keyframes hero-settle {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+.hero-line > span { display: block; }
 @media (min-width: 1280px) { .hero-line { white-space: nowrap; } }
 @media (prefers-reduced-motion: reduce) {
-    .hero-line > span, .hero-settle, .hero-roll.is-rolling, .hero-slide-zoom { animation: none !important; }
+    .hero-roll.is-rolling, .hero-slide-zoom { animation: none !important; }
 }
 
 /* Decorative glyphs rendered via CSS so they're not announced or contrast-audited as text. */

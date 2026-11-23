@@ -50,10 +50,10 @@
                     <span>/</span>
                     <span class="text-white/60">FAQ</span>
                 </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6 wow fadeInUp" data-wow-duration="0.7s">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
                     Frequently Asked Questions
                 </h1>
-                <p class="text-white/60 text-[16px] leading-relaxed wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
+                <p class="text-white/60 text-[16px] leading-relaxed">
                     {{ $allFaqs->count() }} real answers, sorted so you only read what you actually need. Pick a topic below.
                 </p>
             </div>

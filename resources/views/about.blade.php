@@ -25,13 +25,13 @@
                 <span>/</span>
                 <span class="text-white/60">About</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6 wow fadeInUp" data-wow-duration="0.7s">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
                 A registered, insured cleaning team — not a side hustle.
             </h1>
-            <p class="text-white/60 text-[16px] leading-relaxed mb-8 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
+            <p class="text-white/60 text-[16px] leading-relaxed mb-8">
                 SpringKleaners is a registered South African company (reg. {{ \App\Support\Company::regNo() }}) operating across Cape Town's Northern Suburbs. We built this business around one idea: quote honestly, show up on time, and clean like it's our own home.
             </p>
-            <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
+            <div class="flex flex-wrap gap-4">
                 <x-arrow-button href="{{ route('booking.show') }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
                 <x-arrow-button variant="outline" href="{{ \App\Support\WhatsApp::link() }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>

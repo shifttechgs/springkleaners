@@ -79,13 +79,13 @@
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                 <div class="lg:col-span-8">
-                    <h1 class="font-extrabold text-white leading-[1.1] tracking-tight mb-6 whitespace-normal lg:whitespace-nowrap wow fadeInUp" style="font-size: clamp(28px, 3.4vw, 46px);" data-wow-duration="0.7s">
+                    <h1 class="font-extrabold text-white leading-[1.1] tracking-tight mb-6 whitespace-normal lg:whitespace-nowrap" style="font-size: clamp(28px, 3.4vw, 46px);">
                         {{ $content['h1_line1'] }}<br>{{ $content['h1_line2'] }}
                     </h1>
-                    <p class="text-white/60 text-[16px] leading-relaxed max-w-xl mb-8 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
+                    <p class="text-white/60 text-[16px] leading-relaxed max-w-xl mb-8">
                         {{ $content['intro'] }}
                     </p>
-                    <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
+                    <div class="flex flex-wrap gap-4">
                         @if ($isQuoteMode)
                         <x-arrow-button href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">{{ $content['cta_label'] ?? 'Request a Quote' }}</x-arrow-button>
                         <x-arrow-button variant="outline" href="mailto:bookings@springkleaners.co.za" class="flex-shrink-0">Email Us</x-arrow-button>
@@ -94,9 +94,9 @@
                         <x-arrow-button variant="outline" href="{{ $quoteWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
                         @endif
                     </div>
-                    <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
+                    <x-trust-badges class="mt-6" />
                 </div>
-                <div class="lg:col-span-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
+                <div class="lg:col-span-4">
                     <div class="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
                         <img src="{{ $content['hero_image'] }}"{!! \App\Support\Img::attrs($content['hero_image'], '(min-width: 1024px) 420px, calc(100vw - 32px)') !!} fetchpriority="high" alt="{{ $content['hero_alt'] ?? $content['label'] . ' — SpringKleaners' }}" class="w-full h-full object-cover">
                     </div>

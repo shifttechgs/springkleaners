@@ -52,7 +52,7 @@
             <span class="inline-block bg-[#f6e304] text-[#081d3a] text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
                 {{ $post['category'] }}
             </span>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.15] tracking-tight mb-6 wow fadeInUp" data-wow-duration="0.7s">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.15] tracking-tight mb-6">
                 {{ $post['title'] }}
             </h1>
             <div class="flex items-center justify-center gap-3 text-white/50 text-[13px] font-medium">

@@ -43,20 +43,20 @@
                 <span>/</span>
                 <span class="text-white/60">{{ $location['name'] }}</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6 wow fadeInUp" data-wow-duration="0.7s">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
                 Cleaning Services in {{ $location['name'] }}, Cape Town
             </h1>
-            <p class="text-white/60 text-[16px] leading-relaxed mb-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.1s">
+            <p class="text-white/60 text-[16px] leading-relaxed mb-4">
                 {{ $location['blurb'] }}
             </p>
-            <p class="text-white/60 text-[13px] mb-8 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.15s">
+            <p class="text-white/60 text-[13px] mb-8">
                 {{ $location['property_note'] }}
             </p>
-            <div class="flex flex-wrap gap-4 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.2s">
+            <div class="flex flex-wrap gap-4">
                 <x-arrow-button href="{{ route('booking.show', ['suburb' => $location['name']]) }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
                 <x-arrow-button variant="outline" href="{{ \App\Support\WhatsApp::forSuburb($location['name']) }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">WhatsApp Us</x-arrow-button>
             </div>
-            <x-trust-badges class="mt-6 wow fadeInUp" data-wow-duration="0.7s" data-wow-delay="0.25s" />
+            <x-trust-badges class="mt-6" />
         </div>
     </section>
 
