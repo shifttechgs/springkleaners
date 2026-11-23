@@ -63,7 +63,7 @@
                 <h3 class="text-[#081d3a] text-[15px] font-bold uppercase tracking-tight mt-2 mb-1.5">Get Quote</h3>
                 <p class="text-[#5b6779] text-[12px] leading-relaxed mb-4">We'll send you a personalized estimate, no hidden fees, no upselling.</p>
                 <div class="mt-auto rounded-lg overflow-hidden aspect-[4/3] bg-[#e8e8e4]">
-                    <img loading="lazy" decoding="async" src="/images/works/step2-get-quote.avif" alt="Woman smiling as she checks her cleaning quote on her phone" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="/images/works/step2-get-quote.avif"{!! \App\Support\Img::attrs('/images/works/step2-get-quote.avif', '(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw') !!} alt="Woman smiling as she checks her cleaning quote on her phone" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -78,7 +78,7 @@
                 <h3 class="text-[#081d3a] text-[15px] font-bold uppercase tracking-tight mt-2 mb-1.5">We Clean</h3>
                 <p class="text-[#5b6779] text-[12px] leading-relaxed mb-4">Our team arrives on time, equipped, and ready to clean thoroughly.</p>
                 <div class="mt-auto rounded-lg overflow-hidden aspect-[4/3] bg-[#e8e8e4]">
-                    <img loading="lazy" decoding="async" src="/images/works/real-we-clean.avif" alt="Two SpringKleaners team members cleaning a kitchen together, one wiping the tops of the tall cabinets" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="/images/works/real-we-clean.avif"{!! \App\Support\Img::attrs('/images/works/real-we-clean.avif', '(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw') !!} alt="Two SpringKleaners team members cleaning a kitchen together, one wiping the tops of the tall cabinets" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -88,7 +88,7 @@
                 <h3 class="text-[#081d3a] text-[15px] font-bold uppercase tracking-tight mt-2 mb-1.5">You Relax</h3>
                 <p class="text-[#5b6779] text-[12px] leading-relaxed mb-4">Enjoy a spotless home or workspace that looks, feels, and smells truly clean.</p>
                 <div class="mt-auto rounded-lg overflow-hidden aspect-[4/3] bg-[#e8e8e4]">
-                    <img loading="lazy" decoding="async" src="/images/works/step4-you-relax.avif" alt="The same woman relaxing on her sofa at home after the clean" class="w-full h-full object-cover">
+                    <img loading="lazy" decoding="async" src="/images/works/step4-you-relax.avif"{!! \App\Support\Img::attrs('/images/works/step4-you-relax.avif', '(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw') !!} alt="The same woman relaxing on her sofa at home after the clean" class="w-full h-full object-cover">
                 </div>
             </div>
 

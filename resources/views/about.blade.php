@@ -126,7 +126,7 @@
                 </div>
                 <figure class="wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
                     <div class="rounded-2xl overflow-hidden aspect-[4/3]">
-                        <img src="/images/works/real-team-light-fitting.avif" alt="SpringKleaners team member on a step-ladder dusting a ceiling light fitting" width="960" height="720" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                        <img src="/images/works/real-team-light-fitting.avif"{!! \App\Support\Img::attrs('/images/works/real-team-light-fitting.avif', '(min-width: 1024px) 50vw, 100vw') !!} alt="SpringKleaners team member on a step-ladder dusting a ceiling light fitting" width="960" height="720" loading="lazy" decoding="async" class="w-full h-full object-cover">
                     </div>
                     <figcaption class="mt-3 text-[13px] text-[#5b6779]">One of our team members on a job, detailing a light fitting.</figcaption>
                 </figure>

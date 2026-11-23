@@ -52,7 +52,7 @@
                                 <span class="step-num text-[#081d3a]/30 font-semibold text-[12px] tracking-widest" data-n="01" aria-hidden="true"></span>
                             </div>
                             <div class="flex-1 m-4 mt-2 rounded-xl overflow-hidden" style="height:155px">
-                                <img loading="lazy" decoding="async" src="/images/works/services/real-deep-cleaning.avif" alt="SpringKleaners team member scrubbing a bathroom vanity and mirror" class="w-full h-full object-cover">
+                                <img loading="lazy" decoding="async" src="/images/works/services/real-deep-cleaning.avif"{!! \App\Support\Img::attrs('/images/works/services/real-deep-cleaning.avif', '(min-width: 640px) 260px, 100vw') !!} alt="SpringKleaners team member scrubbing a bathroom vanity and mirror" class="w-full h-full object-cover">
                             </div>
                         </div>
 
@@ -118,7 +118,7 @@
                                 <span class="step-num text-[#081d3a]/30 font-semibold text-[12px] tracking-widest" data-n="02" aria-hidden="true"></span>
                             </div>
                             <div class="flex-1 m-4 mt-2 rounded-xl overflow-hidden" style="height:155px">
-                                <img loading="lazy" decoding="async" src="/images/works/services/real-end-of-tenancy.avif" alt="SpringKleaners team wiping out an emptied built-in wardrobe and cleaning the bathroom" class="w-full h-full object-cover">
+                                <img loading="lazy" decoding="async" src="/images/works/services/real-end-of-tenancy.avif"{!! \App\Support\Img::attrs('/images/works/services/real-end-of-tenancy.avif', '(min-width: 640px) 260px, 100vw') !!} alt="SpringKleaners team wiping out an emptied built-in wardrobe and cleaning the bathroom" class="w-full h-full object-cover">
                             </div>
                         </div>
 
@@ -184,7 +184,7 @@
                                 <span class="step-num text-[#081d3a]/30 font-semibold text-[12px] tracking-widest" data-n="03" aria-hidden="true"></span>
                             </div>
                             <div class="flex-1 m-4 mt-2 rounded-xl overflow-hidden" style="height:155px">
-                                <img loading="lazy" decoding="async" src="/images/works/services/real-post-construction.avif" alt="SpringKleaners team member dusting a ceiling light fitting" class="w-full h-full object-cover">
+                                <img loading="lazy" decoding="async" src="/images/works/services/real-post-construction.avif"{!! \App\Support\Img::attrs('/images/works/services/real-post-construction.avif', '(min-width: 640px) 260px, 100vw') !!} alt="SpringKleaners team member dusting a ceiling light fitting" class="w-full h-full object-cover">
                             </div>
                         </div>
 

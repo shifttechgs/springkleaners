@@ -41,7 +41,7 @@
         @foreach ($services as $slug => $s)
             <button type="button" x-on:click="openQuote({ service: @js($slug) })"
                     class="press overflow-hidden rounded-2xl border border-[#081d3a]/10 bg-white text-left">
-                <img src="{{ $s['img'] }}" alt="{{ $s['alt'] }}" loading="lazy" class="aspect-[4/3] w-full object-cover">
+                <img src="{{ $s['img'] }}"{!! \App\Support\Img::attrs($s['img'], '(min-width: 640px) 33vw, 50vw') !!} alt="{{ $s['alt'] }}" loading="lazy" class="aspect-[4/3] w-full object-cover">
                 <span class="block px-3 pb-3 pt-2.5">
                     <span class="block text-[15px] font-bold leading-tight text-[#081d3a]">{{ $s['short'] }}</span>
                     <span class="mt-0.5 block text-[12.5px] text-[#5b6779]">from R{{ number_format($s['base_price'] + $s['service_fee']) }}</span>

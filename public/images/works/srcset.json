@@ -1,0 +1,406 @@
+{
+    "/images/works/1.avif": {
+        "w": 570,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/2.avif": {
+        "w": 570,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/3.avif": {
+        "w": 570,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/blog/airbnb-short-let-cleaning-cape-town-hosts.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/carpet-cleaning-cost-cape-town.avif": {
+        "w": 1280,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/deep-clean-cost-cape-town-pricing-guide.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/deep-cleaning-vs-regular-cleaning.avif": {
+        "w": 1280,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/eco-friendly-cleaning-is-it-really-better.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/end-of-tenancy-cleaning-checklist-cape-town.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/end-of-tenancy-cleaning-cost-cape-town.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/home-faq.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/meet-the-team-behind-springkleaners.avif": {
+        "w": 1280,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/move-in-vs-move-out-cleaning-difference.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/office-cleaning-cost-cape-town.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/office-cleanliness-productivity.avif": {
+        "w": 1280,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/post-construction-cleaning-checklist.avif": {
+        "w": 1200,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/post-construction-cleaning-what-to-expect.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/signs-your-home-needs-a-deep-clean.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/spring-cleaning-cape-town-guide.avif": {
+        "w": 1280,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/who-pays-for-end-of-lease-cleaning-south-africa.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/why-we-publish-our-prices.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/window-cleaning-cost-cape-town.avif": {
+        "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/faq/areas.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/faq/comparisons.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/faq/per-service.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/faq/pricing-process.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/hero2_cleaning.avif": {
+        "w": 1680,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/hero_clean.avif": {
+        "w": 3006,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/premium_photo-1683141112334-d7d404f6e716.avif": {
+        "w": 900,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/real-team-light-fitting.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/real-team-with-client.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/real-walkthrough.avif": {
+        "w": 800,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/real-we-clean.avif": {
+        "w": 640,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/real-window-cleaning.avif": {
+        "w": 680,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/refer_earn.avif": {
+        "w": 847,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/service-pages/airbnb-turnover-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/blind-curtain-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/carpet-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/deep-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/end-of-tenancy.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/fridge-appliance-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/move-in-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/office-commercial-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/oven-deep-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/post-construction.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/recurring-house-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/spring-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/upholstery-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/service-pages/window-cleaning.avif": {
+        "w": 960,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/services/deep_cleaning.avif": {
+        "w": 1024,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/services/end_of_tenancy.avif": {
+        "w": 1024,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/services/post_construction.avif": {
+        "w": 683,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/services/post_construction_card.avif": {
+        "w": 570,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/services/real-deep-cleaning.avif": {
+        "w": 840,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/services/real-end-of-tenancy.avif": {
+        "w": 840,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/services/real-post-construction.avif": {
+        "w": 840,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/step2-get-quote.avif": {
+        "w": 880,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/step4-you-relax.avif": {
+        "w": 880,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/we_clean.avif": {
+        "w": 683,
+        "variants": [
+            480
+        ]
+    },
+    "/images/works/why_works.avif": {
+        "w": 1333,
+        "variants": [
+            480,
+            800
+        ]
+    }
+}

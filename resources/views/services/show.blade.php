@@ -98,7 +98,7 @@
                 </div>
                 <div class="lg:col-span-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.15s">
                     <div class="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
-                        <img src="{{ $content['hero_image'] }}" alt="{{ $content['hero_alt'] ?? $content['label'] . ' — SpringKleaners' }}" class="w-full h-full object-cover">
+                        <img src="{{ $content['hero_image'] }}"{!! \App\Support\Img::attrs($content['hero_image'], '(min-width: 1024px) 420px, calc(100vw - 32px)') !!} fetchpriority="high" alt="{{ $content['hero_alt'] ?? $content['label'] . ' — SpringKleaners' }}" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>

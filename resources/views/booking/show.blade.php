@@ -413,7 +413,7 @@
 
         <div class="relative z-10 section-wrap pt-10 pb-2 text-center">
             <p class="text-white/60 text-[11px] font-semibold uppercase tracking-[0.22em] mb-3">Book Online</p>
-            <h1 class="text-white text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-8" x-text="service.name"></h1>
+            <h1 class="text-white text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-8" x-text="service.name">{{ $services[$selectedSlug]['name'] ?? 'Book a clean' }}</h1>
         </div>
     </div>
 
@@ -423,21 +423,21 @@
     <div class="bg-[#081d3a] pb-8">
         <div class="section-wrap">
             <div class="flex items-center justify-center gap-3 sm:gap-4 max-w-md mx-auto">
-                <template x-for="(label, idx) in ['Details','Schedule','Review']" :key="idx">
-                    <template x-if="true">
-                        <div class="flex items-center gap-3 sm:gap-4" :class="idx < 2 ? 'flex-1' : ''">
-                            <div class="flex flex-col items-center gap-2 flex-shrink-0">
-                                <div class="step-dot"
-                                     :class="step > idx + 1 ? 'step-dot-done' : (step === idx + 1 ? 'step-dot-current' : 'step-dot-upcoming')">
-                                    <svg x-show="step > idx + 1" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                    <span x-show="step <= idx + 1" x-text="idx + 1"></span>
-                                </div>
-                                <span class="text-[11px] font-semibold" :class="step >= idx + 1 ? 'text-white/80' : 'text-white/60'" x-text="label"></span>
+                @foreach (['Details', 'Schedule', 'Review'] as $idx => $label)
+                    <div class="flex items-center gap-3 sm:gap-4 {{ $idx < 2 ? 'flex-1' : '' }}">
+                        <div class="flex flex-col items-center gap-2 flex-shrink-0">
+                            <div class="step-dot"
+                                 :class="step > {{ $idx }} + 1 ? 'step-dot-done' : (step === {{ $idx }} + 1 ? 'step-dot-current' : 'step-dot-upcoming')">
+                                <svg x-show="step > {{ $idx }} + 1" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span x-show="step <= {{ $idx }} + 1">{{ $idx + 1 }}</span>
                             </div>
-                            <div class="step-line" :class="step > idx + 1 ? 'step-line-done' : ''" x-show="idx < 2"></div>
+                            <span class="text-[11px] font-semibold" :class="step >= {{ $idx }} + 1 ? 'text-white/80' : 'text-white/60'">{{ $label }}</span>
                         </div>
-                    </template>
-                </template>
+                        @if ($idx < 2)
+                            <div class="step-line" :class="step > {{ $idx }} + 1 ? 'step-line-done' : ''"></div>
+                        @endif
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -476,7 +476,7 @@
                 <div x-show="!submitted">
 
                 {{-- ── STEP 1: DETAILS ── --}}
-                <div x-show="step === 1" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
+                <div x-show="step === 1" class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Your details</h2>
                     <p class="text-[#5b6779] text-[13.5px] mt-1 mb-7">Tell us about the property and what you need cleaned.</p>
 

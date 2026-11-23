@@ -68,7 +68,7 @@
     <section class="bg-light">
         <div class="section-wrap -mt-8 lg:-mt-10 relative z-10">
             <div class="rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto aspect-[16/9]">
-                <img src="{{ $post['cover'] }}" alt="{{ $post['cover_alt'] ?? $post['title'] }}" class="w-full h-full object-cover">
+                <img src="{{ $post['cover'] }}"{!! \App\Support\Img::attrs($post['cover'], '(min-width: 960px) 896px, calc(100vw - 32px)') !!} alt="{{ $post['cover_alt'] ?? $post['title'] }}" fetchpriority="high" class="w-full h-full object-cover">
             </div>
         </div>
     </section>
