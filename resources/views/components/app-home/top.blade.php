@@ -61,7 +61,7 @@
     <ol class="grid grid-cols-3 gap-3">
         @foreach ([['Get your price', 'In about a minute'], ['Pick a slot', 'Sat or Sun, morning or afternoon'], ['We clean', 'You check it before we go']] as $i => [$t, $d])
             <li>
-                <span class="mb-2 block font-display text-[26px] leading-none text-[#081d3a]/25">0{{ $i + 1 }}</span>
+                <span class="mb-2 block font-display text-[26px] leading-none text-[#081d3a]/50">0{{ $i + 1 }}</span>
                 <p class="text-[14px] font-bold leading-tight text-[#081d3a]">{{ $t }}</p>
                 <p class="mt-1 text-[12px] leading-snug text-[#5b6779]">{{ $d }}</p>
             </li>
@@ -115,5 +115,5 @@
         <p class="text-[14px]"><b>Yes</b>, we clean in <span x-text="match"></span>.</p>
         <button type="button" x-on:click="openQuote({ suburb: match })" class="press flex-shrink-0 rounded-full bg-[#f6e304] px-4 py-2.5 text-[14px] font-bold text-[#081d3a]">Book</button>
     </div>
-    <p x-show="q.trim().length > 2 && !match && !hints.length" x-cloak class="mt-4 text-[14px] text-white/80">Not yet, but we're growing. <a :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, do you clean in ' + q.trim() + '? Please let me know when you do.')" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#f6e304] underline underline-offset-2">WhatsApp us</a> and we'll tell you when we reach you.</p>
+    <p x-show="q.trim().length > 2 && !match && !hints.length" x-cloak class="mt-4 text-[14px] text-white/80">Not yet, but we're growing. <a href="{{ \App\Support\WhatsApp::link() }}" :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, do you clean in ' + q.trim() + '? Please let me know when you do.')" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#f6e304] underline underline-offset-2">WhatsApp us</a> and we'll tell you when we reach you.</p>
 </section>

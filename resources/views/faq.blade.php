@@ -67,10 +67,10 @@
                     <button type="button"
                             @click="tab = '{{ $clusterKey }}'"
                             class="flex items-center gap-2 whitespace-nowrap px-4 py-2.5 rounded-full text-[13px] font-semibold transition-all duration-200 flex-shrink-0"
-                            :class="tab === '{{ $clusterKey }}' ? 'bg-[#081d3a] text-white shadow-md' : 'text-[#081d3a]/60 hover:bg-white hover:text-[#081d3a]'">
+                            :class="tab === '{{ $clusterKey }}' ? 'bg-[#081d3a] text-white shadow-md' : 'text-[#081d3a]/70 hover:bg-white hover:text-[#081d3a]'">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $clusterIcons[$clusterKey] }}"/></svg>
                         {{ $cluster['label'] }}
-                        <span class="text-[10px] font-bold opacity-50">{{ count($cluster['faqs']) }}</span>
+                        <span class="text-[10px] font-bold">{{ count($cluster['faqs']) }}</span>
                     </button>
                     @endforeach
                 </div>

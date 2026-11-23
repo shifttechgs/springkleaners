@@ -27,7 +27,7 @@
         <p class="text-[#5b6779] text-[14px] mt-2" x-text="(service ? service.name : '') + ' · ' + whenLabel"></p>
         <p class="text-[#081d3a] font-bold text-[20px] mt-1" x-text="money(total)"></p>
         <p class="text-[#5b6779] text-[13.5px] mt-3">We'll confirm on WhatsApp shortly, and a confirmation email is on its way to <span class="font-semibold text-[#081d3a]" x-text="form.email"></span>.</p>
-        <a :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, I just booked ' + (service ? service.name : 'a clean') + ' for ' + whenLabel + ' in ' + selectedSuburb + '. My name is ' + form.name.trim() + '.')" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-5 bg-[#25d366] text-[#081d3a] font-bold px-5 py-3 rounded-full text-[14px] hover:bg-[#20bd5a] transition-colors">WhatsApp us</a>
+        <a href="{{ \App\Support\WhatsApp::link() }}" :href="@js(\App\Support\WhatsApp::base()) + encodeURIComponent('Hi SpringKleaners, I just booked ' + (service ? service.name : 'a clean') + ' for ' + whenLabel + ' in ' + selectedSuburb + '. My name is ' + form.name.trim() + '.')" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-5 bg-[#25d366] text-[#081d3a] font-bold px-5 py-3 rounded-full text-[14px] hover:bg-[#20bd5a] transition-colors">WhatsApp us</a>
     </div>
 
     <div x-show="!done">
@@ -256,7 +256,7 @@
         <p class="hero-form-note text-center text-[#5b6779] text-[12px] mt-3">
             <span x-show="step === 4" x-cloak>No payment now. We confirm every booking with you first.</span>
             <span x-show="step < 4">Free, no obligation.</span>
-            <a :href="fullFormLink" x-on:click="track('quote_full_form', { step_number: step, service: serviceKey })" class="underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Need add-ons or notes? Full form</a>
+            <a href="{{ route('booking.show') }}" :href="fullFormLink" x-on:click="track('quote_full_form', { step_number: step, service: serviceKey })" class="underline decoration-[#081d3a]/20 underline-offset-2 hover:text-[#081d3a]">Need add-ons or notes? Full form</a>
         </p>
     </div>
 </div>

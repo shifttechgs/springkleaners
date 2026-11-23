@@ -77,7 +77,7 @@
                 <div class="flex items-center gap-3 mb-7">
                     <div class="w-8 h-[2px] bg-[#f6e304]"></div>
                     <h2 class="text-[#081d3a] text-[13px] font-bold uppercase tracking-[0.14em]">{{ $clusterName }}</h2>
-                    <span class="text-[#adb5c4] text-[12px] font-medium">{{ $clusterAreas->count() }} {{ Str::plural('area', $clusterAreas->count()) }}</span>
+                    <span class="text-[#5b6779] text-[12px] font-medium">{{ $clusterAreas->count() }} {{ Str::plural('area', $clusterAreas->count()) }}</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     @foreach ($clusterAreas as $slug => $area)

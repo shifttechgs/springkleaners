@@ -65,7 +65,7 @@
                             </p>
                             <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
                                 <x-arrow-button href="#" x-bind:href="quoteUrl">Get My Instant Quote</x-arrow-button>
-                                <a x-show="pages[exact]" x-bind:href="pages[exact]" class="link-arrow text-[15px] font-semibold text-[#081d3a] underline decoration-[#081d3a]/30 underline-offset-4 hover:decoration-[#081d3a]">
+                                <a x-show="pages[exact]" href="{{ route('areas.index') }}" x-bind:href="pages[exact]" class="link-arrow text-[15px] font-semibold text-[#081d3a] underline decoration-[#081d3a]/30 underline-offset-4 hover:decoration-[#081d3a]">
                                     See cleaning in <span x-text="exact"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
                                 </a>
                             </div>

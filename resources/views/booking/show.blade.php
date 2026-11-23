@@ -28,7 +28,7 @@
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #8a94a6;
+        color: #5b6779;
         margin-bottom: 7px;
     }
     .req { color: #f43f5e; }
@@ -38,7 +38,7 @@
         font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #adb5c4;
+        color: #5b6779;
     }
     .type-btn {
         flex: 1; padding: 11px 12px; border-radius: 9999px;
@@ -46,7 +46,7 @@
         transition: all 0.18s; border: 1.5px solid #e8eaf0;
         text-align: center;
     }
-    .type-inactive { background: #fff; color: #8a94a6; }
+    .type-inactive { background: #fff; color: #5b6779; }
     .type-active   { background: #081d3a; color: #fff; border-color: #081d3a; }
 
     .service-pick {
@@ -56,7 +56,7 @@
     .service-pick-active { background: #081d3a; border-color: #081d3a; }
     .sp-name { font-size: 13.5px; font-weight: 700; color: #081d3a; }
     .service-pick-active .sp-name { color: #fff; }
-    .sp-sub { font-size: 11px; color: #8a94a6; margin-top: 2px; }
+    .sp-sub { font-size: 11px; color: #5b6779; margin-top: 2px; }
     .service-pick-active .sp-sub { color: rgba(255,255,255,0.6); }
 
     .pill-btn {
@@ -85,7 +85,7 @@
     .cal-cell { flex-direction: column; gap: 2px; }
     .cal-pill {
         font-size: 7.5px; font-weight: 700; line-height: 1; letter-spacing: 0.02em; text-transform: uppercase;
-        padding: 2px 4px; border-radius: 999px; background: #f0f2f7; color: #8a94a6;
+        padding: 2px 4px; border-radius: 999px; background: #f0f2f7; color: #5b6779;
     }
 
     .time-slot {
@@ -460,7 +460,7 @@
                         </svg>
                     </div>
                     <h2 class="text-[#081d3a] text-3xl font-black tracking-tight mb-3">Booking request sent!</h2>
-                    <p class="text-[#8a94a6] text-[15px] leading-relaxed max-w-sm mx-auto">
+                    <p class="text-[#5b6779] text-[15px] leading-relaxed max-w-sm mx-auto">
                         We've emailed you a confirmation — our team will confirm availability and your final price within a few hours.
                     </p>
                     <div class="mt-8">
@@ -478,7 +478,7 @@
                 {{-- ── STEP 1: DETAILS ── --}}
                 <div x-show="step === 1" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Your details</h2>
-                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">Tell us about the property and what you need cleaned.</p>
+                    <p class="text-[#5b6779] text-[13.5px] mt-1 mb-7">Tell us about the property and what you need cleaned.</p>
 
                     <div class="mb-7">
                         <label class="fl">Which service do you need?</label>
@@ -513,7 +513,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
                         <div>
                             <label class="fl">Bedrooms</label>
-                            <select x-model="form.bedrooms" class="fi cursor-pointer">
+                            <select x-model="form.bedrooms" aria-label="Bedrooms" class="fi cursor-pointer">
                                 <option value="1">Studio / 1 Bed</option>
                                 <option value="2">2 Bedrooms</option>
                                 <option value="3">3 Bedrooms</option>
@@ -523,7 +523,7 @@
                         </div>
                         <div>
                             <label class="fl">Bathrooms</label>
-                            <select x-model="form.bathrooms" class="fi cursor-pointer">
+                            <select x-model="form.bathrooms" aria-label="Bathrooms" class="fi cursor-pointer">
                                 <option value="1">1 Bathroom</option>
                                 <option value="2">2 Bathrooms</option>
                                 <option value="3">3 Bathrooms</option>
@@ -532,7 +532,7 @@
                         </div>
                         <div>
                             <label class="fl">Extra rooms</label>
-                            <select x-model="form.extraRooms" class="fi cursor-pointer">
+                            <select x-model="form.extraRooms" aria-label="Extra rooms" class="fi cursor-pointer">
                                 <option value="0">None</option>
                                 <option value="1">1 Extra Room</option>
                                 <option value="2">2 Extra Rooms</option>
@@ -553,7 +553,7 @@
                     </div>
 
                     <div class="mb-5">
-                        <label class="fl">Main flooring type(s) <span class="normal-case tracking-normal text-[#c8cdd8]">(select all that apply)</span></label>
+                        <label class="fl">Main flooring type(s) <span class="normal-case tracking-normal text-[#5b6779]">(select all that apply)</span></label>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="ft in floorTypeOptions" :key="ft">
                                 <button type="button" @click="toggleFloorType(ft)" class="pill-btn inline-flex items-center gap-1.5" :class="form.floorTypes.includes(ft) ? 'pill-active' : ''">
@@ -569,7 +569,7 @@
 
                     <div class="flex items-center justify-between mb-6 bg-[#f8f9fc] rounded-xl px-4 py-3.5">
                         <span class="text-[#081d3a] text-[13.5px] font-semibold">Do you have any pets?</span>
-                        <button type="button" @click="form.pets = !form.pets"
+                        <button type="button" @click="form.pets = !form.pets" aria-label="Pets in the home" :aria-pressed="form.pets ? 'true' : 'false'"
                                 class="w-11 h-6 rounded-full relative transition-colors flex-shrink-0"
                                 :class="form.pets ? 'bg-[#081d3a]' : 'bg-[#dbe0ea]'">
                             <span class="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all" :class="form.pets ? 'left-[22px]' : 'left-0.5'"></span>
@@ -577,7 +577,7 @@
                     </div>
 
                     <div class="mb-7">
-                        <label class="fl">Special instructions <span class="normal-case tracking-normal text-[#c8cdd8]">(optional)</span></label>
+                        <label class="fl">Special instructions <span class="normal-case tracking-normal text-[#5b6779]">(optional)</span></label>
                         <textarea x-model="form.notes" rows="2" placeholder="Any areas to focus on or avoid..." class="fi resize-none"></textarea>
                     </div>
 
@@ -648,11 +648,11 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                         <div>
-                            <label class="fl">Access instructions <span class="normal-case tracking-normal text-[#c8cdd8]">(optional)</span></label>
+                            <label class="fl">Access instructions <span class="normal-case tracking-normal text-[#5b6779]">(optional)</span></label>
                             <input type="text" x-model="form.accessInstructions" placeholder="e.g. Ring bell, use side gate..." class="fi">
                         </div>
                         <div>
-                            <label class="fl">Parking <span class="normal-case tracking-normal text-[#c8cdd8]">(optional)</span></label>
+                            <label class="fl">Parking <span class="normal-case tracking-normal text-[#5b6779]">(optional)</span></label>
                             <input type="text" x-model="form.parking" placeholder="Street parking, driveway..." class="fi">
                         </div>
                     </div>
@@ -660,7 +660,7 @@
                     <div class="h-px bg-[#edf0f5] mb-7"></div>
 
                     <p class="fs-label mb-1">Add-on extras</p>
-                    <p class="text-[#adb5c4] text-[13px] mb-4">Optional — added to your estimate below.</p>
+                    <p class="text-[#5b6779] text-[13px] mb-4">Optional — added to your estimate below.</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                         <template x-for="addon in addonsList" :key="addon.key">
@@ -675,7 +675,7 @@
                                             <span class="text-[#081d3a] font-bold text-[13.5px]" x-text="addon.label"></span>
                                             <span class="text-[#081d3a] font-bold text-[13px] flex-shrink-0" x-text="addonPriceLabel(addon)"></span>
                                         </div>
-                                        <p class="text-[#8a94a6] text-[12px] mt-0.5" x-text="addon.desc"></p>
+                                        <p class="text-[#5b6779] text-[12px] mt-0.5" x-text="addon.desc"></p>
                                         <div x-show="addon.unit && selectedAddons.includes(addon.key)" x-cloak @click.stop class="flex items-center gap-2 mt-2.5">
                                             <button type="button" @click="setQty(addon.key, qtyOf(addon.key) - 1)" class="w-8 h-8 rounded-lg border border-[#dbe0ea] bg-white text-[#081d3a] font-bold text-[16px] leading-none hover:border-[#081d3a]" :aria-label="'Fewer ' + addon.unit + 's'">−</button>
                                             <input type="number" min="1" max="200" inputmode="numeric" :value="qtyOf(addon.key)" @change="setQty(addon.key, $event.target.value)"
@@ -711,13 +711,13 @@
                 {{-- ── STEP 2: SCHEDULE ── --}}
                 <div x-show="step === 2" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Choose your date &amp; time</h2>
-                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">We currently take bookings on Saturdays and Sundays, with two slots per day: 8am–12pm and 1pm–5pm. Pick a weekend date below.</p>
+                    <p class="text-[#5b6779] text-[13.5px] mt-1 mb-7">We currently take bookings on Saturdays and Sundays, with two slots per day: 8am–12pm and 1pm–5pm. Pick a weekend date below.</p>
 
                     <div x-show="nextAvailable && !isNextAvailableAlreadySelected" x-cloak
                          class="flex items-center justify-between gap-3 bg-[#f8f9fc] border border-[#e8eaf0] rounded-xl px-4 py-3 mb-6">
                         <div class="min-w-0">
                             <p class="text-[#081d3a] text-[13px] font-bold">Next available date</p>
-                            <p class="text-[#8a94a6] text-[12px]" x-text="nextAvailableLabel"></p>
+                            <p class="text-[#5b6779] text-[12px]" x-text="nextAvailableLabel"></p>
                         </div>
                         <button type="button" @click="goToNextAvailable()" class="flex-shrink-0 bg-[#081d3a] text-white text-[12.5px] font-bold px-4 py-2 rounded-full hover:bg-[#0d2a4a] transition-colors">
                             Select this date
@@ -751,7 +751,7 @@
                             </div>
                             <div class="grid grid-cols-7 gap-1 mb-1">
                                 <template x-for="(d, i) in ['M','T','W','T','F','S','S']" :key="i">
-                                    <div class="text-center text-[10.5px] font-bold text-[#adb5c4] py-1" x-text="d"></div>
+                                    <div class="text-center text-[10.5px] font-bold text-[#5b6779] py-1" x-text="d"></div>
                                 </template>
                             </div>
                             <div class="grid grid-cols-7 gap-1">
@@ -772,16 +772,16 @@
                                 </template>
                             </div>
                             <div class="flex items-center gap-4 mt-3 pt-3 border-t border-[#f0f2f7]">
-                                <span class="flex items-center gap-1.5 text-[11px] text-[#8a94a6]"><span class="w-2.5 h-2.5 rounded-full bg-[#081d3a] inline-block"></span> Selected</span>
-                                <span class="flex items-center gap-1.5 text-[11px] text-[#8a94a6]"><span class="w-2.5 h-2.5 rounded-full bg-[#fef2f2] border border-[#fca5a5] inline-block"></span> Fully booked</span>
+                                <span class="flex items-center gap-1.5 text-[11px] text-[#5b6779]"><span class="w-2.5 h-2.5 rounded-full bg-[#081d3a] inline-block"></span> Selected</span>
+                                <span class="flex items-center gap-1.5 text-[11px] text-[#5b6779]"><span class="w-2.5 h-2.5 rounded-full bg-[#fef2f2] border border-[#fca5a5] inline-block"></span> Fully booked</span>
                             </div>
                         </div>
 
                         <div>
                             <p class="fl mb-3">Pick a time</p>
-                            <div x-show="!selectedDate" class="text-[#adb5c4] text-[13px] bg-[#f8f9fc] rounded-xl p-5 text-center">Choose a date first.</div>
+                            <div x-show="!selectedDate" class="text-[#5b6779] text-[13px] bg-[#f8f9fc] rounded-xl p-5 text-center">Choose a date first.</div>
                             <div x-show="selectedDate" x-cloak>
-                                <p class="text-[#8a94a6] text-[11.5px] font-semibold mb-2" x-text="(capacity - selectedDateBookedCount > 0 ? (capacity - selectedDateBookedCount) : 0) + ' of ' + capacity + ' slots available on ' + selectedDateLabel"></p>
+                                <p class="text-[#5b6779] text-[11.5px] font-semibold mb-2" x-text="(capacity - selectedDateBookedCount > 0 ? (capacity - selectedDateBookedCount) : 0) + ' of ' + capacity + ' slots available on ' + selectedDateLabel"></p>
                                 <div class="grid grid-cols-1 gap-2">
                                     <template x-for="(t, i) in timeSlots" :key="t">
                                         <div @click="if (!isTimeTaken(t)) { selectedTime = t; errors.dateTime = false; }"
@@ -796,7 +796,7 @@
                                     </template>
                                 </div>
                             </div>
-                            <p class="text-[#adb5c4] text-[12px] mt-4">Each job is a 4-hour slot. One booking per slot, so your time is reserved for you only.</p>
+                            <p class="text-[#5b6779] text-[12px] mt-4">Each job is a 4-hour slot. One booking per slot, so your time is reserved for you only.</p>
                         </div>
                     </div>
 
@@ -822,7 +822,7 @@
                 {{-- ── STEP 3: REVIEW ── --}}
                 <div x-show="step === 3" x-cloak class="bg-white rounded-3xl border border-[#edf0f5] shadow-sm p-6 sm:p-8">
                     <h2 class="text-[#081d3a] text-[22px] font-black tracking-tight">Review your booking</h2>
-                    <p class="text-[#adb5c4] text-[13.5px] mt-1 mb-7">Everything look right? You can still make changes before you send it.</p>
+                    <p class="text-[#5b6779] text-[13.5px] mt-1 mb-7">Everything look right? You can still make changes before you send it.</p>
 
                     <div class="space-y-4 mb-7">
 
@@ -832,7 +832,7 @@
                                 <button type="button" @click="goStep(1)" class="text-[#081d3a] text-[12.5px] font-bold hover:text-[#f6e304] transition-colors">Edit</button>
                             </div>
                             <p class="text-[#081d3a] font-semibold text-[14px]" x-text="form.address"></p>
-                            <p class="text-[#8a94a6] text-[13px]" x-text="selectedSuburb + ', Cape Town'"></p>
+                            <p class="text-[#5b6779] text-[13px]" x-text="selectedSuburb + ', Cape Town'"></p>
                         </div>
 
                         <div class="border border-[#edf0f5] rounded-2xl p-5">
@@ -841,12 +841,12 @@
                                 <button type="button" @click="goStep(1)" class="text-[#081d3a] text-[12.5px] font-bold hover:text-[#f6e304] transition-colors">Edit</button>
                             </div>
                             <div class="grid grid-cols-2 gap-y-2 text-[13.5px]">
-                                <span class="text-[#8a94a6]">Property type</span><span class="text-[#081d3a] font-semibold" x-text="form.propertyType"></span>
-                                <span class="text-[#8a94a6]">Bedrooms</span><span class="text-[#081d3a] font-semibold" x-text="form.bedrooms"></span>
-                                <span class="text-[#8a94a6]">Bathrooms</span><span class="text-[#081d3a] font-semibold" x-text="form.bathrooms"></span>
-                                <span class="text-[#8a94a6]">Flooring</span><span class="text-[#081d3a] font-semibold" x-text="form.floorTypes.length ? form.floorTypes.join(', ') : 'Not specified'"></span>
-                                <span class="text-[#8a94a6]">Pets on premises</span><span class="text-[#081d3a] font-semibold" x-text="form.pets ? 'Yes' : 'No'"></span>
-                                <span class="text-[#8a94a6]">Before &amp; after photos</span><span class="text-[#081d3a] font-semibold" x-text="form.photoConsent ? 'Yes' : 'No'"></span>
+                                <span class="text-[#5b6779]">Property type</span><span class="text-[#081d3a] font-semibold" x-text="form.propertyType"></span>
+                                <span class="text-[#5b6779]">Bedrooms</span><span class="text-[#081d3a] font-semibold" x-text="form.bedrooms"></span>
+                                <span class="text-[#5b6779]">Bathrooms</span><span class="text-[#081d3a] font-semibold" x-text="form.bathrooms"></span>
+                                <span class="text-[#5b6779]">Flooring</span><span class="text-[#081d3a] font-semibold" x-text="form.floorTypes.length ? form.floorTypes.join(', ') : 'Not specified'"></span>
+                                <span class="text-[#5b6779]">Pets on premises</span><span class="text-[#081d3a] font-semibold" x-text="form.pets ? 'Yes' : 'No'"></span>
+                                <span class="text-[#5b6779]">Before &amp; after photos</span><span class="text-[#081d3a] font-semibold" x-text="form.photoConsent ? 'Yes' : 'No'"></span>
                             </div>
                         </div>
 
@@ -856,7 +856,7 @@
                                 <button type="button" @click="goStep(2)" class="text-[#081d3a] text-[12.5px] font-bold hover:text-[#f6e304] transition-colors">Edit</button>
                             </div>
                             <p class="text-[#081d3a] font-semibold text-[14px]" x-text="selectedDateLabel"></p>
-                            <p class="text-[#8a94a6] text-[13px]" x-text="selectedTime + ' · ' + (bookingType === 'recurring' ? ('Recurring — ' + frequency) : 'Once-off')"></p>
+                            <p class="text-[#5b6779] text-[13px]" x-text="selectedTime + ' · ' + (bookingType === 'recurring' ? ('Recurring — ' + frequency) : 'Once-off')"></p>
                         </div>
 
                         <div class="border border-[#edf0f5] rounded-2xl p-5">
@@ -864,7 +864,7 @@
                                 <span class="fs-label">Add-ons</span>
                                 <button type="button" @click="goStep(1)" class="text-[#081d3a] text-[12.5px] font-bold hover:text-[#f6e304] transition-colors">Edit</button>
                             </div>
-                            <p x-show="selectedAddons.length === 0" class="text-[#8a94a6] text-[13.5px]">No add-ons selected.</p>
+                            <p x-show="selectedAddons.length === 0" class="text-[#5b6779] text-[13.5px]">No add-ons selected.</p>
                             <ul x-show="selectedAddons.length > 0" class="space-y-1.5">
                                 <template x-for="key in selectedAddons" :key="key">
                                     <li class="flex items-center justify-between text-[13.5px]">
@@ -907,7 +907,7 @@
                         </div>
                         <div>
                             <p class="text-[#081d3a] font-black text-[16px] tracking-tight" x-text="service.name"></p>
-                            <p class="text-[#8a94a6] text-[12px]" x-text="'Est. ' + service.avg_hours + ' hrs'"></p>
+                            <p class="text-[#5b6779] text-[12px]" x-text="'Est. ' + service.avg_hours + ' hrs'"></p>
                         </div>
                     </div>
 
@@ -918,7 +918,7 @@
                         <div class="min-w-0">
                             <p class="fs-label mb-1">Location</p>
                             <p class="text-[#081d3a] font-semibold text-[13.5px] truncate" x-text="form.address"></p>
-                            <p class="text-[#8a94a6] text-[12.5px]" x-text="selectedSuburb"></p>
+                            <p class="text-[#5b6779] text-[12.5px]" x-text="selectedSuburb"></p>
                         </div>
                     </div>
 
@@ -929,7 +929,7 @@
                         <div class="min-w-0">
                             <p class="fs-label mb-1">Date &amp; time</p>
                             <p class="text-[#081d3a] font-semibold text-[13.5px]" x-text="selectedDateLabel"></p>
-                            <p class="text-[#8a94a6] text-[12.5px]" x-text="selectedTime"></p>
+                            <p class="text-[#5b6779] text-[12.5px]" x-text="selectedTime"></p>
                         </div>
                     </div>
 
@@ -970,7 +970,7 @@
                             <span class="text-[#081d3a] font-black text-[15px]">Estimated total</span>
                             <span class="text-[#081d3a] font-black text-[26px] tracking-tight" x-text="'R' + total.toLocaleString()"></span>
                         </div>
-                        <p class="text-[#adb5c4] text-[11.5px] mt-2 leading-relaxed">
+                        <p class="text-[#5b6779] text-[11.5px] mt-2 leading-relaxed">
                             This is an estimate only. Prices may be adjusted after a quick property check — never without your sign-off, and never a surprise.
                         </p>
                     </div>
