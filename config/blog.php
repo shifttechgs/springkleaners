@@ -1,9 +1,20 @@
 <?php
 
 return [
+    // How-To Guides filter: the situations readers are in, in display order. Posts list theirs in 'topics'.
+    'topics' => [
+        'moving' => 'Moving out or in',
+        'builders' => 'Builders just left',
+        'letting' => 'Letting or hosting a property',
+        'office' => 'Running an office',
+        'home' => 'Keeping a home clean',
+        'costs' => 'What it costs',
+    ],
+
     'posts' => [
         [
             'slug' => 'window-cleaning-cost-cape-town',
+            'topics' => ['home', 'costs'],
             'title' => 'How Much Does Window Cleaning Cost in Cape Town? Pricing & the Salt-Residue Problem',
             'excerpt' => 'R50 per window and R80 per glass door panel — how window cleaning pricing works, and why coastal homes in Bloubergstrand, Big Bay and Table View need it far more often.',
             'category' => 'Tips',
@@ -15,6 +26,7 @@ return [
         ],
         [
             'slug' => 'carpet-cleaning-cost-cape-town',
+            'topics' => ['home', 'costs'],
             'title' => 'How Much Does Carpet Cleaning Cost in Cape Town? Pricing & How Often to Book',
             'excerpt' => 'R250 per room, R950 minimum call-out — how carpet cleaning pricing actually breaks down, and how often coastal Northern Suburbs homes should really be booking it.',
             'category' => 'Tips',
@@ -27,6 +39,7 @@ return [
         [
             // Replaced 'end-of-tenancy-cleaning-checklist-cape-town' (2026-06-24), which 301s here (routes/web.php).
             'slug' => 'move-out-cleaning-checklist-cape-town',
+            'topics' => ['moving'],
             'title' => 'Move-Out Cleaning Checklist for Cape Town Tenants: How to Protect Your Deposit',
             'excerpt' => 'A room-by-room move-out (end-of-tenancy) cleaning checklist for Cape Town tenants: when to clean, what landlords and agents check, and how to protect your deposit.',
             'category' => 'End-of-Tenancy',
@@ -47,6 +60,7 @@ return [
         ],
         [
             'slug' => 'deep-clean-cost-cape-town-pricing-guide',
+            'topics' => ['costs'],
             'title' => 'How Much Does a Deep Clean Cost in Cape Town? 2026 Pricing Guide',
             'excerpt' => 'Deep cleaning quotes vary wildly across Cape Town. We break down what actually drives the price, from property size to the state of your kitchen and bathrooms.',
             'category' => 'Pricing',
@@ -58,6 +72,7 @@ return [
         ],
         [
             'slug' => 'post-construction-cleaning-what-to-expect',
+            'topics' => ['builders'],
             'title' => 'Post-Construction Cleaning: What to Expect Before You Move In',
             'excerpt' => 'Builder dust gets into everything. Here is how a professional post-construction clean works, phase by phase, before you unpack a single box.',
             'category' => 'Post-Construction',
@@ -69,6 +84,7 @@ return [
         ],
         [
             'slug' => 'signs-your-home-needs-a-deep-clean',
+            'topics' => ['home'],
             'title' => '7 Signs Your Home Needs a Professional Deep Clean',
             'excerpt' => 'A quick weekly tidy is not the same as a deep clean. These seven warning signs tell you when it is time to book one in.',
             'category' => 'Deep Cleaning',
@@ -80,6 +96,7 @@ return [
         ],
         [
             'slug' => 'move-in-vs-move-out-cleaning-difference',
+            'topics' => ['moving', 'letting'],
             'title' => 'Move-In vs Move-Out Cleaning: What is the Difference?',
             'excerpt' => 'They sound similar but the priorities are completely different. Here is how to choose the right service depending on which side of the move you are on.',
             'category' => 'End-of-Tenancy',
@@ -91,6 +108,7 @@ return [
         ],
         [
             'slug' => 'eco-friendly-cleaning-is-it-really-better',
+            'topics' => ['home'],
             'title' => 'Eco-Friendly Cleaning: Is It Really Better for Your Home?',
             'excerpt' => 'Green cleaning products are everywhere, but do they actually clean as well as traditional chemicals? We tested the trade-offs so you do not have to.',
             'category' => 'Tips',
@@ -102,6 +120,7 @@ return [
         ],
         [
             'slug' => 'end-of-tenancy-cleaning-cost-cape-town',
+            'topics' => ['moving', 'costs'],
             'title' => 'How Much Does End-of-Tenancy Cleaning Cost in Cape Town?',
             'excerpt' => 'From R1,200 for a 2-bed, 1-bath property, scaling with bedrooms, bathrooms, and condition. Here is exactly how the price is built up.',
             'category' => 'End-of-Tenancy',
@@ -113,6 +132,7 @@ return [
         ],
         [
             'slug' => 'office-cleaning-cost-cape-town',
+            'topics' => ['office', 'costs'],
             'title' => 'How Much Does Office Cleaning Cost in Cape Town?',
             'excerpt' => 'Office cleaning is usually priced per square metre, not per hour. Here is how the R10/m² model works, and when a monthly contract makes more sense.',
             'category' => 'Office Cleaning',
@@ -124,6 +144,7 @@ return [
         ],
         [
             'slug' => 'post-construction-cleaning-checklist',
+            'topics' => ['builders'],
             'title' => 'The Ultimate Post-Construction Cleaning Checklist',
             'excerpt' => 'Every surface builders touch, room by room, before a new build or renovation is genuinely move-in ready.',
             'category' => 'Post-Construction',
@@ -136,6 +157,7 @@ return [
         ],
         [
             'slug' => 'deep-cleaning-vs-regular-cleaning',
+            'topics' => ['home'],
             'title' => 'Deep Cleaning vs. Regular Cleaning: What\'s Actually Different?',
             'excerpt' => 'They sound like the same service at two price points. They are not. Here is exactly where the line sits, and how to choose.',
             'category' => 'Deep Cleaning',
@@ -147,6 +169,7 @@ return [
         ],
         [
             'slug' => 'who-pays-for-end-of-lease-cleaning-south-africa',
+            'topics' => ['moving', 'letting'],
             'title' => 'Who Pays for End-of-Lease Cleaning in South Africa? A Legal Overview',
             'excerpt' => 'A general guide to how South African lease agreements typically treat cleaning obligations and deposit deductions — not legal advice, but a useful starting point.',
             'category' => 'End-of-Tenancy',
@@ -158,6 +181,7 @@ return [
         ],
         [
             'slug' => 'office-cleanliness-productivity',
+            'topics' => ['office'],
             'title' => 'Why Office Cleanliness Affects Productivity (and Client Perception)',
             'excerpt' => 'A clean office is not just about appearances. Here is how workplace hygiene actually shapes staff wellbeing and the impression clients walk away with.',
             'category' => 'Office Cleaning',
@@ -169,6 +193,7 @@ return [
         ],
         [
             'slug' => 'spring-cleaning-cape-town-guide',
+            'topics' => ['home'],
             'title' => 'Spring Cleaning in Cape Town: The Complete Seasonal Guide',
             'excerpt' => 'Sea-air salt residue, wind-blown dust, and winter grime — a room-by-room guide to a genuine seasonal reset for Cape Town homes.',
             'category' => 'Tips',
@@ -180,6 +205,7 @@ return [
         ],
         [
             'slug' => 'meet-the-team-behind-springkleaners',
+            'topics' => [],
             'title' => 'Meet the Team Behind SpringKleaners',
             'excerpt' => 'A registered company, background-checked staff, and the real people our clients ask for by name.',
             'category' => 'About',
@@ -191,6 +217,7 @@ return [
         ],
         [
             'slug' => 'why-we-publish-our-prices',
+            'topics' => ['costs'],
             'title' => 'Why We Publish Our Prices When Other Cleaning Companies Don\'t',
             'excerpt' => 'Real starting prices, published on every service page, instead of a "request a quote" black box. Here is why that matters.',
             'category' => 'Trust',
@@ -202,6 +229,7 @@ return [
         ],
         [
             'slug' => 'airbnb-short-let-cleaning-cape-town-hosts',
+            'topics' => ['letting'],
             'title' => 'Airbnb & Short-Let Cleaning: What Cape Town Hosts Need to Know Between Guests',
             'excerpt' => 'A faster, tighter-scope reset between guests — what a proper turnover clean actually covers, and how to keep your listing photo-ready.',
             'category' => 'Tips',

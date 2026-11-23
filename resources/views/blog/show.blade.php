@@ -86,8 +86,17 @@
         <div class="section-wrap guide-hero__grid">
             <div class="guide-hero__copy">
                 <nav class="guide-hero__crumbs print:hidden" aria-label="Breadcrumb">
-                    <a href="/">Home</a><span aria-hidden="true">/</span><a href="{{ route('blog.index') }}">How-To Guides</a><span aria-hidden="true">/</span><a href="{{ route('blog.index', ['category' => $post['category']]) }}">{{ $post['category'] }}</a>
+                    <a href="/">Home</a><span aria-hidden="true">/</span><a href="{{ route('blog.index') }}">How-To Guides</a>
                 </nav>
+                @if (! empty($post['topics']))
+                <p class="guide-hero__topics print:hidden">
+                    @foreach ($post['topics'] as $topicKey)
+                        @if ($label = config('blog.topics.'.$topicKey))
+                        <a href="{{ route('blog.index', ['topic' => $topicKey]) }}">{{ $label }}</a>
+                        @endif
+                    @endforeach
+                </p>
+                @endif
                 <h1 class="guide-hero__title">{{ $post['title'] }}</h1>
                 <p class="guide-hero__dek">{{ $post['excerpt'] }}</p>
                 <p class="guide-hero__meta">By the {{ $post['author'] }}. {{ \Illuminate\Support\Carbon::parse($post['date'])->format('j F Y') }}. {{ $post['read_time'] }}-minute read.</p>

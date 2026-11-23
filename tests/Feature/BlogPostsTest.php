@@ -45,15 +45,11 @@ class BlogPostsTest extends TestCase
 
     public function test_blog_index_lists_all_new_posts(): void
     {
-        $totalPages = (int) ceil(count(config('blog.posts')) / \App\Http\Controllers\BlogController::PER_PAGE);
+        // Every guide is on the one How-To Guides page.
+        $html = $this->get('/blog')->assertStatus(200)->getContent();
 
-        $html = '';
-        for ($page = 1; $page <= $totalPages; $page++) {
-            $html .= $this->get('/blog?page='.$page)->assertStatus(200)->getContent();
-        }
-
-        foreach (self::newPostSlugs() as [$slug]) {
-            $this->assertStringContainsString($slug, $html, "Blog index missing link to {$slug} across all pages");
+        foreach (collect(config('blog.posts'))->pluck('slug') as $slug) {
+            $this->assertStringContainsString(route('blog.show', $slug), $html, "How-To Guides page missing {$slug}");
         }
     }
 

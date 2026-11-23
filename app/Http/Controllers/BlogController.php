@@ -3,45 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    public const PER_PAGE = 9;
-
+    /**
+     * How-To Guides: every guide on one page, filtered by the reader's situation (config blog.topics).
+     * ?topic= is applied here so filtering works without JavaScript; the page then filters instantly in the browser.
+     */
     public function index(Request $request): View
     {
         $posts = collect(config('blog.posts'))
             ->sortByDesc('date')
             ->values();
 
-        $categories = $posts->pluck('category')->unique()->values();
+        $topics = collect(config('blog.topics'))
+            ->map(fn (string $label, string $key) => [
+                'key' => $key,
+                'label' => $label,
+                'count' => $posts->filter(fn ($p) => in_array($key, $p['topics'] ?? [], true))->count(),
+            ])
+            ->filter(fn ($t) => $t['count'] > 0)
+            ->values();
 
-        $activeCategory = $request->query('category');
-        if (! $categories->contains($activeCategory)) {
-            $activeCategory = null;
+        $activeTopic = $request->query('topic');
+        if (! $topics->contains('key', $activeTopic)) {
+            $activeTopic = null;
         }
 
-        $filtered = $activeCategory
-            ? $posts->where('category', $activeCategory)->values()
-            : $posts;
-
-        $page = LengthAwarePaginator::resolveCurrentPage();
-
-        $paginated = new LengthAwarePaginator(
-            $filtered->forPage($page, self::PER_PAGE)->values(),
-            $filtered->count(),
-            self::PER_PAGE,
-            $page,
-            ['path' => LengthAwarePaginator::resolveCurrentPath(), 'query' => $request->query()]
-        );
-
         return view('blog.index', [
-            'posts' => $paginated,
-            'categories' => $categories,
-            'activeCategory' => $activeCategory,
+            'posts' => $posts,
+            'topics' => $topics,
+            'activeTopic' => $activeTopic,
         ]);
     }
 
