@@ -4,6 +4,25 @@
 @section('content')
     @php
         $publishedIso = \Illuminate\Support\Carbon::parse($post['date'])->toIso8601String();
+
+        // Render the guide first so the contents list and checklist total come from what is actually on the page:
+        // each <h2> gets an id for the contents links, and ticking tasks are counted for the progress card.
+        $toc = [];
+        $body = preg_replace_callback('#<h2\b([^>]*)>(.*?)</h2>#s', function ($m) use (&$toc) {
+            $text = trim(html_entity_decode(strip_tags($m[2]), ENT_QUOTES));
+            $id = \Illuminate\Support\Str::slug($text) ?: 'section';
+            while (collect($toc)->contains('id', $id)) {
+                $id .= '-2';
+            }
+            $toc[] = ['id' => $id, 'text' => $text];
+
+            return '<h2 id="'.$id.'"'.$m[1].'>'.$m[2].'</h2>';
+        }, view('blog.posts.'.$post['slug'])->render());
+        $taskTotal = preg_match_all('/data-guide-item="/', $body);
+        // The first task list is where "Start the checklist" jumps to.
+        $body = preg_replace('/<div class="guide-tasks" data-guide-tasks/', '<div id="checklist" class="guide-tasks" data-guide-tasks', $body, 1);
+        $summary = $post['summary'] ?? [];
+        $shareText = $post['title'].' '.url('/blog/'.$post['slug']);
     @endphp
 
     <script type="application/ld+json">
@@ -38,71 +57,150 @@
     @endphp
     <script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
-    @include('components.navbar')
+    @if ($taskTotal)
+    <script>
+        // Ticked tasks are kept on this device only (localStorage), keyed by guide. Nothing is sent anywhere.
+        document.addEventListener('alpine:init', function () {
+            var key = 'sk-guide:{{ $post['slug'] }}';
+            var load = function () { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } };
+            Alpine.store('guide', {
+                total: {{ $taskTotal }},
+                done: load(),
+                get count() { var d = this.done; return Array.prototype.filter.call(document.querySelectorAll('[data-guide-item]'), function (el) { return d[el.dataset.guideItem]; }).length; },
+                toggle: function (id) {
+                    var next = Object.assign({}, this.done);
+                    if (next[id]) { delete next[id]; } else { next[id] = true; }
+                    this.done = next;
+                    try { localStorage.setItem(key, JSON.stringify(next)); } catch (e) {}
+                },
+                clear: function () { this.done = {}; try { localStorage.removeItem(key); } catch (e) {} },
+            });
+        });
+    </script>
+    @endif
 
-    <section class="bg-[#081d3a] pt-36 pb-14 lg:pt-44 lg:pb-16 relative overflow-hidden">
-        <div class="section-wrap relative z-10 max-w-3xl mx-auto text-center">
-            <div class="flex items-center justify-center gap-2 text-white/60 text-[12px] font-medium mb-6">
-                <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
-                <span>/</span>
-                <a href="{{ route('blog.index') }}" class="hover:text-[#f6e304] transition-colors">How-To Guides</a>
-                <span>/</span>
-                <span class="text-white/60">{{ $post['category'] }}</span>
+    <div class="print:hidden">@include('components.navbar')</div>
+
+    {{-- Header: the headline carries the page; the real photo sits on the bottom edge. --}}
+    <header class="guide-hero">
+        <div class="section-wrap guide-hero__grid">
+            <div class="guide-hero__copy">
+                <nav class="guide-hero__crumbs print:hidden" aria-label="Breadcrumb">
+                    <a href="/">Home</a><span aria-hidden="true">/</span><a href="{{ route('blog.index') }}">How-To Guides</a><span aria-hidden="true">/</span><a href="{{ route('blog.index', ['category' => $post['category']]) }}">{{ $post['category'] }}</a>
+                </nav>
+                <h1 class="guide-hero__title">{{ $post['title'] }}</h1>
+                <p class="guide-hero__dek">{{ $post['excerpt'] }}</p>
+                <p class="guide-hero__meta">By the {{ $post['author'] }}. {{ \Illuminate\Support\Carbon::parse($post['date'])->format('j F Y') }}. {{ $post['read_time'] }}-minute read.</p>
+                @if ($taskTotal)
+                <a href="#checklist" class="guide-hero__start print:hidden">
+                    Start the checklist
+                    <span class="guide-hero__start-count">{{ $taskTotal }} tasks</span>
+                </a>
+                @endif
             </div>
-            <span class="inline-block bg-[#f6e304] text-[#081d3a] text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
-                {{ $post['category'] }}
-            </span>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-[1.15] tracking-tight mb-6">
-                {{ $post['title'] }}
-            </h1>
-            <div class="flex items-center justify-center gap-3 text-white/50 text-[13px] font-medium">
-                <span>{{ $post['author'] }}</span>
-                <span class="w-1 h-1 rounded-full bg-white/30"></span>
-                <span>{{ \Illuminate\Support\Carbon::parse($post['date'])->format('d M Y') }}</span>
-                <span class="w-1 h-1 rounded-full bg-white/30"></span>
-                <span>{{ $post['read_time'] }} min read</span>
+            <div class="guide-hero__photo print:hidden">
+                <img src="{{ $post['cover'] }}"{!! \App\Support\Img::attrs($post['cover'], '(min-width: 1024px) 40vw, calc(100vw - 32px)') !!} alt="{{ $post['cover_alt'] ?? $post['title'] }}" fetchpriority="high" width="800" height="600"@if (! empty($post['cover_position'])) style="object-position: {{ $post['cover_position'] }}"@endif>
             </div>
         </div>
-    </section>
+    </header>
 
-    <section class="bg-light">
-        <div class="section-wrap -mt-8 lg:-mt-10 relative z-10">
-            <div class="rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto aspect-[16/9]">
-                <img src="{{ $post['cover'] }}"{!! \App\Support\Img::attrs($post['cover'], '(min-width: 960px) 896px, calc(100vw - 32px)') !!} alt="{{ $post['cover_alt'] ?? $post['title'] }}" fetchpriority="high" class="w-full h-full object-cover">
-            </div>
-        </div>
-    </section>
+    <div class="guide-wrap">
+        <div class="section-wrap guide-layout">
 
-    <article class="bg-light section-py !pt-14 lg:!pt-16">
-        <div class="section-wrap">
-            <div class="max-w-2xl mx-auto">
-                @include('blog.posts.'.$post['slug'])
+            {{-- Desktop rail: where you are, your checklist, and sharing. --}}
+            <aside class="guide-rail print:hidden" aria-label="Guide tools">
+                <div class="guide-rail__inner">
+                    @if (count($toc) > 1)
+                    {{-- The current section is the last heading scrolled past the top third of the screen. --}}
+                    <nav aria-label="Contents" x-data="{ active: null }"
+                         x-init="const hs = [...document.querySelectorAll('.guide-body h2[id]')]; const pick = () => { const line = innerHeight * 0.35; let id = null; for (const h of hs) { if (h.getBoundingClientRect().top < line) id = h.id; } active = id; }; let raf = 0; addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; pick(); }); }, { passive: true }); pick()">
+                        <p class="guide-rail__title">Contents</p>
+                        <ol class="guide-toc">
+                            @foreach ($toc as $item)
+                            <li><a href="#{{ $item['id'] }}" :class="active === '{{ $item['id'] }}' && 'is-active'" :aria-current="active === '{{ $item['id'] }}' ? 'location' : null">{{ $item['text'] }}</a></li>
+                            @endforeach
+                        </ol>
+                    </nav>
+                    @endif
 
-                <div class="flex items-center gap-3 mt-14 pt-8 border-t border-black/10">
-                    <span class="text-muted text-[13px] font-semibold uppercase tracking-widest">Share:</span>
-                    <a href="https://wa.me/?text={{ urlencode($post['title'].' — '.url('/blog/'.$post['slug'])) }}"
-                       target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp"
-                       class="w-9 h-9 rounded-lg bg-white border border-black/10 flex items-center justify-center hover:bg-[#25d366] hover:text-white hover:border-[#25d366] transition-all text-muted">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    </a>
-                    <a href="mailto:?subject={{ urlencode($post['title']) }}&body={{ urlencode(url('/blog/'.$post['slug'])) }}" aria-label="Share by email"
-                       class="w-9 h-9 rounded-lg bg-white border border-black/10 flex items-center justify-center hover:bg-navy hover:text-white hover:border-navy transition-all text-muted">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                    </a>
+                    @if ($taskTotal)
+                    <div class="guide-progress" x-data>
+                        <p class="guide-rail__title">Your checklist</p>
+                        <p class="guide-progress__count"><span x-text="$store.guide ? $store.guide.count : 0">0</span> of {{ $taskTotal }} done</p>
+                        <div class="guide-progress__bar" aria-hidden="true"><span :style="`transform: scaleX(${($store.guide ? $store.guide.count : 0) / {{ $taskTotal }}})`"></span></div>
+                        <p class="guide-progress__note">Saved on this device only.</p>
+                        <div class="guide-progress__actions">
+                            <button type="button" @click="window.print()">Print checklist</button>
+                            <button type="button" x-show="$store.guide && $store.guide.count" x-cloak @click="$store.guide.clear()">Clear ticks</button>
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="guide-share">
+                        <p class="guide-rail__title">Share this guide</p>
+                        <div class="guide-share__links">
+                            <a href="https://wa.me/?text={{ rawurlencode($shareText) }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                            <a href="mailto:?subject={{ rawurlencode($post['title']) }}&body={{ rawurlencode(url('/blog/'.$post['slug'])) }}">Email</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </aside>
+
+            <article class="guide-body">
+                @if ($summary)
+                <section class="guide-summary" aria-labelledby="short-version">
+                    <h2 id="short-version" class="guide-summary__title">The short version</h2>
+                    <ul>
+                        @foreach ($summary as $line)
+                        <li>{{ $line }}</li>
+                        @endforeach
+                    </ul>
+                </section>
+                @endif
+
+                {{-- Phones: contents and checklist tools fold into one panel under the summary. --}}
+                @if (count($toc) > 1 || $taskTotal)
+                <details class="guide-mobile-tools print:hidden">
+                    <summary>
+                        <span>Contents{{ $taskTotal ? ' and checklist' : '' }}</span>
+                        @if ($taskTotal)
+                        <span class="guide-mobile-tools__count" x-data><span x-text="$store.guide ? $store.guide.count : 0">0</span>/{{ $taskTotal }}</span>
+                        @endif
+                    </summary>
+                    <ol class="guide-toc">
+                        @foreach ($toc as $item)
+                        <li><a href="#{{ $item['id'] }}" onclick="this.closest('details').open = false">{{ $item['text'] }}</a></li>
+                        @endforeach
+                    </ol>
+                    @if ($taskTotal)
+                    <div class="guide-progress__actions" x-data>
+                        <button type="button" @click="window.print()">Print checklist</button>
+                        <button type="button" x-show="$store.guide && $store.guide.count" x-cloak @click="$store.guide.clear()">Clear ticks</button>
+                    </div>
+                    <p class="guide-progress__note">Ticks are saved on this device only.</p>
+                    @endif
+                </details>
+                @endif
+
+                {!! $body !!}
+
+                <div class="guide-share guide-share--end print:hidden">
+                    <p class="guide-rail__title">Found this useful? Pass it on.</p>
+                    <div class="guide-share__links">
+                        <a href="https://wa.me/?text={{ rawurlencode($shareText) }}" target="_blank" rel="noopener noreferrer">Share on WhatsApp</a>
+                        <a href="mailto:?subject={{ rawurlencode($post['title']) }}&body={{ rawurlencode(url('/blog/'.$post['slug'])) }}">Share by email</a>
+                    </div>
+                </div>
+            </article>
         </div>
-    </article>
+    </div>
 
     @if($related->isNotEmpty())
-    <section class="bg-white section-py !py-16 border-t border-black/5">
+    <section class="bg-[#f4f6f9] section-py !py-16 print:hidden">
         <div class="section-wrap">
             <div class="flex items-end justify-between mb-10">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-navy tracking-tight">More from the blog</h2>
-                <a href="{{ route('blog.index') }}" class="text-navy font-bold text-[13px] tracking-tight hidden sm:inline-flex items-center gap-2 hover:opacity-70 transition-opacity">
-                    View all posts
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </a>
+                <h2 class="text-2xl lg:text-3xl font-extrabold text-navy tracking-tight">More how-to guides</h2>
+                <a href="{{ route('blog.index') }}" class="text-navy font-bold text-[14px] tracking-tight hidden sm:inline-flex underline underline-offset-4 decoration-[#081d3a]/30 hover:decoration-[#081d3a]">All guides</a>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($related as $item)
@@ -113,6 +211,8 @@
     </section>
     @endif
 
-    @include('components.final-cta')
-    @include('components.footer')
+    <div class="print:hidden">
+        @include('components.final-cta')
+        @include('components.footer')
+    </div>
 @endsection

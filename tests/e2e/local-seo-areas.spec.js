@@ -119,8 +119,8 @@ test('pricing guide CTA opens booking on the matching service', async ({ page })
     await page.goto('/blog/end-of-tenancy-cleaning-cost-cape-town');
     await scrollThrough(page);
     // The in-article CTA box: its heading paragraph, then the box (two levels up) holding the button.
-    const cta = page.getByText('Get an accurate end-of-tenancy quote', { exact: true }).locator('xpath=../..');
-    await cta.getByRole('link', { name: 'Get My Instant Quote' }).click();
+    // The guide's one help box (components/blog/cta): its button opens booking on the guide's service.
+    await page.locator('.guide-help').getByRole('link', { name: 'See your price' }).click();
     await expect(page).toHaveURL(/\/book\?service=end-of-tenancy/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('End-of-Tenancy Cleaning');
 });

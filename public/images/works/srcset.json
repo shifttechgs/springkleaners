@@ -87,6 +87,13 @@
             800
         ]
     },
+    "/images/works/blog/move-out-cleaning-checklist-cape-town.avif": {
+        "w": 1536,
+        "variants": [
+            480,
+            800
+        ]
+    },
     "/images/works/blog/office-cleaning-cost-cape-town.avif": {
         "w": 1600,
         "variants": [
@@ -110,6 +117,13 @@
     },
     "/images/works/blog/post-construction-cleaning-what-to-expect.avif": {
         "w": 1600,
+        "variants": [
+            480,
+            800
+        ]
+    },
+    "/images/works/blog/post-construction-team-clean.avif": {
+        "w": 1536,
         "variants": [
             480,
             800

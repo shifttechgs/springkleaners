@@ -1,9 +1,12 @@
-@props(['heading' => 'Ready to book your clean?', 'text' => 'Get an accurate, no-obligation quote in minutes.', 'service' => null])
-
-<div class="bg-[#081d3a] rounded-2xl px-6 sm:px-8 py-8 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-    <div>
-        <p class="text-white font-extrabold text-lg tracking-tight mb-1">{{ $heading }}</p>
-        <p class="text-white/50 text-[14px]">{{ $text }}</p>
+@props(['heading' => 'Rather hand this over?', 'text' => 'See your price online in a minute. No payment upfront.', 'service' => null])
+{{-- One quiet offer of help inside a guide: the guide itself is the point, so this stays low-key. --}}
+<aside class="guide-help print:hidden">
+    <div class="guide-help__copy">
+        <p class="guide-help__title">{{ $heading }}</p>
+        <p class="guide-help__text">{{ $text }}</p>
     </div>
-    <x-arrow-button href="{{ route('booking.show', array_filter(['service' => $service])) }}" class="flex-shrink-0">Get My Instant Quote</x-arrow-button>
-</div>
+    <div class="guide-help__actions">
+        <x-arrow-button href="{{ route('booking.show', array_filter(['service' => $service])) }}" class="flex-shrink-0">See your price</x-arrow-button>
+        <a href="{{ \App\Support\WhatsApp::question() }}" target="_blank" rel="noopener noreferrer" class="guide-help__link">Ask us on WhatsApp</a>
+    </div>
+</aside>

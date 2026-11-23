@@ -59,7 +59,7 @@
 
 <h3 class="{{ $h3 }}">Kitchen</h3>
 <p class="{{ $p }}">Kitchens usually need the most work: grease, food residue and limescale build up over a tenancy.</p>
-<x-blog.checklist :items="[
+<x-blog.checklist interactive :items="[
     'Oven, including racks, trays, door glass and interior surfaces',
     'Stovetop, burner rings, knobs and surrounding surfaces',
     'Extractor fan, filters and the grease around them',
@@ -79,7 +79,7 @@
 
 <h3 class="{{ $h3 }}">Bathrooms</h3>
 <p class="{{ $p }}">Bathrooms need descaling, sanitising and attention to detail.</p>
-<x-blog.checklist :items="[
+<x-blog.checklist interactive :items="[
     'Toilet, including the base, cistern, seat, lid and surrounding floor',
     'Shower, bath, screens, doors and tracks',
     'Showerhead, taps and drains',
@@ -97,7 +97,7 @@
 
 <h3 class="{{ $h3 }}">Bedrooms and living areas</h3>
 <p class="{{ $p }}">These rooms are usually quicker, but the details matter.</p>
-<x-blog.checklist :items="[
+<x-blog.checklist interactive :items="[
     'Wardrobes, cupboards, drawers and shelves, inside and out',
     'Doors, handles, frames and light switches',
     'Skirting boards, corners and floor edges',
@@ -115,7 +115,7 @@
 
 <h3 class="{{ $h3 }}">Floors, walls and final details</h3>
 <p class="{{ $p }}">These finishing touches make a big difference on inspection day.</p>
-<x-blog.checklist :items="[
+<x-blog.checklist interactive :items="[
     'Vacuum all carpets and rugs, and any upholstered furniture that stays in the property',
     'Mop hard floors, paying attention to edges, corners and behind doors',
     'Remove cobwebs from ceilings, corners and light fittings',

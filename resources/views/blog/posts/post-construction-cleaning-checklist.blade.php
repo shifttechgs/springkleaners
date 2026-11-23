@@ -8,7 +8,7 @@
 </p>
 
 <h2 class="text-2xl md:text-[28px] font-extrabold text-navy tracking-tight mt-12 mb-4">The room-by-room checklist</h2>
-<x-blog.checklist :items="[
+<x-blog.checklist interactive :items="[
     'Every room — dust and debris removed from all surfaces, skirting, and corners',
     'Windows & frames — paint splatter and adhesive residue removed, glass polished',
     'Floors — scrubbed and finished, not just swept',

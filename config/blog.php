@@ -30,10 +30,19 @@ return [
             'title' => 'Move-Out Cleaning Checklist for Cape Town Tenants: How to Protect Your Deposit',
             'excerpt' => 'A room-by-room move-out (end-of-tenancy) cleaning checklist for Cape Town tenants: when to clean, what landlords and agents check, and how to protect your deposit.',
             'category' => 'End-of-Tenancy',
-            'cover' => '/images/works/blog/end-of-tenancy-cleaning-checklist-cape-town.avif',
-            'cover_alt' => 'An empty, freshly cleaned apartment after an end-of-tenancy clean',
+            'cover' => '/images/works/blog/move-out-cleaning-checklist-cape-town.avif',
+            'cover_alt' => 'Four SpringKleaners team members cleaning an empty kitchen and living area beside packed moving boxes and a set of keys: wiping the counter, cleaning inside cupboards, sweeping and vacuuming',
+            // Optional: where to keep in frame when the guide header crops the photo (CSS object-position).
+            'cover_position' => '0% 50%',
             'date' => '2026-11-23',
             'read_time' => 9,
+            // Optional on any post: shown as "The short version" at the top, for readers who skim.
+            'summary' => [
+                'Clean once the property is empty, before the final inspection or key handover.',
+                'Kitchens and bathrooms take the longest: oven grease and limescale are what agents notice first.',
+                'Take clear, dated photos of every room when you finish.',
+                'A spotless handover removes one reason for deductions, but no clean can guarantee your deposit.',
+            ],
             'author' => 'SpringKleaners Team',
         ],
         [
@@ -118,8 +127,9 @@ return [
             'title' => 'The Ultimate Post-Construction Cleaning Checklist',
             'excerpt' => 'Every surface builders touch, room by room, before a new build or renovation is genuinely move-in ready.',
             'category' => 'Post-Construction',
-            'cover' => '/images/works/blog/post-construction-cleaning-checklist.avif',
-            'cover_alt' => 'A clean new bathroom with a glass shower after a post-construction clean',
+            'cover' => '/images/works/blog/post-construction-team-clean.avif',
+            'cover_alt' => 'Four SpringKleaners team members cleaning a renovated open-plan kitchen with furniture under plastic sheeting: wiping the island, washing a wall from a ladder, mopping and vacuuming',
+            'cover_position' => '72% 50%',
             'date' => '2026-07-05',
             'read_time' => 7,
             'author' => 'SpringKleaners Team',
