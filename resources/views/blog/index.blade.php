@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Cleaning Tips & Guides Cape Town | SpringKleaners Blog')
-@section('description', 'Practical cleaning guides for Cape Town homes and businesses — end-of-tenancy checklists, deep cleaning pricing, post-construction clean-ups and more from SpringKleaners.')
+@section('title', 'How-To Cleaning Guides & Checklists, Cape Town | SpringKleaners')
+@section('description', 'How-to cleaning guides for Cape Town homes and businesses: move-out checklists, deep cleaning and end-of-tenancy pricing, post-construction clean-ups and more.')
 @if ($posts->currentPage() > 1)
 @section('robots', 'noindex, follow')
 @endif
@@ -10,9 +10,9 @@
     <section class="bg-[#081d3a] pt-36 pb-20 lg:pt-44 lg:pb-24 relative overflow-hidden">
         <div class="section-wrap relative z-10 text-center max-w-3xl mx-auto">
             <div class="w-8 h-[2px] bg-[#f6e304] mb-3 mx-auto"></div>
-            <p class="text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em] mb-4">The SpringKleaners Blog</p>
+            <p class="text-white/70 text-[11px] font-semibold uppercase tracking-[0.18em] mb-4">How-To Guides</p>
             <h1 class="text-4xl sm:text-5xl lg:text-[62px] font-extrabold text-white leading-[1.1] tracking-tight mb-5">
-                Cleaning tips, guides<br>&amp; local know-how.
+                How-to guides, checklists<br>&amp; local know-how.
             </h1>
             <p class="text-white/50 text-[15px] sm:text-[16px] leading-relaxed max-w-xl mx-auto">
                 Practical advice on deep cleaning, end-of-tenancy checklists and post-construction clean-ups — written for homes and businesses across Cape Town's Northern Suburbs.
@@ -39,6 +39,7 @@
             @if ($posts->isEmpty())
             <p class="text-center text-muted text-[15px]">No posts in this category yet.</p>
             @else
+            <h2 class="sr-only">Latest guides</h2>
 
             @if ($posts->currentPage() === 1)
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">

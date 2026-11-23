@@ -25,14 +25,15 @@ return [
             'author' => 'SpringKleaners Team',
         ],
         [
-            'slug' => 'end-of-tenancy-cleaning-checklist-cape-town',
-            'title' => 'End-of-Tenancy Cleaning Checklist: How to Get Your Full Deposit Back in Cape Town',
-            'excerpt' => 'Landlords and agents in the Northern Suburbs inspect harder than ever. Here is the room-by-room checklist our crews use to help tenants recover their full deposit.',
+            // Replaced 'end-of-tenancy-cleaning-checklist-cape-town' (2026-06-24), which 301s here (routes/web.php).
+            'slug' => 'move-out-cleaning-checklist-cape-town',
+            'title' => 'Move-Out Cleaning Checklist for Cape Town Tenants: How to Protect Your Deposit',
+            'excerpt' => 'A room-by-room move-out (end-of-tenancy) cleaning checklist for Cape Town tenants: when to clean, what landlords and agents check, and how to protect your deposit.',
             'category' => 'End-of-Tenancy',
             'cover' => '/images/works/blog/end-of-tenancy-cleaning-checklist-cape-town.avif',
             'cover_alt' => 'An empty, freshly cleaned apartment after an end-of-tenancy clean',
-            'date' => '2026-06-24',
-            'read_time' => 8,
+            'date' => '2026-11-23',
+            'read_time' => 9,
             'author' => 'SpringKleaners Team',
         ],
         [

@@ -5,7 +5,7 @@
     <div class="relative overflow-hidden {{ $featured ? 'aspect-[16/8]' : 'aspect-[16/10]' }}">
         <img src="{{ $post['cover'] }}"{!! \App\Support\Img::attrs($post['cover'], ($featured ?? false) ? '(min-width: 1024px) 800px, 100vw' : '(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw') !!}
              alt="{{ $post['cover_alt'] ?? $post['title'] }}"
-             loading="lazy"
+             @if ($featured) fetchpriority="high" @else loading="lazy" @endif
              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-[#040f1f]/40 via-transparent to-transparent"></div>
         <span class="absolute top-4 left-4 bg-[#f6e304] text-[#081d3a] text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">

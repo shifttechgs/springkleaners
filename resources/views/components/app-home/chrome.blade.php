@@ -43,7 +43,7 @@
         <div class="h-full" data-booking-flow x-ignore>@include('components.app-booking')</div>
     </div>
     <nav class="flex-1 overflow-y-auto px-4 pb-8 tab-safe" x-show="sheet === 'more'" aria-label="More">
-        @foreach ([['About us', '/about'], ['Pricing', '/#pricing'], ['Areas we serve', route('areas.index')], ['Blog', '/blog'], ['Full booking form', route('booking.show')]] as [$label, $href])
+        @foreach ([['About us', '/about'], ['Pricing', '/#pricing'], ['Areas we serve', route('areas.index')], ['How-To Guides', route('blog.index')], ['Full booking form', route('booking.show')]] as [$label, $href])
             <a href="{{ $href }}" class="press flex items-center justify-between border-b border-[#081d3a]/10 py-4 text-[16px] font-semibold text-[#081d3a]">{{ $label }}
                 <svg class="h-4 w-4 text-[#081d3a]/40" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></a>
         @endforeach

@@ -1,4 +1,4 @@
-<section class="bg-[#0d1b33] section-py !py-16">
+<section id="deposit-checklist" class="bg-[#0d1b33] section-py !py-16 scroll-mt-24">
     <div class="section-wrap">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div class="lg:col-span-7">

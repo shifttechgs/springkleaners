@@ -62,6 +62,8 @@ Route::get('/book/{service}', function (string $service) {
 });
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+// Old checklist post, replaced by the move-out checklist on 2026-11-23.
+Route::permanentRedirect('/blog/end-of-tenancy-cleaning-checklist-cape-town', '/blog/move-out-cleaning-checklist-cape-town');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/sitemap.xml', function () {

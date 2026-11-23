@@ -23,7 +23,7 @@
                     <li><a href="{{ route('services.show', 'upholstery-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Upholstery Cleaning</a></li>
                     <li><a href="{{ route('services.show', 'window-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Window Cleaning</a></li>
                     <li><a href="{{ route('services.show', 'airbnb-turnover-cleaning') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Airbnb & Short-Let Cleaning</a></li>
-                    <li><a href="{{ route('blog.index') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">Blog</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="text-white/50 hover:text-[#f6e304] text-[14px] transition-colors leading-relaxed">How-To Guides</a></li>
                 </ul>
             </div>
 

@@ -24,6 +24,7 @@ class BlogPostsTest extends TestCase
             'meet-the-team-behind-springkleaners',
             'why-we-publish-our-prices',
             'airbnb-short-let-cleaning-cape-town-hosts',
+            'move-out-cleaning-checklist-cape-town',
         ])->mapWithKeys(fn ($slug) => [$slug => [$slug]])->all();
     }
 
@@ -66,6 +67,7 @@ class BlogPostsTest extends TestCase
             'who-pays-for-end-of-lease-cleaning-south-africa',
             'spring-cleaning-cape-town-guide',
             'airbnb-short-let-cleaning-cape-town-hosts',
+            'move-out-cleaning-checklist-cape-town',
         ];
 
         foreach ($slugsWithFaqs as $slug) {
@@ -78,5 +80,31 @@ class BlogPostsTest extends TestCase
             $this->assertNotNull($faq, "FAQPage JSON-LD missing or invalid for {$slug}");
             $this->assertNotEmpty($faq['mainEntity'], "FAQPage has no questions for {$slug}");
         }
+    }
+
+    public function test_old_end_of_tenancy_checklist_redirects_permanently_to_the_move_out_checklist(): void
+    {
+        $this->get('/blog/end-of-tenancy-cleaning-checklist-cape-town')
+            ->assertStatus(301)
+            ->assertRedirect('/blog/move-out-cleaning-checklist-cape-town');
+    }
+
+    public function test_move_out_checklist_uses_live_prices_and_links_to_booking_and_the_printable_checklist(): void
+    {
+        $eot = \App\Support\Services::find('end-of-tenancy');
+        $html = $this->get('/blog/move-out-cleaning-checklist-cape-town')->assertOk()->getContent();
+
+        $this->assertStringContainsString('R'.number_format($eot['base_price']), $html);
+        $this->assertStringContainsString(e(route('booking.show', ['service' => 'end-of-tenancy'])), $html);
+        $this->assertStringContainsString(route('services.show', 'end-of-tenancy').'#deposit-checklist', $html);
+        $this->assertStringContainsString('No cleaning company can guarantee a deposit outcome', $html);
+
+        preg_match_all('#<script type="application/ld\+json">(.*?)</script>#s', $html, $m);
+        $faq = collect($m[1])->map(fn ($j) => json_decode($j, true))->firstWhere('@type', 'FAQPage');
+        $this->assertCount(6, $faq['mainEntity']);
+
+        // The old URL is gone from the site's own links and the sitemap.
+        $this->assertStringNotContainsString('end-of-tenancy-cleaning-checklist-cape-town"', $this->get('/blog')->getContent());
+        $this->assertStringNotContainsString('/blog/end-of-tenancy-cleaning-checklist-cape-town<', $this->get('/sitemap.xml')->getContent());
     }
 }

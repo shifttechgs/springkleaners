@@ -9,7 +9,7 @@
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 wow fadeInUp" data-wow-duration="0.7s">
             <div class="max-w-xl">
                 <div class="w-8 h-[2px] bg-[#f6e304] mb-3"></div>
-                <p class="text-navy/60 text-[11px] font-semibold uppercase tracking-[0.18em] mb-4">From The Blog</p>
+                <p class="text-navy/60 text-[11px] font-semibold uppercase tracking-[0.18em] mb-4">How-To Guides</p>
                 <h2 class="text-4xl lg:text-5xl font-extrabold text-navy leading-[1.1] tracking-tight">
                     Cleaning tips &amp; local guides.
                 </h2>

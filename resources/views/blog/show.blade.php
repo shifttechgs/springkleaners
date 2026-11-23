@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $post['title'].' | SpringKleaners Blog')
+@section('title', $post['title'].' | SpringKleaners')
 @section('description', $post['excerpt'])
 @section('content')
     @php
@@ -31,7 +31,7 @@
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('blog.index')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'How-To Guides', 'item' => route('blog.index')],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $post['title'], 'item' => url()->current()],
             ],
         ];
@@ -45,7 +45,7 @@
             <div class="flex items-center justify-center gap-2 text-white/60 text-[12px] font-medium mb-6">
                 <a href="/" class="hover:text-[#f6e304] transition-colors">Home</a>
                 <span>/</span>
-                <a href="{{ route('blog.index') }}" class="hover:text-[#f6e304] transition-colors">Blog</a>
+                <a href="{{ route('blog.index') }}" class="hover:text-[#f6e304] transition-colors">How-To Guides</a>
                 <span>/</span>
                 <span class="text-white/60">{{ $post['category'] }}</span>
             </div>
