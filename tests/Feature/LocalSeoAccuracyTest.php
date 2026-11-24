@@ -111,6 +111,7 @@ class LocalSeoAccuracyTest extends TestCase
         preg_match('#name="description" content="([^"]*)"#', $html, $m);
 
         $this->assertSame('Move-Out & Deep Cleaning Cape Town | SpringKleaners', html_entity_decode($this->title($html)));
+        $this->assertSame(1, preg_match_all('#<h1[\s>]#i', $html), 'Homepage must have exactly one <h1> (Bing flags duplicates).');
         $this->assertLessThanOrEqual(65, mb_strlen($this->title($html)));
         $this->assertLessThanOrEqual(160, mb_strlen(html_entity_decode($m[1], ENT_QUOTES)));
     }

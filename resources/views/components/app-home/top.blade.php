@@ -29,7 +29,9 @@
         <x-stars />
         <span><b>4.9</b> on Google</span><span class="h-3.5 w-px bg-white/40"></span><span><b>500+</b> cleans done</span>
     </p>
-    <h1 class="font-display text-[34px] leading-[1.05] text-white" style="letter-spacing:-0.03em">Cape Town's Northern Suburbs, cleaned properly.</h1>
+    {{-- Not an <h1> tag: the desktop hero (components/hero) holds the page's one <h1> with the same words; crawlers
+         read both, so this stays a heading for screen readers only (role + aria-level). --}}
+    <p role="heading" aria-level="1" class="font-display text-[34px] leading-[1.05] text-white" style="letter-spacing:-0.03em">Cape Town's Northern Suburbs, cleaned properly.</p>
     <p class="mt-2.5 text-[15px] leading-relaxed text-white/90">Your price in a minute. Weekend slots. No payment upfront.</p>
 </section>
 
